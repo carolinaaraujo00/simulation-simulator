@@ -9,7 +9,7 @@ import os, sys
 
 loadPrcFileData("", configVars)
 
-class test_office(ShowBase):
+class ociffer(ShowBase):
     def __init__(self):
         super().__init__()
         simplepbr.init()
@@ -33,5 +33,5 @@ class test_office(ShowBase):
         self.office_model.reparentTo(self.render)
 
 
-game = test_office()
+game = ociffer()
 game.run()
