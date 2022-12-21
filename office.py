@@ -19,8 +19,8 @@ class ociffer(ShowBase):
 
         # load models
         self.load_office()
-        self.camera.lookAt(self.office_model)
-
+        self.cam.setPos(20, 10, 5)
+        self.cam.lookAt(self.office_model)
         # light the scene
         setup_ambient_light(self.render)
         setup_point_light(self.render, (50, 50, 50))
@@ -31,7 +31,6 @@ class ociffer(ShowBase):
         # self.office_model.setPos(0, 50, 0)
         self.office_model.setScale(0.5,0.5,0.5)
         self.office_model.reparentTo(self.render)
-
 
 game = ociffer()
 game.run()
