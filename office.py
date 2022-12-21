@@ -26,7 +26,7 @@ class test_office(ShowBase):
         setup_point_light(self.render, (50, 50, 50))
 
     def load_office(self):
-        self.office_model = self.loader.loadModel("egg-models/office_props_pack/scene.gltf")
+        self.office_model = self.loader.loadModel("egg-models/office_space/office.gltf")
 
         # self.office_model.setPos(0, 50, 0)
         self.office_model.setScale(0.5,0.5,0.5)
