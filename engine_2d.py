@@ -1,12 +1,8 @@
 from direct.showbase.ShowBase import ShowBase
+from common import *
 from panda3d.core import CollisionTraverser, CollisionHandlerQueue, loadPrcFileData
 from light_setup import setup_point_light
 
-# This config var section is to replace an actual config file like we had in the hands-on
-configVars = """
-win-size 1280 720
-show-frame-rate-meter 1
-"""
 loadPrcFileData("", configVars)
 
 
