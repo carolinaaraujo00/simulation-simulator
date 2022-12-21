@@ -19,11 +19,14 @@ class ociffer(ShowBase):
 
         # load models
         self.load_office()
+        self.load_hands()
+
         self.cam.setPos(20, 10, 5)
         self.cam.lookAt(self.office_model)
         # light the scene
         setup_ambient_light(self.render)
         setup_point_light(self.render, (50, 50, 50))
+
 
     def load_office(self):
         self.office_model = self.loader.loadModel("egg-models/office_space/office.gltf")
@@ -31,6 +34,14 @@ class ociffer(ShowBase):
         # self.office_model.setPos(0, 50, 0)
         self.office_model.setScale(0.5,0.5,0.5)
         self.office_model.reparentTo(self.render)
+
+
+    def load_hands(self):
+        self.hands = self.loader.loadModel("egg-models/hands2/fps-hands.gltf")
+
+        self.hands.setPos(20, 10, 5)
+        self.hands.setScale(0.5,-0.5,0.5)
+        self.hands.reparentTo(self.render)
 
 game = ociffer()
 game.run()
