@@ -1,4 +1,6 @@
+import math
 from direct.showbase.ShowBase import ShowBase
+from direct.interval.LerpInterval import LerpHprInterval
 from panda3d.core import loadPrcFileData
 from panda3d.core import *
 from light_setup import *
@@ -15,18 +17,34 @@ class ociffer(ShowBase):
         self.actors = []
 
         # movement variables and key mapping 
+        self.disable_mouse()
         self.init_movement()
 
         setup_ambient_light(self.render)
         setup_point_light(self.render, (10, 10, 10 ))
         self.set_background_color(0, 0, 0, 1)
 
-        self.cam.setPos(0, 0, 0)
+        # self.cam.setPos(0, 0, 3)
 
         self.taskMgr.add(self.update, "update")
+
+        self.props = self.win.getProperties()
+        self.screensizeX = self.props.getXSize() / 2
+
+        # self.cam.setPos(0, -10, 4) # X = left & right, Y = zoom, Z = Up & down.
+        # self.cam.setHpr(0, -15, 0) # Heading, pitch, roll.
+
         # load models
         self.load_office()
         self.load_hands()
+        # self.follow_camera()
+
+    def follow_camera(self):
+        self.camera_dummy_node = self.render.attachNewNode("camera_dummy_node")
+        self.camera_dummy_node.setPos( 0, 0, 0)
+        self.camera_dummy_node.setHpr(180, 0, 0)
+
+        self.cam.reparentTo(self.camera_dummy_node)
 
 
     def load_office(self):
@@ -38,21 +56,22 @@ class ociffer(ShowBase):
 
     def load_hands(self):
         self.hands = self.loader.loadModel(hand_model_path)
-
-        # self.hands.setPos(20, 10, 5)
-        self.hands.setScale(0.3)
+        
+        self.hands.setScale(self.cam, 2)
         self.hands.reparentTo(self.render)
+
 
     # Called every frame
     def update(self, task):
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
+        
         self.dt = globalClock.getDt()
-        self.check_movement()
-        self.hands.setPos(self.cam, (0, 2, -2))
-        # self.hands.setPos(self.cam, (0, 2, -2))
-        # self.hands.setHpr(self.cam, 180, -5, 0)
-        # self.hands.setHpr(self.cam, (180, -5, 0))
-        self.hands.setHpr(180, -15, 0)
+        self.check_movement(task)
+        self.mousePosition(task)
+
+        self.hands.setPos(self.cam, (0, 20, -10))
+        self.hands.setHpr(self.cam, (180, -40, 0))
+        # self.hands.setScale(self.cam, 1)
 
         return task.cont
 
@@ -67,18 +86,58 @@ class ociffer(ShowBase):
         self.accept("d", updateKeyMap, ["right", True])
         self.accept("d-up", updateKeyMap, ["right", False])
 
+        self.accept("w", updateKeyMap, ["up", True])
+        self.accept("w-up", updateKeyMap, ["up", False])
 
-    def check_movement(self):
+        self.accept("s", updateKeyMap, ["down", True])
+        self.accept("s-up", updateKeyMap, ["down", False])
+
+
+    def check_movement(self, task):
         cam_pos = self.cam.getPos()
 
         if key_map_3d["left"]:
             cam_pos.x -= self.speed * self.dt
         if key_map_3d["right"]:
             cam_pos.x += self.speed * self.dt
+        if key_map_3d["up"]:
+            cam_pos.y += self.speed * self.dt
+        if key_map_3d["down"]:
+            cam_pos.y -= self.speed * self.dt
 
 
         self.cam.setPos(cam_pos)
-        self.hands.setPos(cam_pos + (10, 10, 0))
+        return task.cont
+
+
+    def mousePosition(self, task):
+        if not self.mouseWatcherNode.hasMouse():
+            return task.cont
+        
+        # get the relative mouse position, 
+        # its always between 1 and -1
+        mpos = self.mouseWatcherNode.getMouse()
+
+        cam_rotation_p = self.cam.getP()
+        cam_rotation_h = self.cam.getH()
+        print(self.cam.getHpr())
+        
+        if mpos.getX() > 0.2: # and self.cam.getH() > -15:
+            cam_rotation_h -= self.speed*10 * self.dt
+
+        elif mpos.getX() < -0.2: # and self.cam.getH() < 15:
+            cam_rotation_h += self.speed*10 * self.dt
+
+        if mpos.getY() > 0.2 and self.cam.getP() < 10:
+            cam_rotation_p += self.speed*10 * self.dt
+
+        elif mpos.getY() < -0.2 and self.cam.getP() > -20:
+            cam_rotation_p -= self.speed*10 * self.dt
+
+        self.cam.setHpr((cam_rotation_h, cam_rotation_p, 0))
+
+        return task.cont
+
 
 if __name__ == "__main__":
     game = ociffer()
