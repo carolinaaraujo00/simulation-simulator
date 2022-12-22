@@ -40,17 +40,16 @@ class ociffer(ShowBase):
         self.hands = self.loader.loadModel(hand_model_path)
 
         # self.hands.setPos(20, 10, 5)
-        self.hands.setScale(0.3,0.3,0.3)
-        self.hands.reparentTo(self.cam)
-        self.hands.setHpr(180)
-        self.hands.setPos(100, 100, 0)
-
+        self.hands.setScale(0.3)
+        self.hands.reparentTo(self.render)
 
     # Called every frame
     def update(self, task):
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
         self.dt = globalClock.getDt()
         self.check_movement()
+        self.hands.setPos(self.cam, (0, 6, -3))
+        self.hands.setHpr(180, 0, 0)
 
         return task.cont
 
@@ -59,11 +58,11 @@ class ociffer(ShowBase):
         self.speed = 4
         self.angle = 0
 
-        self.accept("arrow_a", updateKeyMap, ["left", True])
-        self.accept("arrow_a-up", updateKeyMap, ["left", False])
+        self.accept("a", updateKeyMap, ["left", True])
+        self.accept("a-up", updateKeyMap, ["left", False])
 
-        self.accept("arrow_d", updateKeyMap, ["right", True])
-        self.accept("arrow_d-up", updateKeyMap, ["right", False])
+        self.accept("d", updateKeyMap, ["right", True])
+        self.accept("d-up", updateKeyMap, ["right", False])
 
 
     def check_movement(self):
@@ -74,8 +73,9 @@ class ociffer(ShowBase):
         if key_map_3d["right"]:
             cam_pos.x += self.speed * self.dt
 
+
         self.cam.setPos(cam_pos)
-        self.hands.setPos(cam_pos + (0, 5, 0))
+        self.hands.setPos(cam_pos + (10, 10, 0))
 
 if __name__ == "__main__":
     game = ociffer()
