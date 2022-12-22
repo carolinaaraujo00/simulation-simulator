@@ -3,48 +3,43 @@ from panda3d.core import loadPrcFileData
 from panda3d.core import *
 from light_setup import *
 from common import *
-import simplepbr
+from office import * 
 
 loadPrcFileData("", configVars)
 
-class ociffer(ShowBase):
+# hands should be rendered under the camera, so each time the camera is moved the
+# hands move accordingly
+
+
+class Engine3D(ShowBase):
+    # __instance = None
+
+    # def get():
+    #     if not Engine3D.__instance:
+    #         Engine3D()
+    #     return Engine3D.__instance
+
+
+    # def __init__(self):
+    #     if Engine3D.__instance:
+    #         raise Exception("Engine3D class already initialised")
+    #     else:
+    #         Engine3D.__instance = self
+    
+    
     def __init__(self):
         super().__init__()
-        simplepbr.init()
-
+        
         self.actors = []
 
         # movement variables and key mapping 
         self.init_movement()
 
-        setup_ambient_light(self.render)
-        setup_point_light(self.render, (10, 10, 10 ))
-        self.set_background_color(0, 0, 0, 1)
 
-        self.cam.setPos(0, 0, 0)
-
+        self.cam.setPos(100, 100, 5)
         self.taskMgr.add(self.update, "update")
-        # load models
-        self.load_office()
-        self.load_hands()
 
-
-    def load_office(self):
-        self.office_model = self.loader.loadModel(office_model_path)
-
-        self.office_model.setScale(0.5,0.5,0.5)
-        self.office_model.reparentTo(self.render)
-
-
-    def load_hands(self):
-        self.hands = self.loader.loadModel(hand_model_path)
-
-        # self.hands.setPos(20, 10, 5)
-        self.hands.setScale(0.3,0.3,0.3)
-        self.hands.reparentTo(self.cam)
-        self.hands.setHpr(180)
-        self.hands.setPos(100, 100, 0)
-
+        game = ociffer()
 
     # Called every frame
     def update(self, task):
@@ -75,8 +70,3 @@ class ociffer(ShowBase):
             cam_pos.x += self.speed * self.dt
 
         self.cam.setPos(cam_pos)
-        self.hands.setPos(cam_pos + (0, 5, 0))
-
-if __name__ == "__main__":
-    game = ociffer()
-    game.run()
