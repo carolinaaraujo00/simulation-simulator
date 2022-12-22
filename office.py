@@ -48,8 +48,11 @@ class ociffer(ShowBase):
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
         self.dt = globalClock.getDt()
         self.check_movement()
-        self.hands.setPos(self.cam, (0, 6, -3))
-        self.hands.setHpr(180, 0, 0)
+        self.hands.setPos(self.cam, (0, 2, -2))
+        # self.hands.setPos(self.cam, (0, 2, -2))
+        # self.hands.setHpr(self.cam, 180, -5, 0)
+        # self.hands.setHpr(self.cam, (180, -5, 0))
+        self.hands.setHpr(180, -15, 0)
 
         return task.cont
 
