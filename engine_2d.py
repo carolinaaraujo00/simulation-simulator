@@ -1,35 +1,54 @@
+from panda3d.core import CollisionTraverser, CollisionHandlerEvent, loadPrcFileData, CollisionNode
 from direct.showbase.ShowBase import ShowBase
+import simplepbr 
+
 from common import *
-from panda3d.core import CollisionTraverser, CollisionHandlerQueue, loadPrcFileData
-from light_setup import setup_point_light
+from light_setup import *
+
 
 loadPrcFileData("", configVars)
 
+def last_string_from_node(node):
+    temp_string = str(node)
+    index = temp_string.rfind("/") + 1
+    return temp_string[index:]
+
 
 class Engine2D(ShowBase):
-    def __init__(self):
+    def __init__(self, debug):
         super().__init__()
+        #simplepbr.init()
 
         # Consts
         self.GRAVITY = -0.08
         self.ACCEL_MODIFIER = 0.5
-        self.DEBUG = False  # Can be used to debug collisions for example
+        self.DEBUG = debug  # Can be used to debug collisions for example
 
         # Vars
         self.dt_time = 0
         self.player = None
         self.actors = []
         self.cTrav = None
-        self.colHandlerQueue = None
+        self.colHandlerEvent = None
 
         # Init setup
         self.set_background_color(0.1, 0.1, 0.2, 1)
         self.cam.setPos(0, -65, 15)
-        setup_point_light(self.render, (15, 0, 20))  # Comes from the other file
+        setup_ambient_light(self.render)
+        #setup_point_light(self.render, (15, 0, 20)) 
+
+        
 
         # Setting up collision vars
         self.cTrav = CollisionTraverser()  # VAR NEEDS TO HAVE THIS NAME. PANDA3D SHENANIGANS...
-        self.colHandlerQueue = CollisionHandlerQueue()
+        if self.DEBUG:
+            self.cTrav.showCollisions(self.render)
+
+        self.colHandlerEvent = CollisionHandlerEvent()
+        self.colHandlerEvent.addInPattern('%fn-into-%in')
+        self.colHandlerEvent.addAgainPattern('%fn-again-%in')
+        self.colHandlerEvent.addOutPattern('%fn-out-%in')
+
 
         # Adding the update aka MainLoop to the Task manager
         self.taskMgr.add(self.update, "update")

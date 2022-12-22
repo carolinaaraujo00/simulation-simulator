@@ -5,7 +5,7 @@ from light_setup import *
 from direct.showbase.ShowBase import ShowBase
 from common import *
 import simplepbr
-import os, sys
+
 
 loadPrcFileData("", configVars)
 
@@ -13,7 +13,6 @@ class ociffer(ShowBase):
     def __init__(self):
         super().__init__()
         simplepbr.init()
-        # self.disable_mouse()
 
         self.set_background_color(0, 0, 0, 1)
 

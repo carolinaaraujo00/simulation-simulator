@@ -1,6 +1,7 @@
 from direct.actor.Actor import Actor
+from direct.showbase.DirectObject import DirectObject
 from panda3d.core import CollisionBox, CollisionNode, BitMask32, Vec3
-import engine_2d
+from engine_2d import *
 
 # Auxiliary stuff for movement input
 key_map = {
@@ -14,17 +15,17 @@ def update_key_map(control_name, state):
     key_map[control_name] = state
 
 
-class FishActor:
-    def __init__(self, incoming_engine_ref: engine_2d.Engine2D):
-
+class FishPlayer(DirectObject):
+    def __init__(self, incoming_engine_ref: Engine2D):
+        
         self.SPEED = 4
         self.JUMP_FORCE = 1.2
         self.FRICTION = -0.12
 
         self.engine_ref = incoming_engine_ref
         self.actor = None
-        self.position = Vec3(0, 0, 20)  # This is also the initial position of the actor
-        self.scale = Vec3(5, 5, 5)
+        self.position = Vec3(0, 0, 18)  # This is also the initial position of the actor
+        self.scale = Vec3(0.1, 0.1, 0.1)
 
         # Movement variables
         self.velocity = Vec3(0, 0, 0)
@@ -35,24 +36,39 @@ class FishActor:
         self.is_on_floor = True
 
         # Setting the actor
-        self.actor = Actor("egg-models/FishEgg/FirstFish", {"anim1": "egg-models/FishEgg/FirstFishAnim"})
-        # self.actor.find("**/Object_4").node().setIntoCollideMask(BitMask32.bit(2))
+        self.actor = Actor("egg-models/angler_fish/angler_fish.gltf")
         self.actor.reparentTo(self.engine_ref.render)
         self.actor.setScale(self.scale)
-        self.actor.loop("anim1")
-        self.actor.setPlayRate(5, 'anim1')
+        self.actor.setH(self.actor, -90)
+        #self.actor.loop("mill")
+        #self.actor.setPlayRate(5, "mill")
 
         # Setting up actor collision
-        collider_node = CollisionNode("box-coll")
+        collider_node = CollisionNode("fish_player")
         collider_node.setFromCollideMask(BitMask32.bit(1))
         # TODO: find a standardized way to figure the collider size for each object.
-        collider_node.addSolid(CollisionBox((0, 0, 0), 0.5, 0.2, 0.4))
+        collider_node.addSolid(CollisionBox((0, 0, 0), 30, 30, 30))
         collider = self.actor.attachNewNode(collider_node)
-        self.engine_ref.cTrav.addCollider(collider, self.engine_ref.colHandlerQueue)
+        self.engine_ref.cTrav.addCollider(collider, self.engine_ref.colHandlerEvent)
         if self.engine_ref.DEBUG:
             collider.show()
 
-        # TODO: make global input manager
+
+
+
+        plight = PointLight("plight_fish")
+        # plight.setShadowCaster(True, 1280, 1280)
+        plight.setColor((1, 1, 1, 1))
+        plnp = self.actor.attachNewNode(plight)
+        plnp.setPos(1, 1, 50)
+        # plight.setAttenuation((1.4, 0, 0))
+        self.engine_ref.render.setLight(plnp) 
+
+        # Collision Events
+        self.accept("fish_player-into-pier", self.on_collision_enter)
+        self.accept("fish_player-again-pier", self.on_collision_again)
+        self.accept("fish_player-out-pier", self.on_collision_out)
+     
         # Keyboard input events
         self.engine_ref.accept("arrow_left", update_key_map, ["left", True])
         self.engine_ref.accept("arrow_left-up", update_key_map, ["left", False])
@@ -65,7 +81,6 @@ class FishActor:
 
     def jump(self):
         if self.is_on_floor:
-            self.is_jumping = True
             self.is_on_floor = False
             self.velocity.z = self.JUMP_FORCE
 
@@ -90,22 +105,32 @@ class FishActor:
         self.velocity += self.acceleration
         self.position += self.velocity + (self.acceleration * self.engine_ref.ACCEL_MODIFIER)
 
-        # TODO: make global collision manager. This "for" loop should be in the engine
-        # Handle collisions
-        for entry in self.engine_ref.colHandlerQueue.getEntries():
+        # Setting the actor's position
+        self.actor.setPos(self.position)
 
-            # inp means: into node path
-            inp = entry.getIntoNodePath().getPos(self.engine_ref.render)
 
-            if self.velocity.z < 0:  # prevent snapping to the top of the platforms
+    # ::::::::::::::::::::::::::::::::Collision::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    
+    def on_collision_enter(self, entry):
+        self.is_on_floor = True
+
+    def on_collision_again(self, entry):
+        if last_string_from_node(entry.getIntoNodePath()) == "pier":
+
+            self.position.z = entry.getIntoNodePath().getPos(self.engine_ref.render).z + 18
+            self.velocity.z = 0  # prevent fast falling from platforms
+            self.actor.setPos(self.position)
+
+            """             if self.velocity.z < 0:  # prevent snapping to the top of the platforms
                 if not self.is_jumping:
                     # TODO: find a standardized way to figure the offset for each object.
                     #  The value that is being added is hardcoded.
-                    self.position.z = inp.z + 2.3
-                    self.velocity.z = 0  # prevent fast falling from platforms
-                    self.is_on_floor = True
+                   
             else:
-                self.is_jumping = False
+                self.is_jumping = False """
 
-        # Setting the actor's position
-        self.actor.setPos(self.position)
+    def on_collision_out(self, entry):
+        pass
+
+
