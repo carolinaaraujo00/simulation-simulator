@@ -10,6 +10,10 @@ hand_model_path = "egg-models/hands/fps-hands.gltf"
 
 office_model_path = "egg-models/office_space/office.gltf"
 
+office_room_model_path = "egg-models/office_space/office_room.gltf"
+
+lamp_model_path = "egg-models/office_space/lamp.gltf"
+
 key_map_3d = {
     "up" : False,
     "down" : False,
