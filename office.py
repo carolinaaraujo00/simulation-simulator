@@ -30,9 +30,9 @@ class ociffer(ShowBase):
 
         self.props = self.win.getProperties()
         self.screensizeX = self.props.getXSize() / 2
-
-        # self.cam.setPos(0, -10, 4) # X = left & right, Y = zoom, Z = Up & down.
-        # self.cam.setHpr(0, -15, 0) # Heading, pitch, roll.
+        
+        self.cam.setPos(6, 7, 4) # X = left & right, Y = zoom, Z = Up & down.
+        self.cam.setHpr(140, -20, 0) # Heading, pitch, roll.
 
         # load models
         self.load_office()
@@ -70,7 +70,7 @@ class ociffer(ShowBase):
         self.mousePosition(task)
 
         self.hands.setPos(self.cam, (0, 20, -10))
-        self.hands.setHpr(self.cam, (180, -40, 0))
+        self.hands.setHpr(self.cam, (180, -58, 0))
         # self.hands.setScale(self.cam, 1)
 
         return task.cont
