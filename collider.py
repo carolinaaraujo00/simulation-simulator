@@ -1,10 +1,10 @@
-from direct.actor.Actor import Actor
-from panda3d.core import CollisionBox, CollisionNode, BitMask32, Vec3
-import engine_2d
+from panda3d.core import CollisionBox, CollisionNode, BitMask32
+
+from engine_2d import Engine2D
 
 
 class Collider:
-    def __init__(self, engine_ref: engine_2d.Engine2D, entity_ref, name, offset, size):
+    def __init__(self, engine_ref: Engine2D, entity_ref, name, offset, size):
 
         self.name = name
         self.offset = offset

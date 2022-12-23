@@ -1,3 +1,5 @@
+import numpy
+
 from panda3d.core import CollisionTraverser, CollisionHandlerEvent, loadPrcFileData, CollisionNode
 from direct.showbase.ShowBase import ShowBase
 import simplepbr 
@@ -17,10 +19,10 @@ def last_string_from_node(node):
 class Engine2D(ShowBase):
     def __init__(self, debug):
         super().__init__()
-        #simplepbr.init()
+        simplepbr.init()
 
         # Consts
-        self.GRAVITY = -0.08
+        self.GRAVITY = -0.01
         self.ACCEL_MODIFIER = 0.5
         self.DEBUG = debug  # Can be used to debug collisions for example
 
@@ -33,7 +35,7 @@ class Engine2D(ShowBase):
 
         # Init setup
         self.set_background_color(0.1, 0.1, 0.2, 1)
-        self.cam.setPos(0, -65, 15)
+        self.cam.setPos(0, -30, 2)
         setup_ambient_light(self.render)
         #setup_point_light(self.render, (15, 0, 20)) 
 
@@ -62,6 +64,9 @@ class Engine2D(ShowBase):
         for actor in self.actors:
             actor.update()
 
-        self.cam.setX(self.player.position.x)
+        self.cam.setX(numpy.clip(self.player.pos.x, -100, 40))
+
+        #TODO: Polish z movement
+        self.cam.setZ(numpy.clip(self.player.pos.z + 1.5, -100, 100))
 
         return task.cont

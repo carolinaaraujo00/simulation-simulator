@@ -1,10 +1,10 @@
 from direct.actor.Actor import Actor
-from panda3d.core import CollisionBox, CollisionNode, BitMask32, Vec3
-import engine_2d
+
+from engine_2d import Engine2D 
 
 
 class Entity:
-    def __init__(self, incoming_engine_ref: engine_2d.Engine2D, pos, rot, scale, model_path, model_or_actor):
+    def __init__(self, incoming_engine_ref: Engine2D, pos, rot, scale, model_path, model_or_actor):
 
         self.engine_ref = incoming_engine_ref
         self.mesh = None
