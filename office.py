@@ -149,13 +149,6 @@ class ociffer(ShowBase):
 
         self.cam.setHpr((cam_rotation_h, cam_rotation_p, 0))
 
-        # if self.mouseWatcherNode.hasMouse():
-        #     self.mousex = self.mouseWatcherNode.getMouseX() 
-        #     self.mousey = self.mouseWatcherNode.getMouseY() 
-            
-        #     self.cam.setH(self.cam, -self.mousex)
-        #     self.cam.setP(self.cam, self.mousey)
-
         return task.cont
 
 
