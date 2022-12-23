@@ -96,15 +96,28 @@ class ociffer(ShowBase):
     def check_movement(self, task):
         cam_pos = self.cam.getPos()
 
-        if key_map_3d["left"]:
-            cam_pos.x -= self.speed * self.dt
-        if key_map_3d["right"]:
-            cam_pos.x += self.speed * self.dt
-        if key_map_3d["up"]:
-            cam_pos.y += self.speed * self.dt
-        if key_map_3d["down"]:
-            cam_pos.y -= self.speed * self.dt
+        # Converts camera rotation to a percentage of direction towards X and Y, then applies it
+        # Source: https://stackoverflow.com/questions/4550315/python-convert-degrees-to-change-in-x-and-change-in-y
+        speed = self.speed * self.dt
+        angle = math.radians(self.cam.getH())    # Remember to convert to radians!
+        
+        change = [speed * math.cos(angle), speed * math.sin(angle)]
+        # Debug
+        # print(f"change={change[0]:.2f}, {change[1]:.2f}")
 
+        if key_map_3d["left"]:
+            cam_pos.x -= change[0]
+            cam_pos.y -= change[1]
+        if key_map_3d["right"]:
+            cam_pos.x += change[0]
+            cam_pos.y += change[1]
+
+        if key_map_3d["up"]:
+            cam_pos.y += change[0]
+            cam_pos.x -= change[1]
+        if key_map_3d["down"]:
+            cam_pos.y -= change[0]
+            cam_pos.x += change[1]
 
         self.cam.setPos(cam_pos)
         return task.cont
@@ -120,7 +133,7 @@ class ociffer(ShowBase):
 
         cam_rotation_p = self.cam.getP()
         cam_rotation_h = self.cam.getH()
-        print(self.cam.getHpr())
+        # print(self.cam.getHpr())
         
         if mpos.getX() > 0.2: # and self.cam.getH() > -15:
             cam_rotation_h -= self.speed*10 * self.dt
@@ -135,6 +148,13 @@ class ociffer(ShowBase):
             cam_rotation_p -= self.speed*10 * self.dt
 
         self.cam.setHpr((cam_rotation_h, cam_rotation_p, 0))
+
+        # if self.mouseWatcherNode.hasMouse():
+        #     self.mousex = self.mouseWatcherNode.getMouseX() 
+        #     self.mousey = self.mouseWatcherNode.getMouseY() 
+            
+        #     self.cam.setH(self.cam, -self.mousex)
+        #     self.cam.setP(self.cam, self.mousey)
 
         return task.cont
 
