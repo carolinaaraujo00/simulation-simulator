@@ -40,8 +40,8 @@ class PlayerChar2D(Entity, DirectObject):
         self.accept("player_char_2d-into-pier", self.on_collision_enter)
         self.accept("player_char_2d-again-pier", self.on_collision_again)
         self.accept("player_char_2d-out-pier", self.on_collision_out)
-     
-        # Keyboard input events
+
+    def accept_input(self):
         self.engine_ref.accept("arrow_left", self.update_key_map, ["left", True])
         self.engine_ref.accept("arrow_left-up", self.update_key_map, ["left", False])
         self.engine_ref.accept("arrow_right", self.update_key_map, ["right", True])

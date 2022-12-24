@@ -13,7 +13,8 @@ if __name__ == "__main__":
     col_player = Collider(engine, player_char_2d, "player_char_2d", Vec3(0, 0, -10), Vec3(20, 40, 25))
     engine.player = player_char_2d
     engine.actors.append(player_char_2d)
-    
+
+
 
     posy = -15
     posz = -3
