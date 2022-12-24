@@ -36,7 +36,9 @@ class ociffer(ShowBase):
 
         # load models
         self.load_office()
+        self.load_office_room()
         self.load_hands()
+        self.setup_desk_lamp()
         # self.follow_camera()
 
     def follow_camera(self):
@@ -52,6 +54,26 @@ class ociffer(ShowBase):
 
         self.office_model.setScale(0.5,0.5,0.5)
         self.office_model.reparentTo(self.render)
+        print(self.office_model.getPos())
+
+    
+    def load_office_room(self):
+        self.office_room_model = self.loader.loadModel(office_room_model_path)
+
+        self.office_room_model.setScale(0.7,0.7,0.7)
+        self.office_room_model.reparentTo(self.render)
+        print(self.office_room_model.getPos())
+
+    def setup_desk_lamp(self):
+        self.desk_lamp = self.loader.loadModel(lamp_model_path)
+
+        self.desk_lamp.setScale(0.5,0.5,0.5)
+        self.desk_lamp.setPos(-1.7, -0.68, 3)
+        # self.desk_lamp.reparentTo(self.office_model)
+        setup_red_spotlight(self.render, (-1.5, -0.21, 3), (-1.7, -0.68, 0))
+        print(self.desk_lamp.getPos())
+
+
 
 
     def load_hands(self):
@@ -72,6 +94,7 @@ class ociffer(ShowBase):
         self.hands.setPos(self.cam, (0, 20, -10))
         self.hands.setHpr(self.cam, (180, -58, 0))
         # self.hands.setScale(self.cam, 1)
+        print("Cam=", self.cam.getPos())
 
         return task.cont
 
@@ -102,6 +125,7 @@ class ociffer(ShowBase):
         angle = math.radians(self.cam.getH())    # Remember to convert to radians!
         
         change = [speed * math.cos(angle), speed * math.sin(angle)]
+        
         # Debug
         # print(f"change={change[0]:.2f}, {change[1]:.2f}")
 
