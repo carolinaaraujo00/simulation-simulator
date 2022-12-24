@@ -4,6 +4,7 @@ from direct.interval.LerpInterval import LerpHprInterval
 from panda3d.core import loadPrcFileData
 from panda3d.core import *
 from light_setup import *
+from cockroach import *
 from common import *
 import simplepbr
 
@@ -39,6 +40,7 @@ class ociffer(ShowBase):
         self.load_office_room()
         self.load_hands()
         self.setup_desk_lamp()
+        self.setup_cockroach()
         # self.follow_camera()
 
     def follow_camera(self):
@@ -73,8 +75,8 @@ class ociffer(ShowBase):
         setup_red_spotlight(self.render, (-1.5, -0.21, 3), (-1.7, -0.68, 0))
         print(self.desk_lamp.getPos())
 
-
-
+    def setup_cockroach(self):
+        self.cockroach = Cockroach(self.office_model, Vec3(-4.87, 0.43, 3.4) )
 
     def load_hands(self):
         self.hands = self.loader.loadModel(hand_model_path)
@@ -94,7 +96,7 @@ class ociffer(ShowBase):
         self.hands.setPos(self.cam, (0, 20, -10))
         self.hands.setHpr(self.cam, (180, -58, 0))
         # self.hands.setScale(self.cam, 1)
-        print("Cam=", self.cam.getPos())
+        # print("Cam=", self.cam.getPos())
 
         return task.cont
 
@@ -114,6 +116,14 @@ class ociffer(ShowBase):
 
         self.accept("s", updateKeyMap, ["down", True])
         self.accept("s-up", updateKeyMap, ["down", False])
+
+        # Debug purposes
+
+        self.accept("x", updateKeyMap, ["elevate", True])
+        self.accept("x-up", updateKeyMap, ["elevate", False])
+
+        self.accept("z", updateKeyMap, ["lower", True])
+        self.accept("z-up", updateKeyMap, ["lower", False])
 
 
     def check_movement(self, task):
@@ -142,6 +152,12 @@ class ociffer(ShowBase):
         if key_map_3d["down"]:
             cam_pos.y -= change[0]
             cam_pos.x += change[1]
+
+        # Debug
+        if key_map_3d["elevate"]:
+            cam_pos.z += speed
+        if key_map_3d["lower"]:
+            cam_pos.z -= speed
 
         self.cam.setPos(cam_pos)
         return task.cont
