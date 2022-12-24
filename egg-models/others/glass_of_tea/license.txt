@@ -1,0 +1,11 @@
+Model Information:
+* title:	Glass of Tea
+* source:	https://sketchfab.com/3d-models/glass-of-tea-7669b27d4e634e7b9cd114d50c33af97
+* author:	Tiago Lopes (https://sketchfab.com/drobluda)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Glass of Tea" (https://sketchfab.com/3d-models/glass-of-tea-7669b27d4e634e7b9cd114d50c33af97) by Tiago Lopes (https://sketchfab.com/drobluda) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
