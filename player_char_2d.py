@@ -40,7 +40,9 @@ class PlayerChar2D(Entity, DirectObject):
         # plight.setAttenuation((1.4, 0, 0))
         self.engine_ref.render.setLight(plnp)  """
 
+        # Temp stuff
         self.accept_input()
+        #self.mesh.setRenderModeWireframe()
 
 
         # Collision Events
@@ -95,8 +97,8 @@ class PlayerChar2D(Entity, DirectObject):
         self.mesh.setPos(self.pos)
 
         #TODO: Polish cam z movement
-        self.engine_ref.cam.setX(numpy.clip(self.pos.x, -100, 40))
-        self.engine_ref.cam.setZ(numpy.clip(self.pos.z + 1.5, -40, 40))
+        #self.engine_ref.cam.setX(numpy.clip(self.pos.x, -100, 40))
+        #self.engine_ref.cam.setZ(numpy.clip(self.pos.z + 1.5, -40, 40))
 
 
     # ::::::::::::::::::::::::::::::::Collision::::::::::::::::::::::::::::::::::::::::::::::::::::::::

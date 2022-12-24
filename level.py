@@ -1,3 +1,4 @@
+from panda3d.core import NodePath
 from engine_2d import Engine2D 
 
 class Level:
@@ -9,7 +10,21 @@ class Level:
         self.rot = rot
         self.scale = scale
 
+        self.lvl_node_path = NodePath("lvl_np")
+        self.lvl_node_path.reparentTo(self.engine_ref.render)
+
+        self.lvl_node_path.setPos(self.pos)
+        self.lvl_node_path.setHpr(self.rot)
+        self.lvl_node_path.setScale(self.scale)
+
         self.actors = []
+
+    def add_actor(self, new_actor):
+        self.actors.append(new_actor)
+        self.lvl_node_path.attachNewNode(new_actor.mesh.node())
+
+    def toggle_background(self, toggle):
+        pass
 
     def update(self):
         for actor in self.actors:

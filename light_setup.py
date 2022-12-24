@@ -11,13 +11,13 @@ def setup_ambient_light(render):
 def setup_point_light(render, pos):
     # Point light
     plight = PointLight("plight")
-    # plight.setShadowCaster(True, 1280, 1280)
+    #plight.setShadowCaster(True, 1280, 1280)
     
-    plight.setColor((1, 50, 100, 1))
+    plight.setColor((1, 1, 1, 1))
     plnp = render.attachNewNode(plight)
     plnp.setPos(pos[0], pos[1], pos[2])
 
-    # plight.setAttenuation((1.4, 0, 0))
+    #plight.setAttenuation((1.4, 0, 0))
     render.setLight(plnp) 
 
 

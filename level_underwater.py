@@ -13,7 +13,7 @@ class LevelUnderwater(Level):
         
         # Player
         self.player_char_2d = PlayerChar2D(self.engine_ref, Vec3(-100, -15, 5), Vec3(-90, 0, 0), Vec3(0.01, 0.01, 0.01))
-        self.actors.append(self.player_char_2d)
+        self.add_actor(self.player_char_2d)
 
 
         # Setup plats
@@ -46,11 +46,23 @@ class LevelUnderwater(Level):
         # Create plats
         for pos in plat_positions:
             self.platforms.append(PlatformDefault(self.engine_ref, pos, rot, scale))
+            self.add_actor(self.platforms[-1])
 
         # Background
         self.fossil = Entity(self.engine_ref, Vec3(0, 100, 0), Vec3(0, 0, 0), Vec3(0.5, 0.5, 0.5), "egg-models/underwater_environment/fossil.gltf", True)
+        self.add_actor(self.fossil)
         self.background_albedo = Entity(self.engine_ref, Vec3(-90, 350, -30), Vec3(-90, 0, 0), Vec3(2, 2, 2), "egg-models/background_sea.gltf", True)
+        self.add_actor(self.background_albedo)
         self.background_alpha = Entity(self.engine_ref, Vec3(0, 200, 50), Vec3(-90, 0, 0), Vec3(1.5, 1.5, 1.5), "egg-models/background_sea_shading.gltf", True)
+        self.add_actor(self.background_alpha)
+
+        #self.toggle_background(False)
+
+    def toggle_background(self, toggle):
+        if toggle:
+            self.fossil.toggle_visibility(True)
+        else:
+            self.fossil.toggle_visibility(False)
 
     def update(self):
         super().update()

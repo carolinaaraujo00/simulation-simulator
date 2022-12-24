@@ -14,6 +14,7 @@ class Entity:
         self.scale = scale
         self.model_actor = model_or_actor
         self.mesh = None
+        
 
         # Setting the actor
         if self.model_actor:
@@ -21,12 +22,23 @@ class Entity:
         else:
             self.mesh = Actor(model_path)
 
-        self.mesh.reparentTo(self.engine_ref.render)
         self.mesh.setPos(self.pos)
-        self.mesh.setH(self.mesh, self.rot.x)
-        self.mesh.setP(self.mesh, self.rot.y)
-        self.mesh.setR(self.mesh, self.rot.z)
+        self.mesh.setHpr(self.rot)
         self.mesh.setScale(self.scale)
+
+        #self.mesh.setTexture(self.engine_ref.alt_txtr_stage, self.engine_ref.blank_txtr)
+
+    def toggle_visibility(self, toggle):
+        if toggle:
+            self.mesh.show()
+        else:
+            self.mesh.hide()
+
+    def toggle_texture(self, toggle):
+        if toggle:
+            self.mesh.clearTexture(self.engine_ref.alt_txtr_stage)
+        else:
+            self.mesh.setTexture(self.engine_ref.alt_txtr_stage, self.engine_ref.blank_txtr)
 
     def update(self):
         pass

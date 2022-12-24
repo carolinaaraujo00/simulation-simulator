@@ -9,6 +9,6 @@ if __name__ == "__main__":
 
     # Set underwater level
     first_lvl = LevelUnderwater(engine, Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(1, 1, 1))
-    engine.levels.append(first_lvl)
+    engine.add_level(first_lvl)
 
     engine.run()
