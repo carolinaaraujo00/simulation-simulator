@@ -1,13 +1,16 @@
+import numpy
+
 from direct.showbase.DirectObject import DirectObject
 from panda3d.core import Vec3
 
 from entity import Entity
-from engine_2d import*
+from engine_2d import last_string_from_node
+from collider import Collider
 
 # Needs to inherit from DirectObject to receive collision notifications
 class PlayerChar2D(Entity, DirectObject):
-    def __init__(self, incoming_engine_ref, pos, rot, scale, model_path, model_or_actor):
-        super().__init__(incoming_engine_ref, pos, rot, scale, model_path, model_or_actor)
+    def __init__(self, incoming_engine_ref, pos, rot, scale):
+        super().__init__(incoming_engine_ref, pos, rot, scale, "egg-models/angler_fish/angler_fish.gltf", True)
         
         self.SPEED = 1.2
         self.JUMP_FORCE = 0.2
@@ -19,6 +22,8 @@ class PlayerChar2D(Entity, DirectObject):
         self.move_direction_cache = "right"
         self.is_jumping = False
         self.is_on_floor = True
+
+        self.collider = Collider(self.engine_ref, self, "player_char_2d", Vec3(0, 0, -10), Vec3(20, 40, 25))
 
         self.key_map = {
             "left": False,
@@ -35,6 +40,8 @@ class PlayerChar2D(Entity, DirectObject):
         # plight.setAttenuation((1.4, 0, 0))
         self.engine_ref.render.setLight(plnp)  """
 
+        self.accept_input()
+
 
         # Collision Events
         self.accept("player_char_2d-into-pier", self.on_collision_enter)
@@ -42,6 +49,7 @@ class PlayerChar2D(Entity, DirectObject):
         self.accept("player_char_2d-out-pier", self.on_collision_out)
 
     def accept_input(self):
+        # Keyboard events
         self.engine_ref.accept("arrow_left", self.update_key_map, ["left", True])
         self.engine_ref.accept("arrow_left-up", self.update_key_map, ["left", False])
         self.engine_ref.accept("arrow_right", self.update_key_map, ["right", True])
@@ -85,6 +93,10 @@ class PlayerChar2D(Entity, DirectObject):
 
         # Setting the actor's position
         self.mesh.setPos(self.pos)
+
+        #TODO: Polish cam z movement
+        self.engine_ref.cam.setX(numpy.clip(self.pos.x, -100, 40))
+        self.engine_ref.cam.setZ(numpy.clip(self.pos.z + 1.5, -40, 40))
 
 
     # ::::::::::::::::::::::::::::::::Collision::::::::::::::::::::::::::::::::::::::::::::::::::::::::

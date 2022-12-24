@@ -1,5 +1,3 @@
-import numpy
-
 from panda3d.core import CollisionTraverser, CollisionHandlerEvent, loadPrcFileData, CollisionNode
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.Transitions import Transitions
@@ -12,11 +10,11 @@ from light_setup import *
 
 loadPrcFileData("", configVars)
 
+# Used to parse collision by any actor that needs it
 def last_string_from_node(node):
     temp_string = str(node)
     index = temp_string.rfind("/") + 1
     return temp_string[index:]
-
 
 class Engine2D(ShowBase):
     def __init__(self, debug):
@@ -30,8 +28,7 @@ class Engine2D(ShowBase):
 
         # Vars
         self.dt_time = 0
-        self.player = None
-        self.actors = []
+        self.levels = []
         self.cTrav = None
         self.colHandlerEvent = None
         self.fade_trans = Transitions(self.loader)
@@ -58,14 +55,13 @@ class Engine2D(ShowBase):
         self.colHandlerEvent.addAgainPattern('%fn-again-%in')
         self.colHandlerEvent.addOutPattern('%fn-out-%in')
 
-
-        # Adding the update aka MainLoop to the Task manager
+        # Tasks setup
         self.taskMgr.add(self.update, "update")
         self.taskMgr.doMethodLater(self.time_to_start_fade, self.fade_screen_in, "custom_fade")
 
     def fade_screen_in(self, task):
         self.fade_trans.fadeIn(self.fade_time)
-        self.player.accept_input()
+        #self.player.accept_input()
         return task.done
 
     # Called every frame
@@ -74,12 +70,7 @@ class Engine2D(ShowBase):
         self.dt_time = globalClock.getDt()     
 
         # Logic Loop
-        for actor in self.actors:
-            actor.update()
-
-        self.cam.setX(numpy.clip(self.player.pos.x, -100, 40))
-
-        #TODO: Polish z movement
-        self.cam.setZ(numpy.clip(self.player.pos.z + 1.5, -100, 100))
+        for level in self.levels:
+            level.update()
 
         return task.cont
