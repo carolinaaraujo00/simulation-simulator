@@ -1,5 +1,5 @@
 from direct.actor.Actor import Actor
-from panda3d.core import CollisionBox, CollisionNode, BitMask32, Vec3, Point3
+from panda3d.core import Vec3, Point3
 from direct.interval.IntervalGlobal import Sequence
 
 from common import *
@@ -15,14 +15,9 @@ class Cockroach:
         self.hpr = Point3(0, 0, 0)
 
         self.scale = Vec3(0.25, 0.25, 0.25)
-        # self.scale = Vec3(0.5, 0.5, 0.5)
-
-        # Movement variables
-        self.velocity = Vec3(0, 0, 0)
 
         # Setting the actor
         self.actor = Actor(cockroach_model_path, {"Walk": cockroach_model_path})
-        # self.actor.find("**/Object_4").node().setIntoCollideMask(BitMask32.bit(2))
         self.actor.reparentTo(scene)
         self.actor.setPos(self.position)
         self.actor.setScale(self.scale)
@@ -32,16 +27,14 @@ class Cockroach:
 
 
     def setup_animation(self):
-        # seconds, final position, start position
         print("Animation")
         print("self.position", self.position)
         intervals = []
 
-        # start                                     Vec3(-4.6, 0.80, 3.4)
+        # start Vec3(-4.6, 0.80, 3.4)
         intervals.append(self.define_new_interval(2, Vec3(-3.6, -2.35, 3.4)))
         intervals.append(self.define_new_hpr_interval(0.5, Point3(45, 0, 0) ))
         intervals.append(self.define_new_interval(0.1, Vec3(-3.6, -2.35, 3.5)))
-
 
         # starts climbing
         intervals.append(self.define_new_hpr_interval(0.1, Point3(45, -90, 0) ))
@@ -79,9 +72,10 @@ class Cockroach:
     def define_new_interval(self, duration, new_position):
         self.previous_position = self.position
         self.position = new_position
+        # seconds, final position, start position
         posInterval = self.actor.posInterval(duration, self.position, startPos=self.previous_position)
         # posInterval = self.actor.posInterval(duration, self.position, startPos=self.position)
-        print("self.position", self.position)
+        # print("self.position", self.position)
         return posInterval
 
 
