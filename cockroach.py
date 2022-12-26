@@ -7,9 +7,9 @@ from common import *
 class Cockroach:
     def __init__(self, scene, location):
         self.actor = None   
-        self.position = location  # This is also the initial position of the actor
-        self.previous_position = location  # This is also the initial position of the actor
-        self.start_position = location  # This is also the initial position of the actor
+        self.position = location  # This is the initial position of the actor
+        self.previous_position = location  
+        self.start_position = location  
         
         self.previous_hpr = Point3(0, 0, 0)
         self.hpr = Point3(0, 0, 0)
@@ -61,7 +61,7 @@ class Cockroach:
         intervals.append(self.define_new_interval(3, Vec3(-3.65,-4.5, 6.1)))
         intervals.append(self.define_new_hpr_interval(0,Point3(0, 0, 0) ))
 
-        self.animation_sequence = Sequence(name="animation_sequence")
+        self.animation_sequence = Sequence(name="animation_cockroach")
         
         for x in intervals:
             self.animation_sequence.append(x)
