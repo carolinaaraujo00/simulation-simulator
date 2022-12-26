@@ -21,25 +21,21 @@ def setup_point_light(render, pos):
     #plight.setAttenuation((1.4, 0, 0))
     render.setLight(plnp) 
 
-def setup_red_spotlight(render, pos, object):
+def setup_red_spotlight(render, model, position):
     # Point light
-    slight = Spotlight("slight")
+    plight = PointLight("plight")
+    plight.setAttenuation((1, 0, 0)) # constant, linear and quadratic
     # plight.setShadowCaster(True, 1280, 1280)
-    
-    slight.setColor((1, 0, 0, 1))
-    lens = PerspectiveLens()
-    # print("FocalLength = ", lens.getFocalLength())
-    # lens.setFocalLength(10)
-    # print("new FocalLength = ", lens.getFocalLength())
-    # print("FOV = ", lens.getFov())
-    # lens.setFov(10)
-    # print("new FOV = ", lens.getFov())
-    slight.setLens(lens)
-    slnp = render.attachNewNode(slight)
-    slnp.setPos(pos[0], pos[1], pos[2])
-    slnp.lookAt(object)
 
-    # plight.setAttenuation((1.4, 0, 0))
-    render.setLight(slnp)
+    lens = PerspectiveLens()
+    plight.setLens(lens)
+
+    plight.setColor((0.83137, 0.42353, 0.00784, 1))
+
+    plnp = model.attachNewNode(plight)
+    plnp.setPos(position[0], position[1], position[2])
+    plnp.lookAt(position[0], position[1], 0)
+
+    render.setLight(plnp)
 
 
