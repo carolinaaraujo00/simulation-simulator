@@ -1,4 +1,5 @@
-from panda3d.core import PointLight, AmbientLight
+from panda3d.core import PointLight, AmbientLight, Spotlight
+from panda3d.core import PerspectiveLens
 
 def setup_ambient_light(render):
     # it needs no position because..... it's ambient
@@ -19,5 +20,26 @@ def setup_point_light(render, pos):
 
     #plight.setAttenuation((1.4, 0, 0))
     render.setLight(plnp) 
+
+def setup_red_spotlight(render, pos, object):
+    # Point light
+    slight = Spotlight("slight")
+    # plight.setShadowCaster(True, 1280, 1280)
+    
+    slight.setColor((1, 0, 0, 1))
+    lens = PerspectiveLens()
+    # print("FocalLength = ", lens.getFocalLength())
+    # lens.setFocalLength(10)
+    # print("new FocalLength = ", lens.getFocalLength())
+    # print("FOV = ", lens.getFov())
+    # lens.setFov(10)
+    # print("new FOV = ", lens.getFov())
+    slight.setLens(lens)
+    slnp = render.attachNewNode(slight)
+    slnp.setPos(pos[0], pos[1], pos[2])
+    slnp.lookAt(object)
+
+    # plight.setAttenuation((1.4, 0, 0))
+    render.setLight(slnp)
 
 

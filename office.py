@@ -4,6 +4,8 @@ from direct.interval.LerpInterval import LerpHprInterval
 from panda3d.core import loadPrcFileData
 from panda3d.core import *
 from light_setup import *
+from cockroach import *
+from printer import *
 from common import *
 import simplepbr
 
@@ -36,27 +38,46 @@ class ociffer(ShowBase):
 
         # load models
         self.load_office()
+        self.load_office_room()
         self.load_hands()
-        # self.follow_camera()
-
-    def follow_camera(self):
-        self.camera_dummy_node = self.render.attachNewNode("camera_dummy_node")
-        self.camera_dummy_node.setPos( 0, 0, 0)
-        self.camera_dummy_node.setHpr(180, 0, 0)
-
-        self.cam.reparentTo(self.camera_dummy_node)
+        self.setup_desk_lamp()
+        self.setup_cockroach()
+        self.setup_printer()
 
 
     def load_office(self):
         self.office_model = self.loader.loadModel(office_model_path)
-
         self.office_model.setScale(0.5,0.5,0.5)
         self.office_model.reparentTo(self.render)
+        print(self.office_model.getPos())
 
+    
+    def load_office_room(self):
+        self.office_room_model = self.loader.loadModel(office_room_model_path)
+        self.office_room_model.setScale(0.7,0.7,0.7)
+        self.office_room_model.reparentTo(self.render)
+        print(self.office_room_model.getPos())
+
+    def setup_desk_lamp(self):
+        self.desk_lamp = self.loader.loadModel(lamp_model_path)
+        self.desk_lamp.setScale(0.5,0.5,0.5)
+        self.desk_lamp.setPos(-1.7, -0.68, 3)
+        setup_red_spotlight(self.render, (-1.5, -0.21, 3), (-1.7, -0.68, 0))
+        print(self.desk_lamp.getPos())
+
+    def setup_cockroach(self):
+        self.cockroach = Cockroach(self.office_model, Vec3(-4.87, 0.43, 3.4) )
+
+    def setup_printer(self):
+        printer_location = Vec3(2.5, 2.43, 3.777)
+        # TODO fix
+        # self.printer = self.loader.loadModel(printer_model_path)
+        # self.printer.setScale(0.5,0.5,0.5)
+        # self.printer.setPos(printer_location)
+        # self.printer_paper = Printer(self.office_model, printer_location )
 
     def load_hands(self):
         self.hands = self.loader.loadModel(hand_model_path)
-        
         self.hands.setScale(self.cam, 2)
         self.hands.reparentTo(self.render)
 
@@ -72,6 +93,7 @@ class ociffer(ShowBase):
         self.hands.setPos(self.cam, (0, 20, -10))
         self.hands.setHpr(self.cam, (180, -58, 0))
         # self.hands.setScale(self.cam, 1)
+        # print("Cam=", self.cam.getPos())
 
         return task.cont
 
@@ -92,6 +114,14 @@ class ociffer(ShowBase):
         self.accept("s", updateKeyMap, ["down", True])
         self.accept("s-up", updateKeyMap, ["down", False])
 
+        # Debug purposes
+
+        self.accept("x", updateKeyMap, ["elevate", True])
+        self.accept("x-up", updateKeyMap, ["elevate", False])
+
+        self.accept("z", updateKeyMap, ["lower", True])
+        self.accept("z-up", updateKeyMap, ["lower", False])
+
 
     def check_movement(self, task):
         cam_pos = self.cam.getPos()
@@ -102,6 +132,7 @@ class ociffer(ShowBase):
         angle = math.radians(self.cam.getH())    # Remember to convert to radians!
         
         change = [speed * math.cos(angle), speed * math.sin(angle)]
+        
         # Debug
         # print(f"change={change[0]:.2f}, {change[1]:.2f}")
 
@@ -118,6 +149,12 @@ class ociffer(ShowBase):
         if key_map_3d["down"]:
             cam_pos.y -= change[0]
             cam_pos.x += change[1]
+
+        # Debug
+        if key_map_3d["elevate"]:
+            cam_pos.z += speed
+        if key_map_3d["lower"]:
+            cam_pos.z -= speed
 
         self.cam.setPos(cam_pos)
         return task.cont
