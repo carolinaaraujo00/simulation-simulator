@@ -1,0 +1,4 @@
+direct
+panda3d
+panda3d_simplepbr
+panda3d_gltf
