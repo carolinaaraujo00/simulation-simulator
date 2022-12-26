@@ -6,6 +6,7 @@ from player_char_2d import*
 from entity import Entity
 from platform_default import PlatformDefault
 from shading_orb import ShadingOrb
+from sound_player import *
 
 class LevelUnderwater(Level):
     def __init__(self, incoming_engine_ref: Engine2D, pos, rot, scale):
@@ -108,8 +109,12 @@ class LevelUnderwater(Level):
             Vec3(55, self.y_pos, 9.8)
         ]
 
+        # Add sounds
+        self.sound_player = SoundPlayer(self.engine_ref)
+        self.sound_player.init_level1_sounds()
+
         for index, pos in enumerate(orb_positions):
-            self.orbs.append(ShadingOrb(self.engine_ref, orb_positions[index], Vec3(45, 45, 45), Vec3(2, 2, 2), True, index + 2))
+            self.orbs.append(ShadingOrb(self.engine_ref, self.sound_player, orb_positions[index], Vec3(45, 45, 45), Vec3(2, 2, 2), True, index + 2))
             self.add_actor(self.orbs[-1])
 
         # Background

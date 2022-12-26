@@ -6,6 +6,7 @@ from panda3d.core import *
 from light_setup import *
 from cockroach import *
 from printer import *
+from sound_player import *
 from common import *
 import simplepbr
 
@@ -28,6 +29,9 @@ class ociffer(ShowBase):
 
         # self.cam.setPos(0, 0, 3)
 
+        self.sound_player = SoundPlayer(self)
+        self.sound_player.init_level2_sounds()
+
         self.taskMgr.add(self.update, "update")
 
         self.props = self.win.getProperties()
@@ -43,6 +47,7 @@ class ociffer(ShowBase):
         self.setup_desk_lamp()
         self.setup_cockroach()
         self.setup_printer()
+        self.sound_player.play_level2_sounds()
 
 
     def load_office(self):

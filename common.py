@@ -20,6 +20,14 @@ paper_model_path = "egg-models/others/deskjet_printer/paper_anim_v2.gltf"
 
 lamp_model_path = "egg-models/office_space/lamp.gltf"
 
+# Sounds
+underwater_sound_path = "sounds/level1/Underwater.ogg"
+power_up_sound_path = "sounds/level1/power_up.wav"
+
+intro_level2_sound_path = "sounds/level2/intro.ogg"
+music_level2_sound_path = "sounds/level2/music.ogg"
+
+
 key_map_3d = {
     "up" : False,
     "down" : False,
