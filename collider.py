@@ -9,12 +9,13 @@ class Collider:
         self.name = name
         self.offset = offset
         self.size = size
+        self.collider = None
 
         collider_node = CollisionNode(self.name)
         collider_node.setFromCollideMask(BitMask32.bit(1))
         collider_node.addSolid(CollisionBox(offset, size.x, size.y, size.z))
-        collider = entity_ref.mesh.attachNewNode(collider_node)
-        engine_ref.cTrav.addCollider(collider, engine_ref.colHandlerEvent)
+        self.collider = entity_ref.mesh.attachNewNode(collider_node)
+        engine_ref.cTrav.addCollider(self.collider, engine_ref.colHandlerEvent)
         if engine_ref.DEBUG:
-            collider.show()
+            self.collider.show()
    

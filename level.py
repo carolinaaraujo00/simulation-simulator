@@ -18,6 +18,7 @@ class Level:
         self.lvl_node_path.setScale(self.scale)
 
         self.actors = []
+        self.player = None
 
     def add_actor(self, new_actor):
         self.actors.append(new_actor)

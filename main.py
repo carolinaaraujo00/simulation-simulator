@@ -5,7 +5,7 @@ from level_underwater import LevelUnderwater
 
 
 if __name__ == "__main__":
-    engine = Engine2D(True)
+    engine = Engine2D(False)
 
     # Set underwater level
     first_lvl = LevelUnderwater(engine, Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(1, 1, 1))

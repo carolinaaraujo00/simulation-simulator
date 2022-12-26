@@ -13,7 +13,7 @@ def setup_point_light(render, pos):
     plight = PointLight("plight")
     #plight.setShadowCaster(True, 1280, 1280)
     
-    plight.setColor((1, 1, 1, 1))
+    plight.setColor((0.1, 0.5, 0.5, 1))
     plnp = render.attachNewNode(plight)
     plnp.setPos(pos[0], pos[1], pos[2])
 

@@ -1,5 +1,3 @@
-import numpy
-
 from direct.showbase.DirectObject import DirectObject
 from panda3d.core import Vec3
 
@@ -9,21 +7,25 @@ from collider import Collider
 
 # Needs to inherit from DirectObject to receive collision notifications
 class PlayerChar2D(Entity, DirectObject):
-    def __init__(self, incoming_engine_ref, pos, rot, scale):
-        super().__init__(incoming_engine_ref, pos, rot, scale, "egg-models/angler_fish/angler_fish.gltf", True)
+    def __init__(self, incoming_engine_ref, pos, rot, scale, spcl_shading):
+        super().__init__(incoming_engine_ref, pos, rot, scale, "egg-models/angler_fish/angler_fish.gltf", False, spcl_shading)
         
-        self.SPEED = 1.2
-        self.JUMP_FORCE = 0.2
+        self.SPEED = 0.7
+        self.JUMP_FORCE = 10
         self.FRICTION = -0.12
+
+        self.beggining_pos_x = self.pos.x
+        self.beggining_pos_z = self.pos.z
 
         self.velocity = Vec3(0, 0, 0)
         self.acceleration = Vec3(0, 0, 0)
         self.move_direction = "right"
         self.move_direction_cache = "right"
-        self.is_jumping = False
         self.is_on_floor = True
+        self.floor_offset = 0.5
+        self.can_move = True
 
-        self.collider = Collider(self.engine_ref, self, "player_char_2d", Vec3(0, 0, -10), Vec3(20, 40, 25))
+        self.collider = Collider(self.engine_ref, self, "player_char_2d", Vec3(0, 0, -30), Vec3(20, 40, 25))
 
         self.key_map = {
             "left": False,
@@ -40,15 +42,19 @@ class PlayerChar2D(Entity, DirectObject):
         # plight.setAttenuation((1.4, 0, 0))
         self.engine_ref.render.setLight(plnp)  """
 
-        # Temp stuff
         self.accept_input()
-        #self.mesh.setRenderModeWireframe()
-
 
         # Collision Events
         self.accept("player_char_2d-into-pier", self.on_collision_enter)
         self.accept("player_char_2d-again-pier", self.on_collision_again)
         self.accept("player_char_2d-out-pier", self.on_collision_out)
+
+    def disable_input(self):
+        self.update_key_map("left", False)
+        self.update_key_map("right", False)
+        self.velocity = Vec3(0, 0, 0)
+        self.acceleration = Vec3(0, 0, 0)
+        self.can_move = False
 
     def accept_input(self):
         # Keyboard events
@@ -59,16 +65,22 @@ class PlayerChar2D(Entity, DirectObject):
         self.engine_ref.accept("arrow_up", self.jump)
 
     def update_key_map(self, control_name, state):
-        # This function is called when the left or right keys are pressed or released. It updates the key_map dict.
-        self.key_map[control_name] = state
+        if self.can_move:
+            self.key_map[control_name] = state
 
     def turn(self):
         self.mesh.setH(self.mesh, 180)
 
     def jump(self):
-        if self.is_on_floor:
+        if self.is_on_floor and self.can_move:
             self.is_on_floor = False
             self.velocity.z = self.JUMP_FORCE
+
+    def set_pos_on_collision(self, entry):
+        if self.velocity.z < 0:
+            self.velocity.z = 0
+            self.pos.z = entry.getIntoNodePath().getPos(self.engine_ref.render).z + self.floor_offset
+            self.mesh.setPos(self.pos)
 
     def update(self):
         super().update()
@@ -79,10 +91,10 @@ class PlayerChar2D(Entity, DirectObject):
         # Movement input
         self.move_direction_cache = self.move_direction
         if self.key_map["right"]:  # if right is True
-            self.acceleration.x = self.SPEED * self.engine_ref.dt_time
+            self.acceleration.x = self.SPEED
             self.move_direction = "right"
         if self.key_map["left"]:  # if left is True
-            self.acceleration.x = -self.SPEED * self.engine_ref.dt_time
+            self.acceleration.x = -self.SPEED
             self.move_direction = "left"
 
         if self.move_direction != self.move_direction_cache:
@@ -91,38 +103,35 @@ class PlayerChar2D(Entity, DirectObject):
         # Calculating the position vector based on the velocity and the acceleration vectors
         self.acceleration.x += self.velocity.x * self.FRICTION  # Only add Friction to horizontal movement
         self.velocity += self.acceleration
-        self.pos += self.velocity + (self.acceleration * self.engine_ref.ACCEL_MODIFIER)
+        self.pos += (self.velocity + (self.acceleration * self.engine_ref.ACCEL_MODIFIER))* self.engine_ref.dt_time
+
 
         # Setting the actor's position
         self.mesh.setPos(self.pos)
 
-        #TODO: Polish cam z movement
-        #self.engine_ref.cam.setX(numpy.clip(self.pos.x, -100, 40))
-        #self.engine_ref.cam.setZ(numpy.clip(self.pos.z + 1.5, -40, 40))
+        # Setting cam based on player
+        self.engine_ref.set_cam_pos(self.pos)
+
+        if self.pos.z < self.engine_ref.cam_z_limits[0]:
+            self.pos.x = self.beggining_pos_x
+            self.pos.z = self.beggining_pos_z
+            
+            self.mesh.setPos(self.pos)
 
 
     # ::::::::::::::::::::::::::::::::Collision::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
     def on_collision_enter(self, entry):
-        self.is_on_floor = True
-
+        if last_string_from_node(entry.getIntoNodePath()) == "pier":
+            self.is_on_floor = True
+            self.set_pos_on_collision(entry)
+        
     def on_collision_again(self, entry):
         if last_string_from_node(entry.getIntoNodePath()) == "pier":
-
-            self.velocity.z = 0
-            self.pos.z = entry.getIntoNodePath().getPos(self.engine_ref.render).z + 3.3
-            self.mesh.setPos(self.pos)
-
-            """             if self.velocity.z < 0:  # prevent snapping to the top of the platforms
-                if not self.is_jumping:
-                    # TODO: find a standardized way to figure the offset for each object.
-                    #  The value that is being added is hardcoded.
-                   
-            else:
-                self.is_jumping = False """
+            self.is_on_floor = True
+            self.set_pos_on_collision(entry)
 
     def on_collision_out(self, entry):
-        pass
-
-
+        if last_string_from_node(entry.getIntoNodePath()) == "pier":
+            self.is_on_floor = False

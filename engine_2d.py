@@ -1,3 +1,5 @@
+import numpy
+
 from panda3d.core import CollisionTraverser, CollisionHandlerEvent, loadPrcFileData, TextureStage
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.Transitions import Transitions
@@ -22,9 +24,12 @@ class Engine2D(ShowBase):
         simplepbr.init()
 
         # Consts
-        self.GRAVITY = -0.01
+        self.GRAVITY = -0.5
         self.ACCEL_MODIFIER = 0.5
         self.DEBUG = debug  # Can be used to debug collisions for example
+        self.cam_x_limits = [-95, 50]
+        self.cam_z_limits = [-30, 30]
+        self.cam_z_offset = 1.5
 
         # Vars
         self.dt_time = 0
@@ -52,25 +57,30 @@ class Engine2D(ShowBase):
 
         # Setting up collision vars
         self.cTrav = CollisionTraverser()  # VAR NEEDS TO HAVE THIS NAME. PANDA3D SHENANIGANS...
-        if self.DEBUG:
-            self.cTrav.showCollisions(self.render)
-
         self.colHandlerEvent = CollisionHandlerEvent()
         self.colHandlerEvent.addInPattern('%fn-into-%in')
         self.colHandlerEvent.addAgainPattern('%fn-again-%in')
         self.colHandlerEvent.addOutPattern('%fn-out-%in')
 
-        # Shading setup
-        #self.wireframe_on()
+        if self.DEBUG:
+            self.cTrav.showCollisions(self.render)
 
-        self.accept("1", self.change_shading, [1])
-        self.accept("2", self.change_shading, [2])
-        self.accept("3", self.change_shading, [3])
-        self.accept("4", self.change_shading, [4])
+            self.accept("1", self.change_shading, [1])
+            self.accept("2", self.change_shading, [2])
+            self.accept("3", self.change_shading, [3])
+            self.accept("4", self.change_shading, [4])
+            self.accept("5", self.change_shading, [5])
+        else:
+            self.disable_mouse()
+        
 
         # Tasks setup
         self.taskMgr.add(self.update, "update")
         self.taskMgr.doMethodLater(self.time_to_start_fade, self.fade_screen_in, "custom_fade")
+
+    def set_cam_pos(self, new_pos):
+        self.cam.setX(numpy.clip(new_pos.x, self.cam_x_limits[0], self.cam_x_limits[1]))
+        self.cam.setZ(numpy.clip(new_pos.z + self.cam_z_offset, self.cam_z_limits[0], self.cam_z_limits[1]))
 
     def add_level(self, new_level):
         self.levels.append(new_level)
@@ -79,24 +89,37 @@ class Engine2D(ShowBase):
     def change_shading(self, index):
         match index:
             case 1:
-                self.wireframe_on()
+                for actor in self.current_level.actors:
+                    actor.toggle_wireframe(True)
+
                 self.current_level.toggle_background(False)
             case 2:
-                self.wireframe_off()
-                self.current_level.toggle_background(False)
+                for actor in self.current_level.actors:
+                    actor.toggle_wireframe(False)
+
                 setup_ambient_light(self.render)
             case 3:
+                for actor in self.current_level.actors:
+                    actor.toggle_wireframe(False)
+
                 self.current_level.toggle_background(True)
+
                 setup_point_light(self.render, (-50, 0, 20)) 
             case 4:
                 for actor in self.current_level.actors:
+                    actor.toggle_wireframe(False)
                     actor.toggle_texture(True)
+                
+                self.current_level.toggle_background(True)
+            case 5:
+                print("Transition to office here!")
+                self.current_level.player.disable_input()
+
             case _:
                 print('Command not recognized')
 
     def fade_screen_in(self, task):
         self.fade_trans.fadeIn(self.fade_time)
-        #self.player.accept_input()
         return task.done
 
     # Called every frame
