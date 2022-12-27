@@ -45,6 +45,7 @@ class ociffer(ShowBase):
         
         self.cam.setPos(6, 7, 6) # X = left & right, Y = zoom, Z = Up & down.
         self.cam.setHpr(140, -20, 0) # Heading, pitch, roll.
+        self.mouse_sens = 2.5
 
         # load models
         self.setup_office()
@@ -118,7 +119,7 @@ class ociffer(ShowBase):
 
         self.check_movement(task)
         self.mousePosition(task)
-
+        
         self.hand.setPos(self.cam, (0.8, 5, -1.3))
         self.hand.setHpr(self.cam, (200, -45, 0))
         self.hand.setScale(self.cam, 0.2)
@@ -185,27 +186,23 @@ class ociffer(ShowBase):
     def mousePosition(self, task):
         if not self.mouseWatcherNode.hasMouse():
             return task.cont
-        
+
         # get the relative mouse position, 
         # its always between 1 and -1
-        mouse_pos = self.mouseWatcherNode.getMouse()
+        mouse_pos = self.win.getPointer(0)
 
-        cam_rotation_p = self.cam.getP()
-        cam_rotation_h = self.cam.getH()
-        
+        win_x = self.win.getXSize() 
+        win_y = self.win.getYSize() 
 
-        if mouse_pos.getX() > 0.2: # and self.cam.getH() > -15:
-            cam_rotation_h -= self.speed * 8 * self.dt
+        x = mouse_pos.getX()
+        y = mouse_pos.getY()
 
-        elif mouse_pos.getX() < -0.2: # and self.cam.getH() < 15:
-            cam_rotation_h += self.speed * 8 * self.dt
+        # movePointer forces the pointer to that position, half win_x and half win_y (center of the screen),
+        # if its not possible, it returns false
+        if self.win.movePointer(0, win_x // 2, win_y // 2):
 
-        if mouse_pos.getY() > 0.2 and self.cam.getP() < 15:
-            cam_rotation_p += self.speed * 8 * self.dt
-
-        elif mouse_pos.getY() < -0.2 and self.cam.getP() > -20:
-            cam_rotation_p -= self.speed * 8 * self.dt
-
-        self.cam.setHpr((cam_rotation_h, cam_rotation_p, 0))
+            # move the camera accordingly 
+            self.cam.setH(self.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
+            self.cam.setP(self.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)
 
         return task.cont
