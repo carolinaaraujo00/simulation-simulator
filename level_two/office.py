@@ -1,8 +1,6 @@
 import math
 
 from direct.showbase.ShowBase import ShowBase
-from pandac.PandaModules import WindowProperties
-from panda3d.core import loadPrcFileData
 from panda3d.core import *
 from common import *
 from light_setup import *
