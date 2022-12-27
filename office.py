@@ -8,6 +8,8 @@ from cockroach import *
 from printer import *
 from common import *
 import simplepbr
+from direct.gui.OnscreenText import OnscreenText,TextNode
+import threading
 
 loadPrcFileData("", configVars)
 
@@ -16,9 +18,14 @@ class ociffer(ShowBase):
         super().__init__()
         simplepbr.init()
 
+        print("Loading Text")
+        loadingText=OnscreenText("Loading...",1,fg=(1,1,1,1),pos=(0,0),align=TextNode.ACenter,scale=.07,mayChange=1)
+        self.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
+
         self.actors = []
 
         # movement variables and key mapping 
+        self.is_game_loaded = False
         self.disable_mouse()
         self.init_movement()
 
@@ -36,6 +43,17 @@ class ociffer(ShowBase):
         self.cam.setPos(6, 7, 4) # X = left & right, Y = zoom, Z = Up & down.
         self.cam.setHpr(140, -20, 0) # Heading, pitch, roll.
 
+        x = threading.Thread(target=self.thread_function, args=())
+        x.start()
+        x.join()
+
+        loadingText.cleanup()
+        self.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
+        print("movement is enabled")
+        game.is_game_loaded = True
+
+
+    def thread_function(self):
         # load models
         self.load_office()
         self.load_office_room()
@@ -43,7 +61,6 @@ class ociffer(ShowBase):
         self.setup_desk_lamp()
         self.setup_cockroach()
         self.setup_printer()
-
 
     def load_office(self):
         self.office_model = self.loader.loadModel(office_model_path)
@@ -87,8 +104,9 @@ class ociffer(ShowBase):
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
         
         self.dt = globalClock.getDt()
-        self.check_movement(task)
-        self.mousePosition(task)
+        if self.is_game_loaded:
+            self.check_movement(task)
+            self.mousePosition(task)
 
         self.hands.setPos(self.cam, (0, 20, -10))
         self.hands.setHpr(self.cam, (180, -58, 0))
@@ -190,5 +208,7 @@ class ociffer(ShowBase):
 
 
 if __name__ == "__main__":
+    print("Gonna Load Game")
     game = ociffer()
+    print("Gonna run Game")
     game.run()
