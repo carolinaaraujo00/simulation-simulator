@@ -76,6 +76,10 @@ torch_model_path =  model_path + level_two + "office_space/minecraft_torch/scene
 hand_model_path =  model_path + level_two + "arm/arm.gltf"
 office_model_path =   model_path + level_two + "office_space/office/untitled.gltf"
 
+orange_map_model_path = model_path + level_two + "orange_fruit/orange_map.gltf"
+orange_model_path = model_path + level_two + "orange_fruit/orange.gltf"
+
+
 # SOUNDS
 intro_level2_sound_path = sound_path + level_two + "intro.ogg"
 music_level2_sound_path = sound_path + level_two + "music.ogg"
