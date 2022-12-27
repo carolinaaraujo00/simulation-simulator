@@ -79,6 +79,7 @@ hand_model_path =  model_path + level_two + "arm/arm.gltf"
 office_model_path =   model_path + level_two + "office_space/office/untitled.gltf"
 
 orange_map_model_path = model_path + level_two + "orange_fruit/orange_map.gltf"
+orange_map_model_path = model_path + level_two + "orange_fruit/orange_map.egg"
 orange_model_path = model_path + level_two + "orange_fruit/orange.gltf"
 
 

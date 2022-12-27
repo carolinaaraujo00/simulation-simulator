@@ -42,7 +42,7 @@ class MyGame(ShowBase):
     def move_light(self, task):
         ft = globalClock.getFrameTime()
 
-        self.sphere.setPos(math.sin(ft) * 10, 0, 5)
+        self.sphere.setPos(math.sin(ft) * 10, 0, 8)
 
         return task.cont
 
