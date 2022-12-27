@@ -5,6 +5,8 @@ from panda3d.core import *
 from common import *
 from light_setup import *
 import simplepbr
+from direct.gui.OnscreenText import OnscreenText,TextNode
+import threading
 
 from level_two.cockroach import *
 from level_two.printer import *
@@ -18,9 +20,13 @@ class ociffer(ShowBase):
         super().__init__()
         simplepbr.init()
 
+        loadingText=OnscreenText("Loading...",1,fg=(1,1,1,1),pos=(0,0),align=TextNode.ACenter,scale=.07,mayChange=1)
+        self.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
+
         self.actors = []
 
         # movement variables and key mapping 
+        self.is_game_loaded = False
         self.disable_mouse()
         self.init_movement()
 
@@ -45,6 +51,17 @@ class ociffer(ShowBase):
         self.cam.setHpr(140, -20, 0) # Heading, pitch, roll.
         self.mouse_sens = 2.5
 
+        x = threading.Thread(target=self.thread_function, args=())
+        x.start()
+        x.join()
+
+        loadingText.cleanup()
+        self.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
+       
+        self.is_game_loaded = True
+
+
+    def thread_function(self):
         # load models
         self.setup_office()
         self.setup_office_room()
@@ -114,13 +131,14 @@ class ociffer(ShowBase):
     def update(self, task):
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
         self.dt = globalClock.getDt()
-
-        self.check_movement(task)
-        self.mousePosition(task)
         
-        self.hand.setPos(self.cam, (0.8, 5, -1.3))
-        self.hand.setHpr(self.cam, (200, -45, 0))
-        self.hand.setScale(self.cam, 0.2)
+        if self.is_game_loaded:
+            self.check_movement(task)
+            self.mousePosition(task)
+
+            self.hand.setPos(self.cam, (0, 20, -10))
+            self.hand.setHpr(self.cam, (180, -58, 0))
+            self.hand.setScale(self.cam, 0.2)
 
         return task.cont
 
