@@ -8,8 +8,9 @@ import threading
 
 
 class SoundPlayer:
-    def __init__(self, incoming_engine_ref: Engine2D):
+    def __init__(self, incoming_engine_ref: Engine2D, audio3d):
         self.engine_ref = incoming_engine_ref
+        self.audio3d = audio3d
 
     def init_level1_sounds(self):
         self.power_up_sound = self.engine_ref.loader.loadSfx(power_up_sound_path)
@@ -30,23 +31,35 @@ class SoundPlayer:
         self.intro_sound = self.engine_ref.loader.loadSfx(intro_level2_sound_path)
         self.light_on = self.engine_ref.loader.loadSfx(light_on_level2_sound_path)
         self.light_buzz = self.engine_ref.loader.loadSfx(light_buzz_level2_sound_path)
-        self.cockroach = self.engine_ref.loader.loadSfx(cockroach_level2_sound_path)
+        # self.cockroach = self.engine_ref.loader.loadSfx(cockroach_level2_sound_path)
         self.printer = self.engine_ref.loader.loadSfx(printer_level2_sound_path)
         
         self.intro_music.setLoop(True)
-        self.cockroach.setLoop(True)
+        # self.cockroach.setLoop(True)
         self.light_buzz.setLoop(True)
 
         self.light_on.setLoop(False)
         self.printer.setLoop(False)
         self.intro_sound.setLoop(False)
         self.set_volumes_level2(0.3, 0.1)
+    
+    def cockroach_sound(self, cockroach):
+        sound = self.audio3d.loadSfx(cockroach_level2_sound_path)
+        self.audio3d.attachSoundToObject(sound, cockroach)
+        
+        # sound.setLoop(True)
+        self.audio3d.setSoundVelocity(sound, (1, 1, 1))
+        self.audio3d.setListenerVelocity((1, 1, 1))
+        # self.audio3d.setSoundVelocityAuto(sound)
+        # self.audio3d.setListenerVelocityAuto()
+        self.audio3d.setDistanceFactor(0)
+
 
     def set_volumes_level2(self, main_volume, background_volume):
         self.intro_sound.setVolume(main_volume)
         self.intro_music.setVolume(main_volume)
 
-        self.cockroach.setVolume(background_volume)
+        # self.cockroach.setVolume(background_volume)
         self.light_buzz.setVolume(background_volume)
         self.light_on.setVolume(background_volume)
         self.printer.setVolume(background_volume)
@@ -57,7 +70,7 @@ class SoundPlayer:
         self.intro_music.play()
 
     def play_lights_on_thread(self):
-        print("play lights sounds")
+        # print("play lights sounds")
         self.light_on.play()
         time.sleep(self.light_on.getTime())
         self.light_buzz.play()
@@ -65,7 +78,6 @@ class SoundPlayer:
     def play_level2_sounds(self):
         x = threading.Thread(target=self.wait_for_load_thread, args=())
         x.start()
-        self.cockroach.play()
         self.printer.play()
 
     def play_lights_on(self):

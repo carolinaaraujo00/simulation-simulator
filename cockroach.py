@@ -5,7 +5,7 @@ from direct.interval.IntervalGlobal import Sequence
 from common import *
 
 class Cockroach:
-    def __init__(self, scene, location):
+    def __init__(self, scene, location, audio_player):
         self.actor = None   
         self.position = location  # This is the initial position of the actor
         self.previous_position = location  
@@ -24,6 +24,7 @@ class Cockroach:
         self.actor.loop("Walk")
         self.actor.setPlayRate(1, 'Walk')
         self.setup_animation()
+        audio_player.cockroach_sound(self.actor)
 
 
     def setup_animation(self):
