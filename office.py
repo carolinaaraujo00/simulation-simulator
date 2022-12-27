@@ -6,6 +6,7 @@ from panda3d.core import *
 from light_setup import *
 from cockroach import *
 from printer import *
+from sound_player import *
 from common import *
 import simplepbr
 
@@ -26,6 +27,11 @@ class ociffer(ShowBase):
         setup_point_light(self.render, (10, 10, 10 ))
         self.set_background_color(0, 0, 0, 1)
 
+        # self.cam.setPos(0, 0, 3)
+
+        self.sound_player = SoundPlayer(self)
+        self.sound_player.init_level2_sounds()
+
         self.taskMgr.add(self.update, "update")
 
         self.props = self.win.getProperties()
@@ -41,6 +47,8 @@ class ociffer(ShowBase):
         self.setup_desk_lamp()
         self.setup_cockroach()
         self.setup_printer()
+        self.sound_player.play_level2_sounds()
+        self.sound_player.play_lights_on()
 
 
     def load_office(self):
@@ -48,12 +56,13 @@ class ociffer(ShowBase):
         self.office_model.setScale(0.5,0.5,0.5)
         self.office_model.reparentTo(self.render)
         print(self.office_model.getPos())
-
     
+
     def load_office_room(self):
         self.office_room_model = self.loader.loadModel(office_room_model_path)
         self.office_room_model.setScale(0.7,0.7,0.7)
         self.office_room_model.reparentTo(self.render)
+
 
     def setup_desk_lamp(self):
         self.desk_lamp = self.loader.loadModel(lamp_model_path)
@@ -62,8 +71,10 @@ class ociffer(ShowBase):
         self.desk_lamp.setPos(-1.7, -0.68, 3)
         setup_red_spotlight(self.render, (-1.5, -0.21, 3), (-1.7, -0.68, 0))
 
+
     def setup_cockroach(self):
         self.cockroach = Cockroach(self.office_model, Vec3(-4.87, 0.43, 3.4) )
+
 
     def setup_printer(self):
         printer_location = Vec3(-2.5, 2.43, 3.4)
@@ -71,6 +82,7 @@ class ociffer(ShowBase):
         self.printer.reparentTo(self.office_model)
         self.printer.setPos(printer_location)
         self.printer_paper = Printer(self.office_model, printer_location )
+
 
     def load_hands(self):
         self.hands = self.loader.loadModel(hand_model_path)

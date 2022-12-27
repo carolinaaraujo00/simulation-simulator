@@ -4,6 +4,8 @@ from panda3d.core import Vec3
 from entity import Entity
 from engine_2d import last_string_from_node
 from collider import Collider
+from light_setup import *
+from common import * 
 
 # Needs to inherit from DirectObject to receive collision notifications
 class PlayerChar2D(Entity, DirectObject):
@@ -32,15 +34,8 @@ class PlayerChar2D(Entity, DirectObject):
             "right": False
         }
 
-
         # Attach point light
-        """   plight = PointLight("plight_fish")
-        # plight.setShadowCaster(True, 1280, 1280)
-        plight.setColor((1, 1, 1, 1))
-        plnp = self.actor.attachNewNode(plight)
-        plnp.setPos(1, 1, 50)
-        # plight.setAttenuation((1.4, 0, 0))
-        self.engine_ref.render.setLight(plnp)  """
+        setup_point_light_in_model(self.engine_ref.render, self.mesh, (0,15,48))
 
         self.accept_input()
 
@@ -104,7 +99,7 @@ class PlayerChar2D(Entity, DirectObject):
         self.acceleration.x += self.velocity.x * self.FRICTION  # Only add Friction to horizontal movement
         self.velocity += self.acceleration
         self.pos += (self.velocity + (self.acceleration * self.engine_ref.ACCEL_MODIFIER))* self.engine_ref.dt_time
-
+        # print("fish pos=", self.pos)
 
         # Setting the actor's position
         self.mesh.setPos(self.pos)
