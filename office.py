@@ -6,6 +6,7 @@ from panda3d.core import *
 from light_setup import *
 from cockroach import *
 from printer import *
+from sound_player import *
 from common import *
 import simplepbr
 
@@ -26,6 +27,9 @@ class ociffer(ShowBase):
 
         self.set_background_color(0, 0, 0, 1)
 
+        self.sound_player = SoundPlayer(self)
+        self.sound_player.init_level2_sounds()
+
         self.taskMgr.add(self.update, "update")
 
         self.props = self.win.getProperties()
@@ -42,7 +46,9 @@ class ociffer(ShowBase):
         self.setup_cockroach()
         self.setup_printer()
         self.setup_ceiling_lights()
-
+        
+        self.sound_player.play_level2_sounds()
+        self.sound_player.play_lights_on()
 
     def setup_office(self):
         self.office_model = self.loader.loadModel(office_model_path)
@@ -75,13 +81,14 @@ class ociffer(ShowBase):
     def setup_cockroach(self):
         self.cockroach = Cockroach(self.office_model, Vec3(-4.87, 0.43, 3.4))
 
+
     def setup_printer(self):
-        printer_location = Vec3(2.5, 2.43, 3.777)
-        # TODO fix
-        # self.printer = self.loader.loadModel(printer_model_path)
-        # self.printer.setScale(0.5,0.5,0.5)
-        # self.printer.setPos(printer_location)
-        # self.printer_paper = Printer(self.office_model, printer_location )
+        printer_location = Vec3(-2.5, 2.43, 3.4)
+        self.printer = self.loader.loadModel(printer_model_path)
+        self.printer.reparentTo(self.office_model)
+        self.printer.setPos(printer_location)
+        self.printer_paper = Printer(self.office_model, printer_location )
+
 
     def setup_ceiling_lights(self):
         self.c_lamp = self.loader.loadModel(ceiling_lamp_model_path)
@@ -91,6 +98,7 @@ class ociffer(ShowBase):
 
     # Called every frame
     def update(self, task):
+
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
         self.dt = globalClock.getDt()
 

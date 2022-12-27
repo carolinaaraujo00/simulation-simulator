@@ -8,8 +8,7 @@
         {
             "name" : "Scene",
             "nodes" : [
-                1,
-                2
+                1
             ]
         }
     ],
@@ -39,9 +38,6 @@
                 0
             ],
             "name" : "printer.obj.cleaner.materialmerger.gles"
-        },
-        {
-            "name" : "SceneFinal.obj.cleaner.materialmerger.gles"
         }
     ],
     "animations" : [
