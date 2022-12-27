@@ -14,6 +14,7 @@ level_one = "level_one/"
 level_two = "level_two/"
 
 
+
 ##################################################
 #                  ANGLER FISH                   #
 ##################################################
@@ -23,6 +24,11 @@ blank_texture = level_one + "BlankTextr.png"
 
 # MODEL PATHS
 angler_fish_model_path = model_path + level_one + "angler_fish/angler_fish.gltf"
+
+
+angler_ambient = (0.08, 0.08, 0.08, 1)
+angler_p_light = (0.1, 0.5, 0.5, 1)
+
 
 fossil_model_path = model_path + level_one + "underwater_environment/fossil.gltf"
 
@@ -44,12 +50,13 @@ power_up_sound_path = sound_path + level_one + "power_up.wav"
 
 
 ##################################################
-#                  OFICE SPACE                   #
+#                 OFFICE SPACE                   #
 ##################################################
 
-# MODEL PATHS
-hand_model_path = model_path + level_two +"hands/fps-hands.gltf"
+torch_yellow = (0.83137, 0.42353, 0.00784, 1)
+office_ambient_black = (0.00, 0.03, 0.06, 0.88)
 
+# MODEL PATHS
 office_model_path = model_path + level_two + "office_space/office_final.gltf"
 
 office_room_model_path = model_path + level_two + "office_space/office_room.gltf"
@@ -61,6 +68,13 @@ cockroach_model_path = model_path + level_two + "cockroach/cockroach.gltf"
 printer_model_path = model_path + level_two + "deskjet_printer/printer.gltf"
 
 paper_model_path = model_path + level_two + "deskjet_printer/paper_anim.gltf"
+
+ceiling_lamp_model_path = model_path + level_two + "office_space/ceiling_lamp/scene.gltf"
+sphere_model_path = model_path + level_two + "sphere/sphere.gltf"
+torch_model_path =  model_path + level_two + "office_space/minecraft_torch/scene.gltf"
+
+hand_model_path =  model_path + level_two + "arm/arm.gltf"
+office_model_path =   model_path + level_two + "office_space/office/untitled.gltf"
 
 # SOUNDS
 intro_level2_sound_path = sound_path + level_two + "intro.ogg"

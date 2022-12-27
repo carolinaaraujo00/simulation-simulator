@@ -38,44 +38,53 @@ class ociffer(ShowBase):
         self.props = self.win.getProperties()
         self.screensizeX = self.props.getXSize() / 2
         
-        self.cam.setPos(6, 7, 4) # X = left & right, Y = zoom, Z = Up & down.
+        self.cam.setPos(6, 7, 5) # X = left & right, Y = zoom, Z = Up & down.
         self.cam.setHpr(140, -20, 0) # Heading, pitch, roll.
 
-        # Load models
-        self.load_office()
-        self.load_office_room()
-        self.load_hands()
-        self.setup_desk_lamp()
+        # load models
+        self.setup_office()
+        self.setup_office_room()
+        self.setup_hands()
+        self.setup_torch()
         self.setup_cockroach()
         self.setup_printer()
 
         # Play Sounds
         self.sound_player.play_sounds()
+        self.setup_ceiling_lights()
+        
         self.sound_player.play_lights_on()
 
-
-    def load_office(self):
+    def setup_office(self):
         self.office_model = self.loader.loadModel(office_model_path)
         self.office_model.setScale(0.5,0.5,0.5)
         self.office_model.reparentTo(self.render)
-    
 
-    def load_office_room(self):
+    def setup_office_room(self):
         self.office_room_model = self.loader.loadModel(office_room_model_path)
         self.office_room_model.setScale(0.7,0.7,0.7)
         self.office_room_model.reparentTo(self.render)
 
+    def setup_hands(self):
+        self.hands = self.loader.loadModel(hand_model_path)
+        self.hands.setScale(self.cam, 0.2)
+        self.hands.reparentTo(self.render)
 
-    def setup_desk_lamp(self):
-        self.desk_lamp = self.loader.loadModel(lamp_model_path)
-        self.desk_lamp.setScale(0.5,0.5,0.5)
-        self.desk_lamp.reparentTo(self.office_model)
-        self.desk_lamp.setPos(-1.7, -0.68, 3)
-        setup_red_spotlight(self.render, (-1.5, -0.21, 3), (-1.7, -0.68, 0))
+    def setup_torch(self):
+        self.sphere = self.loader.loadModel(sphere_model_path)
+        self.sphere.setScale(0.05)
+        self.sphere.setPos(-1.7, -0.68, 2.25)
+        self.sphere.reparentTo(self.render)
 
+        self.torch = self.loader.loadModel(torch_model_path)
+        self.torch.setPos(-1.7, -0.68, 2)
+        self.torch.setScale(0.5)
+        self.torch.reparentTo(self.render)
+
+        setup_torch_spotlight(self.render, self.sphere, (-1.5, -0.21, 2))
 
     def setup_cockroach(self):
-        self.cockroach = Cockroach(self.office_model, Vec3(-4.87, 0.43, 3.4) )
+        self.cockroach = Cockroach(self.office_model, Vec3(-4.87, 0.43, 3.4))
 
 
     def setup_printer(self):
@@ -86,22 +95,24 @@ class ociffer(ShowBase):
         self.printer_paper = Printer(self.office_model, printer_location )
 
 
-    def load_hands(self):
-        self.hands = self.loader.loadModel(hand_model_path)
-        self.hands.setScale(self.cam, 2)
-        self.hands.reparentTo(self.render)
-
+    def setup_ceiling_lights(self):
+        self.c_lamp = self.loader.loadModel(ceiling_lamp_model_path)
+        self.c_lamp.setPos(-8, -8, 4)
+        self.c_lamp.setScale(2)
+        self.c_lamp.reparentTo(self.render)
 
     # Called every frame
     def update(self, task):
 
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
         self.dt = globalClock.getDt()
+
         self.check_movement(task)
         self.mousePosition(task)
 
-        self.hands.setPos(self.cam, (0, 20, -10))
-        self.hands.setHpr(self.cam, (180, -58, 0))
+        self.hands.setPos(self.cam, (0.8, 5, -1.3))
+        self.hands.setHpr(self.cam, (200, -45, 0))
+        self.hands.setScale(self.cam, 0.2)
 
         return task.cont
 
