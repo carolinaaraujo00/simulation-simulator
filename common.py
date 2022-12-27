@@ -15,7 +15,7 @@ office_room_model_path = "egg-models/office_space/office_room.gltf"
 
 cockroach_model_path = "egg-models/cockroach/cockroach.gltf"
 
-printer_model_path = "egg-models/others/deskjet_printer/printer_v1.gltf"
+printer_model_path = "egg-models/others/deskjet_printer/printer_anim_v2.gltf"
 paper_model_path = "egg-models/others/deskjet_printer/paper_anim_v2.gltf"
 
 lamp_model_path = "egg-models/office_space/lamp.gltf"
