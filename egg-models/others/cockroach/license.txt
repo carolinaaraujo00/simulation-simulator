@@ -1,0 +1,11 @@
+Model Information:
+* title:	Cockroach
+* source:	https://sketchfab.com/3d-models/cockroach-cead55b8aa8643d48d67240bad028592
+* author:	CK (https://sketchfab.com/xcellf)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Cockroach" (https://sketchfab.com/3d-models/cockroach-cead55b8aa8643d48d67240bad028592) by CK (https://sketchfab.com/xcellf) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
