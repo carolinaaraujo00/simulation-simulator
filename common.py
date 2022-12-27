@@ -29,7 +29,7 @@ music_level2_sound_path = "sounds/level2/music.ogg"
 
 light_on_level2_sound_path = "sounds/level2/light_on.ogg"
 light_buzz_level2_sound_path = "sounds/level2/light_buzz.ogg"
-cockroach_level2_sound_path = "sounds/level2/cockroach.wav"
+cockroach_level2_sound_path = "sounds/level2/cockroach.ogg"
 printer_level2_sound_path = "sounds/level2/printer.ogg"
 
 

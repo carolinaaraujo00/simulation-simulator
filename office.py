@@ -1,6 +1,6 @@
 import math
 from direct.showbase.ShowBase import ShowBase
-from direct.showbase import Audio3DManager
+from direct.interval.LerpInterval import LerpHprInterval
 from panda3d.core import loadPrcFileData
 from panda3d.core import *
 from light_setup import *
@@ -18,10 +18,8 @@ class ociffer(ShowBase):
         simplepbr.init()
 
         self.actors = []
-        self.cTrav = CollisionTraverser()
 
         # movement variables and key mapping 
-        self.audio3d = Audio3DManager.Audio3DManager(self.sfxManagerList[0], self.cam)
         self.disable_mouse()
         self.init_movement()
 
@@ -31,7 +29,7 @@ class ociffer(ShowBase):
 
         # self.cam.setPos(0, 0, 3)
 
-        self.sound_player = SoundPlayer(self, self.audio3d)
+        self.sound_player = SoundPlayer(self)
         self.sound_player.init_level2_sounds()
 
         self.taskMgr.add(self.update, "update")
@@ -75,7 +73,7 @@ class ociffer(ShowBase):
 
 
     def setup_cockroach(self):
-        self.cockroach = Cockroach(self.office_model, Vec3(-4.87, 0.43, 3.4), self.sound_player)
+        self.cockroach = Cockroach(self.office_model, Vec3(-4.87, 0.43, 3.4) )
 
 
     def setup_printer(self):
