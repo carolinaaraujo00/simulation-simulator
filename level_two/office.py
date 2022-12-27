@@ -94,6 +94,13 @@ class ociffer(ShowBase):
         self.printer.setPos(printer_location)
         self.printer_paper = Printer(self.office_model, printer_location )
 
+    def setup_giant_orange(self):
+        orange_location = Vec3(-2.5, 2.43, 0)
+        orange_model_path = "level_two\orange_fruit\orange_map.gltf"
+        self.orange = self.loader.loadModel(orange_model_path)
+        self.orange.reparentTo(self.office_model)
+        self.orange.setPos(orange_location)
+
 
     def setup_ceiling_lights(self):
         self.c_lamp = self.loader.loadModel(ceiling_lamp_model_path)
