@@ -1,0 +1,20 @@
+from level_one.engine_2d import *
+from common import *
+
+class SoundPlayerOne:
+    def __init__(self, incoming_engine_ref: Engine2D):
+        self.engine_ref = incoming_engine_ref
+
+    def init_sounds(self):
+        self.power_up_sound = self.engine_ref.loader.loadSfx(power_up_sound_path)
+        self.underwater_music = self.engine_ref.loader.loadSfx(underwater_sound_path)
+        self.power_up_sound.setLoop(False)
+        self.set_volumes(0.1)
+        self.underwater_music.play()
+
+    def set_volumes(self, volume_value):
+        self.underwater_music.setVolume(volume_value)
+        self.power_up_sound.setVolume(volume_value)
+
+    def power_up(self):
+        self.power_up_sound.play()

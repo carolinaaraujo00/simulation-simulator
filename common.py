@@ -1,39 +1,75 @@
 from enum import Enum
 from panda3d.core import Vec3
 
-
 configVars = """
 win-size 1280 720
 show-frame-rate-meter 1
 window-title Simulation Simulator
 """
 
-cube_model_path = "egg-models/debug_cube.gltf"
-hand_model_path = "egg-models/hands/fps-hands.gltf"
+model_path = "models/"
+sound_path = "sounds/"
 
-# office_model_path = "egg-models/office_space/office.gltf"
-office_model_path = "egg-models/office_space/office_finish_v3.gltf"
+level_one = "level_one/"
+level_two = "level_two/"
 
-office_room_model_path = "egg-models/office_space/office_room.gltf"
 
-cockroach_model_path = "egg-models/cockroach/cockroach.gltf"
+##################################################
+#                  ANGLER FISH                   #
+##################################################
+# TEXTURES
+blank_texture = level_one + "BlankTextr.png"
 
-printer_model_path = "egg-models/others/deskjet_printer/printer_anim_v2.gltf"
-paper_model_path = "egg-models/others/deskjet_printer/paper_anim_v2.gltf"
 
-lamp_model_path = "egg-models/office_space/lamp.gltf"
+# MODEL PATHS
+angler_fish_model_path = model_path + level_one + "angler_fish/angler_fish.gltf"
 
-# Sounds
-underwater_sound_path = "sounds/level1/Underwater.ogg"
-power_up_sound_path = "sounds/level1/power_up.wav"
+fossil_model_path = model_path + level_one + "underwater_environment/fossil.gltf"
 
-intro_level2_sound_path = "sounds/level2/intro.ogg"
-music_level2_sound_path = "sounds/level2/music.ogg"
+background_sea_model_path = model_path + level_one + "background_sea.gltf"
 
-light_on_level2_sound_path = "sounds/level2/light_on.ogg"
-light_buzz_level2_sound_path = "sounds/level2/light_buzz.ogg"
-cockroach_level2_sound_path = "sounds/level2/cockroach.ogg"
-printer_level2_sound_path = "sounds/level2/printer.ogg"
+background_sea_shading_model_path = model_path + level_one + "background_sea_shading.gltf"
+
+pier_model_path = model_path + level_one + "pier2.gltf"
+
+orb_model_path = model_path + level_one + "shading_orb/magic_orb.egg"
+
+orb_anim_model_path = model_path + level_one + "shading_orb/magic_orb-Orb rotation_GLTF_created_0"
+
+
+# SOUNDS
+underwater_sound_path = sound_path + level_one + "Underwater.ogg"
+
+power_up_sound_path = sound_path + level_one + "power_up.wav"
+
+
+##################################################
+#                  OFICE SPACE                   #
+##################################################
+
+# MODEL PATHS
+hand_model_path = model_path + level_two +"hands/fps-hands.gltf"
+
+office_model_path = model_path + level_two + "office_space/office_final.gltf"
+
+office_room_model_path = model_path + level_two + "office_space/office_room.gltf"
+
+lamp_model_path = model_path + level_two + "office_space/lamp.gltf"
+
+cockroach_model_path = model_path + level_two + "cockroach/cockroach.gltf"
+
+printer_model_path = model_path + level_two + "deskjet_printer/printer.gltf"
+
+paper_model_path = model_path + level_two + "deskjet_printer/paper_anim.gltf"
+
+# SOUNDS
+intro_level2_sound_path = sound_path + level_two + "intro.ogg"
+music_level2_sound_path = sound_path + level_two + "music.ogg"
+
+light_on_level2_sound_path = sound_path + level_two + "light_on.ogg"
+light_buzz_level2_sound_path = sound_path + level_two + "light_buzz.ogg"
+cockroach_level2_sound_path = sound_path + level_two + "cockroach.ogg"
+printer_level2_sound_path = sound_path + level_two + "printer.ogg"
 
 key_map_3d = {
     "up" : False,
