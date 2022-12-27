@@ -19,9 +19,15 @@ cockroach_model_path = "egg-models/cockroach/cockroach.gltf"
 printer_model_path = "egg-models/others/deskjet_printer/printer_v1.gltf"
 paper_model_path = "egg-models/others/deskjet_printer/paper_anim_v2.gltf"
 
-lamp_model_path = "egg-models/office_space/lamp.gltf"
+ceiling_lamp_model_path = "egg-models/office_space/ceiling_lamp/scene.gltf"
 sphere_model_path = "egg-models/others/sphere/sphere.gltf"
 torch_model_path = "egg-models/office_space/minecraft_torch/scene.gltf"
+
+angler_ambient = (0.08, 0.08, 0.08, 1)
+angler_p_light = (0.1, 0.5, 0.5, 1)
+torch_yellow = (0.83137, 0.42353, 0.00784, 1)
+office_ambient_black = (0.00, 0.03, 0.06, 0.88)
+
 
 key_map_3d = {
     "up" : False,
