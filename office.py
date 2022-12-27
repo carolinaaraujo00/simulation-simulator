@@ -105,8 +105,6 @@ class ociffer(ShowBase):
         self.check_movement(task)
         self.mousePosition(task)
 
-        print(self.cam.getPos())
-
         self.hands.setPos(self.cam, (0.8, 5, -1.3))
         self.hands.setHpr(self.cam, (200, -45, 0))
         self.hands.setScale(self.cam, 0.2)
