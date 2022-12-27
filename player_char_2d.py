@@ -4,6 +4,7 @@ from panda3d.core import Vec3
 from entity import Entity
 from engine_2d import last_string_from_node
 from collider import Collider
+from light_setup import *
 
 # Needs to inherit from DirectObject to receive collision notifications
 class PlayerChar2D(Entity, DirectObject):
@@ -41,6 +42,9 @@ class PlayerChar2D(Entity, DirectObject):
         plnp.setPos(1, 1, 50)
         # plight.setAttenuation((1.4, 0, 0))
         self.engine_ref.render.setLight(plnp)  """
+
+        print("pos=", pos)
+        setup_point_light_fish(self.engine_ref.render, (self.beggining_pos_x, 0, self.beggining_pos_z), self)
 
         self.accept_input()
 
