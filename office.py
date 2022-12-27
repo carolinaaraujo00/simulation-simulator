@@ -48,6 +48,7 @@ class ociffer(ShowBase):
         self.setup_cockroach()
         self.setup_printer()
         self.sound_player.play_level2_sounds()
+        self.sound_player.play_lights_on()
 
 
     def load_office(self):

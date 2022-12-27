@@ -27,6 +27,11 @@ power_up_sound_path = "sounds/level1/power_up.wav"
 intro_level2_sound_path = "sounds/level2/intro.ogg"
 music_level2_sound_path = "sounds/level2/music.ogg"
 
+light_on_level2_sound_path = "sounds/level2/light_on.ogg"
+light_buzz_level2_sound_path = "sounds/level2/light_buzz.ogg"
+cockroach_level2_sound_path = "sounds/level2/cockroach.ogg"
+printer_level2_sound_path = "sounds/level2/printer.ogg"
+
 
 key_map_3d = {
     "up" : False,
