@@ -15,6 +15,12 @@ def setup_black_ambient_light(render):
     alnp = render.attachNewNode(alight)
     render.setLight(alnp)
 
+def setup_ambient_light(render, color):
+    alight = AmbientLight('alight')
+    alight.setColor(color)
+    alnp = render.attachNewNode(alight)
+    render.setLight(alnp)
+
 # POINT LIGHTS
 
 def setup_blue_point_light(render, pos):
@@ -38,7 +44,7 @@ def setup_black_point_light(render, pos):
 def setup_point_light(render, pos):
     # Point light
     plight = PointLight("plight")
-    #plight.setShadowCaster(True, 1280, 1280)
+    # plight.setShadowCaster(True, 1280, 1280)
     
     plight.setColor(angler_p_light)
     plnp = render.attachNewNode(plight)
@@ -63,7 +69,7 @@ def setup_office_ambient_light(render):
 
 def setup_point_light_in_model(render, model, position):
     plight = PointLight("plight")
-    #plight.setShadowCaster(True, 1280, 1280)
+    # plight.setShadowCaster(True, 1280, 1280)
     plight.setColor((0.83137, 0.42353, 0.00784, 1))
     plnp = model.attachNewNode(plight)
     plnp.setPos(position)
@@ -75,6 +81,7 @@ def setup_torch_spotlight(render, model, position):
     # Point light
     plight = PointLight("plight")
     plight.setAttenuation((1, 0, 0)) # constant, linear and quadratic
+    plight.setShadowCaster(True, 1280, 1280)
 
     lens = PerspectiveLens()
     plight.setLens(lens)

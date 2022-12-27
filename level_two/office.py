@@ -27,6 +27,7 @@ class ociffer(ShowBase):
         self.init_movement()
 
         setup_black_ambient_light(self.render)
+        # setup_ambient_light(self.render, office_ambient_black)
 
         self.set_background_color(0, 0, 0, 1)
 
@@ -55,6 +56,9 @@ class ociffer(ShowBase):
         self.setup_cockroach()
         self.setup_printer()
         self.setup_ceiling_lights()
+        self.setup_giant_orange()
+        self.render.setShaderAuto()
+
 
         # Play Sounds
         self.sound_player.play_sounds()
@@ -77,7 +81,7 @@ class ociffer(ShowBase):
         self.hand = self.loader.loadModel(hand_model_path)
         self.hand.setScale(self.cam, 0.2)
         self.hand.reparentTo(self.render)
-
+        print("hand =", self.hand.getPos())
 
     def setup_torch(self):
         self.sphere = self.loader.loadModel(sphere_model_path)
@@ -105,11 +109,23 @@ class ociffer(ShowBase):
         self.printer_paper = Printer(self.office_model, printer_location )
 
     def setup_giant_orange(self):
-        orange_location = Vec3(-2.5, 2.43, 0)
-        orange_model_path = "level_two\orange_fruit\orange_map.gltf"
-        self.orange = self.loader.loadModel(orange_model_path)
+        orange_location = Vec3(-4, 7, 2)
+        self.orange = self.loader.loadModel(orange_map_model_path)
+
+        alight = AmbientLight('alight')
+        alight.setColor(office_ambient_black)
+        alnp = self.render.attachNewNode(alight)
+        self.orange.setLight(alnp)
+       
+        plight = PointLight("plight")
+        plight.setColor(torch_yellow)
+        plnp = self.hand.attachNewNode(plight)
+        self.orange.setLight(plnp)
+
+        self.orange.setScale(0.2, 0.2, 0.2)
         self.orange.reparentTo(self.office_model)
         self.orange.setPos(orange_location)
+        self.orange.setHpr((90, 20, 0))
 
 
     def setup_ceiling_lights(self):
@@ -211,5 +227,8 @@ class ociffer(ShowBase):
             # move the camera accordingly 
             self.cam.setH(self.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
             self.cam.setP(self.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)
+
+        # Debug
+        self.cam.lookAt(self.orange)
 
         return task.cont

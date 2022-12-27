@@ -55,6 +55,8 @@ power_up_sound_path = sound_path + level_one + "power_up.wav"
 
 torch_yellow = (0.83137, 0.42353, 0.00784, 1)
 office_ambient_black = (0.00, 0.03, 0.06, 0.88)
+white_ambient = (1, 1, 1, 1)
+
 
 # MODEL PATHS
 office_model_path = model_path + level_two + "office_space/office_final.gltf"
