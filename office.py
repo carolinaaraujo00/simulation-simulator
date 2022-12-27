@@ -26,8 +26,6 @@ class ociffer(ShowBase):
         setup_point_light(self.render, (10, 10, 10 ))
         self.set_background_color(0, 0, 0, 1)
 
-        # self.cam.setPos(0, 0, 3)
-
         self.taskMgr.add(self.update, "update")
 
         self.props = self.win.getProperties()
@@ -36,7 +34,7 @@ class ociffer(ShowBase):
         self.cam.setPos(6, 7, 4) # X = left & right, Y = zoom, Z = Up & down.
         self.cam.setHpr(140, -20, 0) # Heading, pitch, roll.
 
-        # load models
+        # Load models
         self.load_office()
         self.load_office_room()
         self.load_hands()
@@ -56,25 +54,23 @@ class ociffer(ShowBase):
         self.office_room_model = self.loader.loadModel(office_room_model_path)
         self.office_room_model.setScale(0.7,0.7,0.7)
         self.office_room_model.reparentTo(self.render)
-        print(self.office_room_model.getPos())
 
     def setup_desk_lamp(self):
         self.desk_lamp = self.loader.loadModel(lamp_model_path)
         self.desk_lamp.setScale(0.5,0.5,0.5)
+        self.desk_lamp.reparentTo(self.office_model)
         self.desk_lamp.setPos(-1.7, -0.68, 3)
         setup_red_spotlight(self.render, (-1.5, -0.21, 3), (-1.7, -0.68, 0))
-        print(self.desk_lamp.getPos())
 
     def setup_cockroach(self):
         self.cockroach = Cockroach(self.office_model, Vec3(-4.87, 0.43, 3.4) )
 
     def setup_printer(self):
-        printer_location = Vec3(2.5, 2.43, 3.777)
-        # TODO fix
-        # self.printer = self.loader.loadModel(printer_model_path)
-        # self.printer.setScale(0.5,0.5,0.5)
-        # self.printer.setPos(printer_location)
-        # self.printer_paper = Printer(self.office_model, printer_location )
+        printer_location = Vec3(-2.5, 2.43, 3.4)
+        self.printer = self.loader.loadModel(printer_model_path)
+        self.printer.reparentTo(self.office_model)
+        self.printer.setPos(printer_location)
+        self.printer_paper = Printer(self.office_model, printer_location )
 
     def load_hands(self):
         self.hands = self.loader.loadModel(hand_model_path)
@@ -84,15 +80,14 @@ class ociffer(ShowBase):
 
     # Called every frame
     def update(self, task):
+
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
-        
         self.dt = globalClock.getDt()
         self.check_movement(task)
         self.mousePosition(task)
 
         self.hands.setPos(self.cam, (0, 20, -10))
         self.hands.setHpr(self.cam, (180, -58, 0))
-        # self.hands.setScale(self.cam, 1)
         # print("Cam=", self.cam.getPos())
 
         return task.cont

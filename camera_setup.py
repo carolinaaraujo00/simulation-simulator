@@ -12,12 +12,3 @@ class Camera:
         lens.setAspectRatio(1920/1080)
         camera.node().setLens(lens)
         # camera.node().getLens()
-
-    # def setup_camera_controls():
-        # TODO: make global input manager
-        # Keyboard input events
-        # engine.accept("arrow_left", update_key_map, ["left", True])
-        # self.engine_ref.accept("arrow_left-up", update_key_map, ["left", False])
-        # self.engine_ref.accept("arrow_right", update_key_map, ["right", True])
-        # self.engine_ref.accept("arrow_right-up", update_key_map, ["right", False])
-        # self.engine_ref.accept("arrow_up", self.jump)

@@ -7,9 +7,9 @@ from common import *
 class Cockroach:
     def __init__(self, scene, location):
         self.actor = None   
-        self.position = location  # This is also the initial position of the actor
-        self.previous_position = location  # This is also the initial position of the actor
-        self.start_position = location  # This is also the initial position of the actor
+        self.position = location  # This is the initial position of the actor
+        self.previous_position = location  
+        self.start_position = location  
         
         self.previous_hpr = Point3(0, 0, 0)
         self.hpr = Point3(0, 0, 0)
@@ -27,8 +27,6 @@ class Cockroach:
 
 
     def setup_animation(self):
-        print("Animation")
-        print("self.position", self.position)
         intervals = []
 
         # start Vec3(-4.6, 0.80, 3.4)
@@ -61,7 +59,7 @@ class Cockroach:
         intervals.append(self.define_new_interval(3, Vec3(-3.65,-4.5, 6.1)))
         intervals.append(self.define_new_hpr_interval(0,Point3(0, 0, 0) ))
 
-        self.animation_sequence = Sequence(name="animation_sequence")
+        self.animation_sequence = Sequence(name="animation_cockroach")
         
         for x in intervals:
             self.animation_sequence.append(x)
@@ -74,8 +72,6 @@ class Cockroach:
         self.position = new_position
         # seconds, final position, start position
         posInterval = self.actor.posInterval(duration, self.position, startPos=self.previous_position)
-        # posInterval = self.actor.posInterval(duration, self.position, startPos=self.position)
-        # print("self.position", self.position)
         return posInterval
 
 
@@ -83,5 +79,4 @@ class Cockroach:
         self.previous_hpr = self.hpr
         self.hpr = new_hpr
         hprInterval = self.actor.hprInterval(duration, self.hpr, startHpr=self.previous_hpr)
-        # print("self.hpr", self.hpr)
         return hprInterval
