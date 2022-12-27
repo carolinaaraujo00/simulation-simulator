@@ -16,7 +16,7 @@ def run(level : int):
         engine.run()
 
     elif level == 2: 
-        game = ociffer() 
+        game = ociffer(debug = True) 
         game.run()
 
     else:

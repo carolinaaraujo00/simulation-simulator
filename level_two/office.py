@@ -16,7 +16,7 @@ from level_two.sound_player_two import *
 loadPrcFileData("", configVars)
 
 class ociffer(ShowBase):
-    def __init__(self):
+    def __init__(self, debug):
         super().__init__()
         simplepbr.init()
 
@@ -41,8 +41,8 @@ class ociffer(ShowBase):
         self.props.setCursorHidden(True)
         self.win.requestProperties(self.props)
         
-        self.cam.setPos(6, 7, 6) # X = left & right, Y = zoom, Z = Up & down.
-        self.cam.setHpr(140, -20, 0) # Heading, pitch, roll.
+        self.cam.setPos(9.20, 8.80, 6) # X = left & right, Y = zoom, Z = Up & down.
+        self.cam.setHpr(140, -10, 0) # Heading, pitch, roll.
         self.mouse_sens = 2.5
 
         load_thread = threading.Thread(target=self.thread_function, args=())
@@ -54,9 +54,12 @@ class ociffer(ShowBase):
        
         self.taskMgr.add(self.update, "update")
         
-        timer = threading.Timer(7.5, self.unlock_mouse)
-        timer.start()
-
+        if not debug: 
+            timer = threading.Timer(7.5, self.unlock_mouse)
+            timer.start()
+        else: 
+            timer = threading.Timer(2, self.unlock_mouse)
+            timer.start()
 
     def unlock_mouse(self):
         self.lock_mouse = False 
@@ -80,11 +83,13 @@ class ociffer(ShowBase):
     def setup_office(self):
         self.office_model = self.loader.loadModel(office_model_path)
         self.office_model.setScale(0.8)
+        print(self.office_model.getPos())
         self.office_model.reparentTo(self.render)
 
 
     def setup_office_room(self):
         self.office_room_model = self.loader.loadModel(office_room_model_path)
+        self.office_room_model.setPos(self.office_room_model.getPos() + (10, 10, 0))
         self.office_room_model.setScale(0.7)
         self.office_room_model.reparentTo(self.render)
 
@@ -122,10 +127,11 @@ class ociffer(ShowBase):
 
 
     def setup_ceiling_lights(self):
-        self.c_lamp = self.loader.loadModel(ceiling_lamp_model_path)
-        self.c_lamp.setPos(-8, -8, 2)
-        self.c_lamp.setScale(4)
-        self.c_lamp.reparentTo(self.render)
+        self.c_lamp1 = self.loader.loadModel(ceiling_lamp_model_path)
+        self.c_lamp1.setPos(-4, 17, 3)
+        self.c_lamp1.setHpr(140, 0, 0)
+        self.c_lamp1.setScale(4)
+        self.c_lamp1.reparentTo(self.render)
 
 
     # Called every frame
@@ -136,8 +142,8 @@ class ociffer(ShowBase):
         self.check_movement(task)
         self.mousePosition(task)
 
-        self.hand.setPos(self.cam, (0, 20, -10))
-        self.hand.setHpr(self.cam, (180, -58, 0))
+        self.hand.setPos(self.cam, (1, 1.5, -0.8))
+        self.hand.setHpr(self.cam, (200, -32, 0))
         self.hand.setScale(self.cam, 0.2)
 
         return task.cont
@@ -196,7 +202,7 @@ class ociffer(ShowBase):
             cam_pos.z -= speed
 
         self.cam.setPos(cam_pos)
-
+        print(cam_pos)
         return task.cont
 
 
@@ -213,9 +219,6 @@ class ociffer(ShowBase):
             self.win.movePointer(0, win_x // 2, win_y // 2)
             
         elif self.mouseWatcherNode.hasMouse() and not self.lock_mouse:
-            # get the relative mouse position, 
-            # its always between 1 and -1
-
             # movePointer forces the pointer to that position, half win_x and half win_y (center of the screen),
             # if its not possible, it returns false
             if self.win.movePointer(0, win_x // 2, win_y // 2):
