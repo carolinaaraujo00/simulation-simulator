@@ -1,4 +1,6 @@
 from enum import Enum
+from panda3d.core import Vec3
+
 
 configVars = """
 win-size 1280 720
@@ -6,6 +8,7 @@ show-frame-rate-meter 1
 window-title Simulation Simulator
 """
 
+cube_model_path = "egg-models/debug_cube.gltf"
 hand_model_path = "egg-models/hands/fps-hands.gltf"
 
 # office_model_path = "egg-models/office_space/office.gltf"
@@ -31,7 +34,6 @@ light_on_level2_sound_path = "sounds/level2/light_on.ogg"
 light_buzz_level2_sound_path = "sounds/level2/light_buzz.ogg"
 cockroach_level2_sound_path = "sounds/level2/cockroach.ogg"
 printer_level2_sound_path = "sounds/level2/printer.ogg"
-
 
 key_map_3d = {
     "up" : False,

@@ -9,6 +9,13 @@ def setup_ambient_light(render):
     render.setLight(alnp)
 
 
+def setup_black_point_light(render, pos):
+    plight = PointLight("plight")
+    plight.setColor((0,0,0, 1))
+    plnp = render.attachNewNode(plight)
+    plnp.setPos(pos[0], pos[1], pos[2])
+    render.setLight(plnp) 
+
 def setup_point_light(render, pos):
     # Point light
     plight = PointLight("plight")
@@ -22,15 +29,17 @@ def setup_point_light(render, pos):
     render.setLight(plnp) 
 
 
-def setup_point_light_fish(render, pos, fish):
+def setup_point_light_in_model(render, model, position):
     plight = PointLight("plight")
     #plight.setShadowCaster(True, 1280, 1280)
-    plight.setColor((0.1, 0.5, 0.5, 1))
-    plnp = fish.attachNewNode(plight)
-    # plnp.reparentTo(fish)
-    plight.reparentTo(render)
-    plnp.setPos(pos)
-    plight.setAttenuation((1.4, 0, 0))
+    plight.setColor((0.83137, 0.42353, 0.00784, 1))
+    plnp = model.attachNewNode(plight)
+    plnp.setPos(position)
+    print("light position=", position)
+    # plight.setAttenuation((1, 0, 0))
+    plight.setAttenuation((1.5, 0, 0))
+    # plight.setMaxDistance(1)
+    plight.setMaxDistance(0.01)
     render.setLight(plnp)
 
 def setup_red_spotlight(render, pos, object):
