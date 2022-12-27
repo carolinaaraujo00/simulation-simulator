@@ -20,45 +20,46 @@ class ociffer(ShowBase):
         super().__init__()
         simplepbr.init()
 
-        loadingText=OnscreenText("Loading...",1,fg=(1,1,1,1),pos=(0,0),align=TextNode.ACenter,scale=.07,mayChange=1)
+        self.set_background_color(0, 0, 0, 1)
+        loadingText = OnscreenText("Loading...",1, fg=(1, 1, 1, 1), bg = (0, 0, 0, 1), pos=(0, 0), align=TextNode.ACenter, scale=.07, mayChange=1)
         self.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
 
         self.actors = []
 
         # movement variables and key mapping 
-        self.is_game_loaded = False
         self.disable_mouse()
+        self.lock_mouse = True 
         self.init_movement()
 
         setup_black_ambient_light(self.render)
 
-        self.set_background_color(0, 0, 0, 1)
 
         self.sound_player = SoundPlayerTwo(self)
         self.sound_player.init_sounds()
 
-        self.taskMgr.add(self.update, "update")
-
-        self.props = self.win.getProperties()
-        self.screensizeX = self.props.getXSize() / 2
-
         self.props = WindowProperties()
         self.props.setCursorHidden(True)
-        self.props.setMouseMode(WindowProperties.M_relative)
         self.win.requestProperties(self.props)
         
         self.cam.setPos(6, 7, 6) # X = left & right, Y = zoom, Z = Up & down.
         self.cam.setHpr(140, -20, 0) # Heading, pitch, roll.
         self.mouse_sens = 2.5
 
-        x = threading.Thread(target=self.thread_function, args=())
-        x.start()
-        x.join()
+        load_thread = threading.Thread(target=self.thread_function, args=())
+        load_thread.start()
+        load_thread.join()
 
         loadingText.cleanup()
         self.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
        
-        self.is_game_loaded = True
+        self.taskMgr.add(self.update, "update")
+        
+        timer = threading.Timer(7.5, self.unlock_mouse)
+        timer.start()
+
+
+    def unlock_mouse(self):
+        self.lock_mouse = False 
 
 
     def thread_function(self):
@@ -132,13 +133,12 @@ class ociffer(ShowBase):
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
         self.dt = globalClock.getDt()
         
-        if self.is_game_loaded:
-            self.check_movement(task)
-            self.mousePosition(task)
+        self.check_movement(task)
+        self.mousePosition(task)
 
-            self.hand.setPos(self.cam, (0, 20, -10))
-            self.hand.setHpr(self.cam, (180, -58, 0))
-            self.hand.setScale(self.cam, 0.2)
+        self.hand.setPos(self.cam, (0, 20, -10))
+        self.hand.setHpr(self.cam, (180, -58, 0))
+        self.hand.setScale(self.cam, 0.2)
 
         return task.cont
 
@@ -196,15 +196,11 @@ class ociffer(ShowBase):
             cam_pos.z -= speed
 
         self.cam.setPos(cam_pos)
+
         return task.cont
 
 
     def mousePosition(self, task):
-        if not self.mouseWatcherNode.hasMouse():
-            return task.cont
-
-        # get the relative mouse position, 
-        # its always between 1 and -1
         mouse_pos = self.win.getPointer(0)
 
         win_x = self.win.getXSize() 
@@ -213,12 +209,18 @@ class ociffer(ShowBase):
         x = mouse_pos.getX()
         y = mouse_pos.getY()
 
-        # movePointer forces the pointer to that position, half win_x and half win_y (center of the screen),
-        # if its not possible, it returns false
-        if self.win.movePointer(0, win_x // 2, win_y // 2):
+        if self.lock_mouse:
+            self.win.movePointer(0, win_x // 2, win_y // 2)
+            
+        elif self.mouseWatcherNode.hasMouse() and not self.lock_mouse:
+            # get the relative mouse position, 
+            # its always between 1 and -1
 
-            # move the camera accordingly 
-            self.cam.setH(self.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
-            self.cam.setP(self.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)
+            # movePointer forces the pointer to that position, half win_x and half win_y (center of the screen),
+            # if its not possible, it returns false
+            if self.win.movePointer(0, win_x // 2, win_y // 2):
 
+                # move the camera accordingly 
+                self.cam.setH(self.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
+                self.cam.setP(self.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)
         return task.cont
