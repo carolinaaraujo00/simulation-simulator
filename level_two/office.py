@@ -57,7 +57,7 @@ class ociffer(ShowBase):
         self.setup_printer()
         self.setup_ceiling_lights()
         self.setup_giant_orange()
-        self.render.setShaderAuto()
+        # self.render.setShaderAuto()
 
 
         # Play Sounds
@@ -112,15 +112,8 @@ class ociffer(ShowBase):
         orange_location = Vec3(-4, 7, 2)
         self.orange = self.loader.loadModel(orange_map_model_path)
 
-        alight = AmbientLight('alight')
-        alight.setColor(office_ambient_black)
-        alnp = self.render.attachNewNode(alight)
-        self.orange.setLight(alnp)
-       
-        plight = PointLight("plight")
-        plight.setColor(torch_yellow)
-        plnp = self.hand.attachNewNode(plight)
-        self.orange.setLight(plnp)
+        # setup_model_ambient_light(self.render, self.orange)
+        # setup_point_light_in_model_mapping(self.hand, self.orange, Vec3(0,0,0))
 
         self.orange.setScale(0.2, 0.2, 0.2)
         self.orange.reparentTo(self.office_model)
@@ -227,8 +220,5 @@ class ociffer(ShowBase):
             # move the camera accordingly 
             self.cam.setH(self.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
             self.cam.setP(self.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)
-
-        # Debug
-        self.cam.lookAt(self.orange)
 
         return task.cont

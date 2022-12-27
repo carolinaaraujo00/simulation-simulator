@@ -59,13 +59,27 @@ def setup_point_light(render, pos):
 #                  OFFICE LIGHTS                  #
 ###################################################
 
+# For MAPPING
+
+def setup_model_ambient_light(render, model):
+    alight = AmbientLight('alight')
+    alight.setColor(ambient_grey)
+    alnp = render.attachNewNode(alight)
+    model.setLight(alnp)
+
+def setup_point_light_in_model_mapping(model_emmitter, model_receiver, position):
+    plight = PointLight("plight")
+    plight.setColor(torch_yellow)
+    plnp = model_emmitter.attachNewNode(plight)
+    plnp.setPos(position)
+    model_receiver.setLight(plnp)
+
 def setup_office_ambient_light(render):
     # it needs no position because..... it's ambient
     alight = AmbientLight('alight')
     alight.setColor(office_ambient_black)
     alnp = render.attachNewNode(alight)
     render.setLight(alnp)
-
 
 def setup_point_light_in_model(render, model, position):
     plight = PointLight("plight")
