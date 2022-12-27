@@ -11,7 +11,7 @@ def setup_ambient_light(render):
 
 def setup_black_point_light(render, pos):
     plight = PointLight("plight")
-    plight.setColor((0,0,0, 1))
+    plight.setColor((0, 0, 0, 1))
     plnp = render.attachNewNode(plight)
     plnp.setPos(pos[0], pos[1], pos[2])
     render.setLight(plnp) 
@@ -36,10 +36,8 @@ def setup_point_light_in_model(render, model, position):
     plnp = model.attachNewNode(plight)
     plnp.setPos(position)
     print("light position=", position)
-    # plight.setAttenuation((1, 0, 0))
-    plight.setAttenuation((1.5, 0, 0))
-    # plight.setMaxDistance(1)
-    plight.setMaxDistance(0.01)
+    plight.setAttenuation((0, 0, 1))
+    plight.setMaxDistance(1)
     render.setLight(plnp)
 
 def setup_red_spotlight(render, pos, object):

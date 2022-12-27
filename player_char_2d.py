@@ -35,16 +35,6 @@ class PlayerChar2D(Entity, DirectObject):
         }
 
         # Attach point light
-
-        print("fish position=", self.mesh.getPos())
-        self.debug_cube = self.engine_ref.loader.loadModel(cube_model_path)
-        self.debug_cube.setPos((0,15,48))
-        # self.debug_cube.reparentTo(self.mesh)
-        self.debug_cube.reparentTo(self.engine_ref.render)
-        # self.debug_cube.setScale(100)
-        print(self.debug_cube.getPos())
-        # setup_point_light_in_model(self.engine_ref.render, self.mesh, (self.beggining_pos_x, -30, self.beggining_pos_z))
-        setup_black_point_light(self.engine_ref.render, (-50, 0, 20)) 
         setup_point_light_in_model(self.engine_ref.render, self.mesh, (0,15,48))
 
         self.accept_input()
