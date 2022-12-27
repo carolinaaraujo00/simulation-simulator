@@ -27,8 +27,6 @@ class Cockroach:
 
 
     def setup_animation(self):
-        print("Animation")
-        print("self.position", self.position)
         intervals = []
 
         # start Vec3(-4.6, 0.80, 3.4)
@@ -74,8 +72,6 @@ class Cockroach:
         self.position = new_position
         # seconds, final position, start position
         posInterval = self.actor.posInterval(duration, self.position, startPos=self.previous_position)
-        # posInterval = self.actor.posInterval(duration, self.position, startPos=self.position)
-        # print("self.position", self.position)
         return posInterval
 
 
@@ -83,5 +79,4 @@ class Cockroach:
         self.previous_hpr = self.hpr
         self.hpr = new_hpr
         hprInterval = self.actor.hprInterval(duration, self.hpr, startHpr=self.previous_hpr)
-        # print("self.hpr", self.hpr)
         return hprInterval
