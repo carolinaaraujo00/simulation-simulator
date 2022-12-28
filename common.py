@@ -59,6 +59,7 @@ ambient_grey = (0.2, 0.2, 0.2, 1)
 white_ambient = (1, 1, 1, 1)
 
 
+
 # MODEL PATHS
 office_model_path = model_path + level_two + "office_space/office_final.gltf"
 
@@ -82,6 +83,16 @@ office_model_path =   model_path + level_two + "office_space/office/untitled.glt
 # orange_map_model_path = model_path + level_two + "orange_fruit/orange.gltf"
 orange_map_model_path = model_path + level_two + "orange_fruit/orange.egg"
 orange_model_path = model_path + level_two + "orange_fruit/orange.gltf"
+
+cup_of_tea_model_path = model_path + level_two + "tea/cup_of_tea.gltf"
+
+# balls
+flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
+smooth_ball_model_path = model_path + level_two + "balls/smooth_ball.gltf"
+smooth_no_mat_ball_model_path = model_path + level_two + "balls/smooth_ball_no_mat.gltf"
+
+#gourand pig
+gourand_pig_model_path = model_path + level_two + "gourand_pig/pig.gltf"
 
 
 # SOUNDS

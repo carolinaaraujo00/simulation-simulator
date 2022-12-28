@@ -6,8 +6,9 @@ from common import *
 
 
 class Printer:
-    def __init__(self, scene, location):
-        self.actor = None   
+    def __init__(self, loader, scene, location):
+        self.actor = None  
+        self.loader = loader 
         self.position = location  # This is also the initial position of the actor
         self.previous_position = location  
         self.start_position = location  
@@ -19,11 +20,13 @@ class Printer:
         
         # TODO : check warning 
         # Actor(warning): models/level_two/deskjet_printer/paper_anim.gltf is not a character!
-        self.actor = Actor(paper_model_path)
+        # self.actor = Actor(paper_model_path)
+        self.actor = self.loader.loadModel(paper_model_path)
         self.actor.reparentTo(scene)
         self.actor.setPos(self.position)
         self.actor.setHpr(90,0,0)
         self.actor.setScale(self.scale)
+
         self.setup_animation()
 
 
