@@ -20,7 +20,7 @@ class LevelUnderwater(Level):
         self.sound_player.init_sounds()
 
         # Setups up main camera
-        self.main_camera = MainCamera(self.engine_ref.cam, self.sound_player)
+        self.main_camera = MainCamera(self.engine_ref.base.cam, self.sound_player)
         self.main_camera.change_camera_to_ortho(True)
         self.main_camera.camera_glitch_effect_start()
 

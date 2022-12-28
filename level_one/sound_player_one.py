@@ -6,10 +6,10 @@ class SoundPlayerOne:
         self.engine_ref = incoming_engine_ref
 
     def init_sounds(self):
-        self.power_up_sound = self.engine_ref.loader.loadSfx(power_up_sound_path)
-        self.underwater_music = self.engine_ref.loader.loadSfx(underwater_sound_path)
-        self.glitch_sound = self.engine_ref.loader.loadSfx(glitch_sound_path)
-        self.death_sound = self.engine_ref.loader.loadSfx(death_sound_path)
+        self.power_up_sound = self.engine_ref.base.loader.loadSfx(power_up_sound_path)
+        self.underwater_music = self.engine_ref.base.loader.loadSfx(underwater_sound_path)
+        self.glitch_sound = self.engine_ref.base.loader.loadSfx(glitch_sound_path)
+        elf.death_sound = self.engine_ref.base.loader.loadSfx(death_sound_path)
         self.power_up_sound.setLoop(False)
         self.death_sound.setLoop(False)
         self.underwater_music.setLoop(True)
