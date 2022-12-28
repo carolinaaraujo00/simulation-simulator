@@ -48,6 +48,7 @@ underwater_sound_path = sound_path + level_one + "Underwater.ogg"
 
 power_up_sound_path = sound_path + level_one + "power_up.wav"
 glitch_sound_path = sound_path + level_one + "glitch.ogg"
+death_sound_path = sound_path + level_one + "death.ogg"
 
 
 ##################################################
@@ -79,7 +80,6 @@ torch_model_path =  model_path + level_two + "office_space/minecraft_torch/scene
 hand_model_path =  model_path + level_two + "arm/arm.gltf"
 office_model_path =   model_path + level_two + "office_space/office/untitled.gltf"
 
-# orange_map_model_path = model_path + level_two + "orange_fruit/orange.gltf"
 orange_map_model_path = model_path + level_two + "orange_fruit/orange.egg"
 orange_model_path = model_path + level_two + "orange_fruit/orange.gltf"
 
@@ -90,6 +90,7 @@ flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
 smooth_ball_model_path = model_path + level_two + "balls/smooth_ball.gltf"
 smooth_no_mat_ball_model_path = model_path + level_two + "balls/smooth_ball_no_mat.gltf"
 podium_model_path = model_path + level_two + "podium/scene.gltf"
+text_ball_model_path = model_path + level_two + "text/choose_ball.gltf"
 
 #gourand pig
 gourand_pig_model_path = model_path + level_two + "gourand_pig/pig.gltf"
