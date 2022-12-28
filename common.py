@@ -80,6 +80,7 @@ office_model_path =   model_path + level_two + "office_space/office/untitled.glt
 # orange_map_model_path = model_path + level_two + "orange_fruit/orange.gltf"
 orange_map_model_path = model_path + level_two + "orange_fruit/orange.egg"
 orange_model_path = model_path + level_two + "orange_fruit/orange.gltf"
+cup_of_tea_model_path = model_path + level_two + "tea/cup_of_tea.gltf"
 
 # balls
 flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"

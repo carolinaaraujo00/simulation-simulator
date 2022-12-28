@@ -74,6 +74,7 @@ class ociffer(ShowBase):
         self.setup_ceiling_lights()
         self.setup_balls()
         self.setup_pig()
+        self.setup_tea_glass()
 
         # Play Sounds
         self.sound_player.play_sounds()
@@ -172,6 +173,13 @@ class ociffer(ShowBase):
         self.pig.setHpr(180,0,0)
         self.pig.setScale(0.25)
         self.pig.reparentTo(self.render)
+
+    def setup_tea_glass(self):
+        self.tea = self.loader.loadModel(cup_of_tea_model_path)
+        self.tea.setPos(-0.1, -3.1, 2.7)
+        # self.tea.setHpr(180,0,0)
+        self.tea.setScale(0.75)
+        self.tea.reparentTo(self.render)
 
     def setup_ceiling_lights(self):
         self.c_lamp = self.loader.loadModel(ceiling_lamp_model_path)
