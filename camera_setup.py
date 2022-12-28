@@ -18,33 +18,26 @@ class MainCamera:
         self.setup_camera_perspective(self.camera)
 
         self.is_breathing = False
-
-
-        # self.init_movement()
-
+        self.can_play_glitch = True
 
     def save_perspective(self) -> None:
         self.original_lens = self.camera.node().getLens()
         self.current_fov = self.original_lens.getFov()
-        print("Fov=", self.current_fov)
 
-        # lens.setFilmSize(16, 9)  # Or whatever is appropriate for your scene
-        # lens.setNearFar(-50, 50)    
     def setup_camera_perspective(self, camera):
         lens = OrthographicLens()
-        # multiplier = 5
-        # multiplier = 2.6
         multiplier = 0.6
         lens.setFilmSize(24 * multiplier, 36 * multiplier)  # Or whatever is appropriate for your scene
         lens.setFocalLength(50)
         lens.setAspectRatio(1920/1080)
-        # lens.setAspectRatio(1280/720)
         self.ortho_lens = lens
         camera.node().setLens(lens)
 
     def change_camera_ortho(self) -> None:
         self.is_ortho = not self.is_ortho
         if self.is_ortho:
+            self.can_play_glitch = True
+            self.is_breathing = False
             self.camera.node().setLens(self.ortho_lens)
         else:
             self.camera.node().setLens(self.original_lens)
@@ -52,6 +45,8 @@ class MainCamera:
     def change_camera_to_ortho(self, change_to_ortho : bool) -> None:
         self.is_ortho = change_to_ortho
         if change_to_ortho:
+            self.can_play_glitch = True
+            self.is_breathing = False
             self.camera.node().setLens(self.ortho_lens)
         else:
             self.camera.node().setLens(self.original_lens)
@@ -85,18 +80,22 @@ class MainCamera:
         self.camera_glitch.daemon = True
         self.camera_glitch.start()
 
-    # TODO: Bug de não ativa em ortho
     def camera_glitch_effect(self):
         while self.is_glitchy:
             time.sleep(7)
-            if not self.is_breathing:
-                self.sound_player.glitch()
-                self.change_camera_ortho()
-                time.sleep(0.5)
-                self.change_camera_ortho()
+            if self.can_play_glitch:
+                if not self.is_breathing:
+                    self.sound_player.glitch()
+                    self.change_camera_ortho()
+                    time.sleep(0.5)
+                    self.change_camera_ortho()
 
 
     def fov_breath_method(self):
+        if self.is_ortho:
+            return
+
+        self.can_play_glitch = False
         self.is_breathing = True
         self.breathing_counter = 0
         self.incraesing = True
@@ -117,6 +116,10 @@ class MainCamera:
                         self.incraesing = True
                         self.zoom_in_out = self.zoom_in_out + 1
         
+        self.can_play_glitch = True
         self.is_breathing = False
-            
-        # TODO: stop thread
+
+    def stop_threads(self):
+        self.zoom_in_out = 3
+        self.is_breathing = False
+        self.is_glitchy = False

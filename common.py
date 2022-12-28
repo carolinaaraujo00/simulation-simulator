@@ -48,6 +48,7 @@ underwater_sound_path = sound_path + level_one + "Underwater.ogg"
 
 power_up_sound_path = sound_path + level_one + "power_up.wav"
 glitch_sound_path = sound_path + level_one + "glitch.ogg"
+death_sound_path = sound_path + level_one + "death.ogg"
 
 
 ##################################################
@@ -77,10 +78,8 @@ sphere_model_path = model_path + level_two + "sphere/sphere.gltf"
 torch_model_path =  model_path + level_two + "office_space/minecraft_torch/scene.gltf"
 
 hand_model_path =  model_path + level_two + "arm/arm.gltf"
-# hand_model_path =  model_path + level_two + "arm/arm.egg"
 office_model_path =   model_path + level_two + "office_space/office/untitled.gltf"
 
-# orange_map_model_path = model_path + level_two + "orange_fruit/orange.gltf"
 orange_map_model_path = model_path + level_two + "orange_fruit/orange.egg"
 orange_model_path = model_path + level_two + "orange_fruit/orange.gltf"
 

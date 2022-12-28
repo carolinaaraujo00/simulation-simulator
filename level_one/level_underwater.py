@@ -15,8 +15,17 @@ class LevelUnderwater(Level):
         # 2D level position
         self.y_pos = -15
         
+        # Add sounds
+        self.sound_player = SoundPlayerOne(self.engine_ref)
+        self.sound_player.init_sounds()
+
+        # Setups up main camera
+        self.main_camera = MainCamera(self.engine_ref.cam, self.sound_player)
+        self.main_camera.change_camera_to_ortho(True)
+        self.main_camera.camera_glitch_effect_start()
+
         # Player
-        self.player_char_2d = PlayerChar2D(self.engine_ref, Vec3(-97, self.y_pos, 3), Vec3(-90, 0, 0), Vec3(0.01, 0.01, 0.01), False)
+        self.player_char_2d = PlayerChar2D(self.engine_ref, self.sound_player, Vec3(-97, self.y_pos, 3), Vec3(-90, 0, 0), Vec3(0.01, 0.01, 0.01), False)
         self.add_actor(self.player_char_2d)
         self.player = self.player_char_2d
 
@@ -109,14 +118,6 @@ class LevelUnderwater(Level):
             Vec3(55, self.y_pos, 9.8)
         ]
 
-        # Add sounds
-        self.sound_player = SoundPlayerOne(self.engine_ref)
-        self.sound_player.init_sounds()
-
-        # Setups up main camera
-        self.main_camera = MainCamera(self.engine_ref.cam, self.sound_player)
-        self.main_camera.change_camera_to_ortho(True)
-        self.main_camera.camera_glitch_effect_start()
 
         for index, pos in enumerate(orb_positions):
             self.orbs.append(ShadingOrb(self.engine_ref, self.sound_player, self.main_camera, orb_positions[index], Vec3(45, 45, 45), Vec3(2, 2, 2), True, index + 2))
