@@ -35,6 +35,7 @@ class ociffer(ShowBase):
         self.init_movement()
 
         setup_black_ambient_light(self.render)
+        # setup_ambient_light(self.render, office_ambient_black)
 
 
         self.sound_player = SoundPlayerTwo(self)
@@ -74,6 +75,9 @@ class ociffer(ShowBase):
         self.setup_cockroach()
         self.setup_printer()
         self.setup_ceiling_lights()
+        self.setup_giant_orange()
+        # self.render.setShaderAuto()
+
         self.setup_balls()
         self.setup_pig()
         self.setup_tea_glass()
@@ -99,7 +103,7 @@ class ociffer(ShowBase):
         self.hand = self.loader.loadModel(hand_model_path)
         self.hand.setScale(self.cam, 0.2)
         self.hand.reparentTo(self.render)
-
+        print("hand =", self.hand.getPos())
 
     def setup_torch(self):
         self.sphere = self.loader.loadModel(sphere_model_path)
@@ -130,8 +134,13 @@ class ociffer(ShowBase):
         orange_location = Vec3(-4, 7, 2)
         self.orange = self.loader.loadModel(orange_map_model_path)
 
+    def setup_giant_orange(self):
+        orange_location = Vec3(-4, 7, 2)
+        self.orange = self.loader.loadModel(orange_map_model_path)
+
         # attribute grey ambient light to orange
         # Then the light that affects the model
+
         # setup_model_ambient_light(self.render, self.orange)
         # setup_point_light_in_model_mapping(self.hand, self.orange, Vec3(0,0,0))
 
@@ -139,6 +148,7 @@ class ociffer(ShowBase):
         self.orange.reparentTo(self.office_model)
         self.orange.setPos(orange_location)
         self.orange.setHpr((90, 20, 0))
+
 
     def setup_balls(self):
         ball_location = Vec3(-4.21, 0.375, 3.55)
