@@ -1,7 +1,6 @@
 import numpy
 
 from panda3d.core import CollisionTraverser, CollisionHandlerEvent, loadPrcFileData, TextureStage
-from direct.showbase.ShowBase import ShowBase
 from direct.showbase.Transitions import Transitions
 
 import simplepbr 

@@ -38,7 +38,7 @@ class PlayerChar2D(Entity, DirectObject):
         }
 
         # Attach point light
-        setup_point_light_in_model(self.engine_ref.base.render, self.mesh, (0,15,48))
+        setup_point_light_in_model(self.engine_ref.base.render, self.mesh, (0, 15, 48))
 
         self.accept_input()
 
@@ -56,11 +56,20 @@ class PlayerChar2D(Entity, DirectObject):
 
     def accept_input(self):
         # Keyboard events
+        self.engine_ref.base.accept("a", self.update_key_map, ["left", True])
+        self.engine_ref.base.accept("a-up", self.update_key_map, ["left", False])
         self.engine_ref.base.accept("arrow_left", self.update_key_map, ["left", True])
         self.engine_ref.base.accept("arrow_left-up", self.update_key_map, ["left", False])
+
+        self.engine_ref.base.accept("d", self.update_key_map, ["right", True])
+        self.engine_ref.base.accept("d-up", self.update_key_map, ["right", False])
         self.engine_ref.base.accept("arrow_right", self.update_key_map, ["right", True])
         self.engine_ref.base.accept("arrow_right-up", self.update_key_map, ["right", False])
+
+        self.engine_ref.base.accept("w", self.jump)
         self.engine_ref.base.accept("arrow_up", self.jump)
+        self.engine_ref.base.accept("space", self.jump)
+
         self.engine_ref.base.accept("escape", sys.exit)
 
     def update_key_map(self, control_name, state):
@@ -73,7 +82,7 @@ class PlayerChar2D(Entity, DirectObject):
     def jump(self):
         if self.is_on_floor and self.can_move:
             self.is_on_floor = False
-            self.velocity.z = self.JUMP_FORCE * 2.3
+            self.velocity.z = self.JUMP_FORCE 
 
     def set_pos_on_collision(self, entry):
         if self.velocity.z < 0:

@@ -1,6 +1,5 @@
 import math
 
-from direct.showbase.ShowBase import ShowBase
 from panda3d.core import *
 from common import *
 from light_setup import *
@@ -20,7 +19,7 @@ from panda3d.core import Material
 
 loadPrcFileData("", configVars)
 
-class ociffer(ShowBase):
+class ociffer():
     def __init__(self, base, debug):
         self.base = base
         # super().__init__()
@@ -258,15 +257,23 @@ class ociffer(ShowBase):
 
         self.base.accept("a", updateKeyMap, ["left", True])
         self.base.accept("a-up", updateKeyMap, ["left", False])
+        self.base.accept("arrow_left", updateKeyMap, ["left", True])
+        self.base.accept("arrow_left-up", updateKeyMap, ["left", False])
 
         self.base.accept("d", updateKeyMap, ["right", True])
         self.base.accept("d-up", updateKeyMap, ["right", False])
+        self.base.accept("arrow_right", updateKeyMap, ["right", True])
+        self.base.accept("arrow_right-up", updateKeyMap, ["right", False])
 
         self.base.accept("w", updateKeyMap, ["up", True])
         self.base.accept("w-up", updateKeyMap, ["up", False])
+        self.base.accept("arrow_up", updateKeyMap, ["up", True])
+        self.base.accept("arrow_up-up", updateKeyMap, ["up", False])
 
         self.base.accept("s", updateKeyMap, ["down", True])
         self.base.accept("s-up", updateKeyMap, ["down", False])
+        self.base.accept("arrow_down", updateKeyMap, ["up", True])
+        self.base.accept("arrow_down-up", updateKeyMap, ["up", False])
 
         # Debug
         self.base.accept("x", updateKeyMap, ["elevate", True])
@@ -275,7 +282,7 @@ class ociffer(ShowBase):
         self.base.accept("z", updateKeyMap, ["lower", True])
         self.base.accept("z-up", updateKeyMap, ["lower", False])
 
-        self.accept("escape", sys.exit)
+        self.base.accept("escape", sys.exit)
 
 
     def mousePosition(self, task):
