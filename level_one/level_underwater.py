@@ -18,6 +18,7 @@ class LevelUnderwater(Level):
         # Setups up main camera
         self.main_camera = MainCamera(self.engine_ref.cam)
         self.main_camera.change_camera_to_ortho(True)
+        self.main_camera.fov_breathing_effect_start()
 
         # Player
         self.player_char_2d = PlayerChar2D(self.engine_ref, Vec3(-97, self.y_pos, 3), Vec3(-90, 0, 0), Vec3(0.01, 0.01, 0.01), False)

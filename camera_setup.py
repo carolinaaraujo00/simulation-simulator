@@ -1,5 +1,8 @@
 from panda3d.core import OrthographicLens
 from common import *
+import threading
+import time
+
 
 class MainCamera:
     def __init__(self, main_camera):
@@ -20,8 +23,6 @@ class MainCamera:
         self.current_fov = self.original_lens.getFov()
         print("Fov=", self.current_fov)
 
-
-        # lens.setFov(51, 30)
         # lens.setFilmSize(16, 9)  # Or whatever is appropriate for your scene
         # lens.setNearFar(-50, 50)    
     def setup_camera_perspective(self, camera):
@@ -39,10 +40,8 @@ class MainCamera:
     def change_camera_ortho(self) -> None:
         self.is_ortho = not self.is_ortho
         if self.is_ortho:
-            print("Is ortho")
             self.camera.node().setLens(self.ortho_lens)
         else:
-            print("Is pers")
             self.camera.node().setLens(self.original_lens)
 
     def change_camera_to_ortho(self, change_to_ortho : bool) -> None:
@@ -55,7 +54,6 @@ class MainCamera:
     def set_camera_fov(self, fov_value : int, focal_length_value : int):
         lens = self.camera.node().getLens()
         lens.setFov(fov_value)
-        # lens.setFocalLength(focal_length_value)
 
     def get_camera_fov(self):
         lens = self.camera.node().getLens()
@@ -63,32 +61,35 @@ class MainCamera:
 
     def add_camera_fov(self):
         lens = self.camera.node().getLens()
-        self.current_fov = self.current_fov + 3
+        self.current_fov = self.current_fov + 0.1
         lens.setFov(self.current_fov)
-        print("FOV = ", self.current_fov)
     
     def subtract_camera_fov(self):
         lens = self.camera.node().getLens()
-        self.current_fov = self.current_fov - 3
+        self.current_fov = self.current_fov - 0.1
         lens.setFov(self.current_fov)
-        print("FOV = ", self.current_fov)
 
-    def init_movement(self):
+    def fov_breathing_effect_start(self):
+        self.is_breathing = True
+        self.fov_breath = threading.Thread(target=self.fov_increase_method, args=())
+        self.fov_breath.daemon = True
+        self.fov_breath.start()
 
-        self.accept("KP_Add", updateCameraKeyMap, ["plus_fov", True])
-        self.accept("KP_Add-up", updateCameraKeyMap, ["plus_fov", False])
+    def fov_increase_method(self):
+        self.breathing_counter = 0
+        self.incraesing = True
 
-        self.accept("KP_Subtract", updateCameraKeyMap, ["minus_fov", True])
-        self.accept("KP_Subtract-up", updateCameraKeyMap, ["minus_fov", False])
-
-    # Called every frame
-    # def update(self, task):
-    def update(self):
-        if camera_input_map["plus_fov"]:
-            print("update")
-            self.add_camera_fov()
-        if camera_input_map["minus_fov"]:
-            print("update")
-            self.subtract_camera_fov()
-
-        # return task.cont
+        while self.is_breathing:
+            time.sleep(0.017)
+            if not self.is_ortho:
+                if self.incraesing:
+                    self.add_camera_fov()
+                    self.breathing_counter = self.breathing_counter + 1
+                    if self.breathing_counter >= 10:
+                        self.incraesing = False
+                else:
+                    self.subtract_camera_fov()
+                    self.breathing_counter = self.breathing_counter - 1
+                    if self.breathing_counter <= 0:
+                        self.incraesing = True
+        # TODO: stop thread
