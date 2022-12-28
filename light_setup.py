@@ -66,9 +66,26 @@ def setup_point_light_in_model(render, model, position):
     #plight.setShadowCaster(True, 1280, 1280)
     plight.setColor((0.83137, 0.42353, 0.00784, 1))
     plnp = model.attachNewNode(plight)
+
     plnp.setPos(position)
     plight.setAttenuation((0, 0, 1))
     plight.setMaxDistance(1)
+
+    render.setLight(plnp)
+
+def setup_ceiling_light(render, model, position):
+    print(position)
+    plight = PointLight("plight")
+
+    plnp = render.attachNewNode(plight)
+
+    plnp.setPos(position)
+    plight.setColor((0.6471, 0.3608, 0.6078, 1))
+    # plight.setAttenuation((0.2, 0.05, 0.05))
+    plight.setAttenuation((0, 0, 1))
+    # plight.setMaxDistance(1)
+    # plight.setShadowCaster(True, 512, 512)
+
     render.setLight(plnp)
 
 def setup_torch_spotlight(render, model, position):

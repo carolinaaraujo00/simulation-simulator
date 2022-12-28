@@ -11,6 +11,7 @@ import threading
 from level_two.cockroach import *
 from level_two.printer import *
 from level_two.sound_player_two import *
+from level_two.lamp import * 
 
 
 loadPrcFileData("", configVars)
@@ -28,7 +29,7 @@ class ociffer(ShowBase):
 
         # movement variables and key mapping 
         self.disable_mouse()
-        self.lock_mouse = True 
+        self.lock_move = True 
         self.init_movement()
 
         setup_black_ambient_light(self.render)
@@ -55,14 +56,14 @@ class ociffer(ShowBase):
         self.taskMgr.add(self.update, "update")
         
         if not debug: 
-            timer = threading.Timer(7.5, self.unlock_mouse)
+            timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
         else: 
-            timer = threading.Timer(2, self.unlock_mouse)
+            timer = threading.Timer(2, self.unlock_move)
             timer.start()
 
-    def unlock_mouse(self):
-        self.lock_mouse = False 
+    def unlock_move(self):
+        self.lock_move = False 
 
 
     def thread_function(self):
@@ -123,15 +124,13 @@ class ociffer(ShowBase):
         self.printer = self.loader.loadModel(printer_model_path)
         self.printer.reparentTo(self.office_model)
         self.printer.setPos(printer_location)
-        self.printer_paper = Printer(self.office_model, printer_location )
+        self.printer_paper = Printer(self.office_model, printer_location)
 
 
     def setup_ceiling_lights(self):
-        self.c_lamp1 = self.loader.loadModel(ceiling_lamp_model_path)
-        self.c_lamp1.setPos(-4, 17, 3)
-        self.c_lamp1.setHpr(140, 0, 0)
-        self.c_lamp1.setScale(4)
-        self.c_lamp1.reparentTo(self.render)
+        lamp1 = Lamp(self.loader, self.render, (-4, 17, 3))
+        lamp2 = Lamp(self.loader, self.render, (8, 7, 3))
+        lamp3 = Lamp(self.loader, self.render, (22, -3, 3))
 
 
     # Called every frame
@@ -174,35 +173,36 @@ class ociffer(ShowBase):
 
 
     def check_movement(self, task):
-        cam_pos = self.cam.getPos()
+        if not self.lock_move:
+            cam_pos = self.cam.getPos()
 
-        speed = self.speed * self.dt
-        angle = math.radians(self.cam.getH())    # Remember to convert to radians!
-        
-        change = [speed * math.cos(angle), speed * math.sin(angle)]
+            speed = self.speed * self.dt
+            angle = math.radians(self.cam.getH())    # Remember to convert to radians!
+            
+            change = [speed * math.cos(angle), speed * math.sin(angle)]
 
-        if key_map_3d["left"]:
-            cam_pos.x -= change[0]
-            cam_pos.y -= change[1]
-        if key_map_3d["right"]:
-            cam_pos.x += change[0]
-            cam_pos.y += change[1]
+            if key_map_3d["left"]:
+                cam_pos.x -= change[0]
+                cam_pos.y -= change[1]
+            if key_map_3d["right"]:
+                cam_pos.x += change[0]
+                cam_pos.y += change[1]
 
-        if key_map_3d["up"]:
-            cam_pos.y += change[0]
-            cam_pos.x -= change[1]
-        if key_map_3d["down"]:
-            cam_pos.y -= change[0]
-            cam_pos.x += change[1]
+            if key_map_3d["up"]:
+                cam_pos.y += change[0]
+                cam_pos.x -= change[1]
+            if key_map_3d["down"]:
+                cam_pos.y -= change[0]
+                cam_pos.x += change[1]
 
-        # Debug
-        if key_map_3d["elevate"]:
-            cam_pos.z += speed
-        if key_map_3d["lower"]:
-            cam_pos.z -= speed
+            # Debug
+            if key_map_3d["elevate"]:
+                cam_pos.z += speed
+            if key_map_3d["lower"]:
+                cam_pos.z -= speed
 
-        self.cam.setPos(cam_pos)
-        print(cam_pos)
+            self.cam.setPos(cam_pos)
+
         return task.cont
 
 
@@ -215,10 +215,10 @@ class ociffer(ShowBase):
         x = mouse_pos.getX()
         y = mouse_pos.getY()
 
-        if self.lock_mouse:
+        if self.lock_move:
             self.win.movePointer(0, win_x // 2, win_y // 2)
             
-        elif self.mouseWatcherNode.hasMouse() and not self.lock_mouse:
+        elif self.mouseWatcherNode.hasMouse() and not self.lock_move:
             # movePointer forces the pointer to that position, half win_x and half win_y (center of the screen),
             # if its not possible, it returns false
             if self.win.movePointer(0, win_x // 2, win_y // 2):
