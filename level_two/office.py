@@ -11,6 +11,9 @@ import threading
 from level_two.cockroach import *
 from level_two.printer import *
 from level_two.sound_player_two import *
+from level_two.lamp import * 
+
+import sys
 from level_two.balls import *
 from panda3d.core import Material
 
@@ -19,7 +22,7 @@ from panda3d.core import Material
 loadPrcFileData("", configVars)
 
 class ociffer(ShowBase):
-    def __init__(self):
+    def __init__(self, debug):
         super().__init__()
         simplepbr.init()
 
@@ -31,7 +34,7 @@ class ociffer(ShowBase):
 
         # movement variables and key mapping 
         self.disable_mouse()
-        self.lock_mouse = True 
+        self.lock_move = True 
         self.init_movement()
 
         setup_black_ambient_light(self.render)
@@ -45,9 +48,10 @@ class ociffer(ShowBase):
         self.props.setCursorHidden(True)
         self.win.requestProperties(self.props)
         
-        self.cam.setPos(6, 7, 6) # X = left & right, Y = zoom, Z = Up & down.
-        self.cam.setHpr(140, -20, 0) # Heading, pitch, roll.
+        self.cam.setPos(9.20, 8.80, 6) # X = left & right, Y = zoom, Z = Up & down.
+        self.cam.setHpr(140, -10, 0) # Heading, pitch, roll.
         self.mouse_sens = 2.5
+        self.repeat_lights = True
 
         load_thread = threading.Thread(target=self.thread_function, args=())
         load_thread.start()
@@ -58,12 +62,15 @@ class ociffer(ShowBase):
        
         self.taskMgr.add(self.update, "update")
         
-        timer = threading.Timer(7.5, self.unlock_mouse)
-        timer.start()
+        if not debug: 
+            timer = threading.Timer(7.5, self.unlock_move)
+            timer.start()
+        else: 
+            timer = threading.Timer(2, self.unlock_move)
+            timer.start()
 
-
-    def unlock_mouse(self):
-        self.lock_mouse = False 
+    def unlock_move(self):
+        self.lock_move = False 
 
 
     def thread_function(self):
@@ -95,6 +102,7 @@ class ociffer(ShowBase):
 
     def setup_office_room(self):
         self.office_room_model = self.loader.loadModel(office_room_model_path)
+        self.office_room_model.setPos(self.office_room_model.getPos() + (10, 10, 0))
         self.office_room_model.setScale(0.7)
         self.office_room_model.reparentTo(self.render)
 
@@ -202,11 +210,13 @@ class ociffer(ShowBase):
         self.tea.reparentTo(self.render)
 
     def setup_ceiling_lights(self):
-        self.c_lamp = self.loader.loadModel(ceiling_lamp_model_path)
-        self.c_lamp.setPos(-8, -8, 2)
-        self.c_lamp.setScale(4)
-        self.c_lamp.reparentTo(self.render)
+        self.lamp1 = Lamp(self.loader, self.render, (-4, 17, 3))
+        self.lamp2 = Lamp(self.loader, self.render, (22, -3, 3))
+        # middle_lamp = Lamp(self.loader, self.render, (8, 7, 3))
 
+        self.light_timer = threading.Timer(1, self.lights_off, args=(False,))
+        self.light_timer.daemon = True
+        self.light_timer.start()
 
     # Called every frame
     def update(self, task):
@@ -216,8 +226,8 @@ class ociffer(ShowBase):
         self.check_movement(task)
         self.mousePosition(task)
 
-        self.hand.setPos(self.cam, (0, 20, -10))
-        self.hand.setHpr(self.cam, (180, -58, 0))
+        self.hand.setPos(self.cam, (1, 1.5, -0.8))
+        self.hand.setHpr(self.cam, (200, -32, 0))
         self.hand.setScale(self.cam, 0.2)
 
         return task.cont
@@ -246,38 +256,7 @@ class ociffer(ShowBase):
         self.accept("z", updateKeyMap, ["lower", True])
         self.accept("z-up", updateKeyMap, ["lower", False])
 
-
-    def check_movement(self, task):
-        cam_pos = self.cam.getPos()
-
-        speed = self.speed * self.dt
-        angle = math.radians(self.cam.getH())    # Remember to convert to radians!
-        
-        change = [speed * math.cos(angle), speed * math.sin(angle)]
-
-        if key_map_3d["left"]:
-            cam_pos.x -= change[0]
-            cam_pos.y -= change[1]
-        if key_map_3d["right"]:
-            cam_pos.x += change[0]
-            cam_pos.y += change[1]
-
-        if key_map_3d["up"]:
-            cam_pos.y += change[0]
-            cam_pos.x -= change[1]
-        if key_map_3d["down"]:
-            cam_pos.y -= change[0]
-            cam_pos.x += change[1]
-
-        # Debug
-        if key_map_3d["elevate"]:
-            cam_pos.z += speed
-        if key_map_3d["lower"]:
-            cam_pos.z -= speed
-
-        self.cam.setPos(cam_pos)
-
-        return task.cont
+        self.accept("escape", sys.exit)
 
 
     def mousePosition(self, task):
@@ -289,13 +268,10 @@ class ociffer(ShowBase):
         x = mouse_pos.getX()
         y = mouse_pos.getY()
 
-        if self.lock_mouse:
+        if self.lock_move:
             self.win.movePointer(0, win_x // 2, win_y // 2)
             
-        elif self.mouseWatcherNode.hasMouse() and not self.lock_mouse:
-            # get the relative mouse position, 
-            # its always between 1 and -1
-
+        elif self.mouseWatcherNode.hasMouse() and not self.lock_move:
             # movePointer forces the pointer to that position, half win_x and half win_y (center of the screen),
             # if its not possible, it returns false
             if self.win.movePointer(0, win_x // 2, win_y // 2):
@@ -304,3 +280,69 @@ class ociffer(ShowBase):
                 self.cam.setH(self.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
                 self.cam.setP(self.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)
         return task.cont
+
+
+    def check_movement(self, task):
+        if not self.lock_move:
+            cam_pos = self.cam.getPos()
+
+            speed = self.speed * self.dt
+            angle = math.radians(self.cam.getH())    # Remember to convert to radians!
+            
+            change = [speed * math.cos(angle), speed * math.sin(angle)]
+
+            if key_map_3d["left"]:
+                cam_pos.x -= change[0]
+                cam_pos.y -= change[1]
+            if key_map_3d["right"]:
+                cam_pos.x += change[0]
+                cam_pos.y += change[1]
+
+            if key_map_3d["up"]:
+                cam_pos.y += change[0]
+                cam_pos.x -= change[1]
+            if key_map_3d["down"]:
+                cam_pos.y -= change[0]
+                cam_pos.x += change[1]
+
+            # Debug
+            if key_map_3d["elevate"]:
+                cam_pos.z += speed
+            if key_map_3d["lower"]:
+                cam_pos.z -= speed
+
+            self.cam.setPos(cam_pos)
+
+        return task.cont
+
+
+    # called first, turns off the lights and immediatly after turns them on 
+    def lights_off(self, repeat):
+        for light in self.lamp1.lights:
+            turn_off(light)
+
+        if repeat: 
+            self.repeat_lights = not self.repeat_lights
+
+        self.light_timer = threading.Timer(0.05, self.lights_on)
+        self.light_timer.daemon = True
+        self.light_timer.start()
+
+
+
+    # called 0.1 seconds after lights off and turns on the lights
+    # waits another second before calling lights off again 
+    def lights_on(self):
+        for light in self.lamp1.lights:
+            self.sound_player.play_interruptor()
+            turn_on(light)
+
+        if self.repeat_lights: 
+            self.light_timer = threading.Timer(0.05, self.lights_off, args=(True,))
+        
+        else:
+            self.light_timer = threading.Timer(2, self.lights_off, args=(False,))
+            self.repeat_lights = not self.repeat_lights
+
+        self.light_timer.daemon = True
+        self.light_timer.start()

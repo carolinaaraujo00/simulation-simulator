@@ -32,8 +32,8 @@ class SoundPlayerTwo:
         self.intro_music.setVolume(main_volume)
 
         self.cockroach.setVolume(background_volume)
-        self.light_buzz.setVolume(background_volume)
-        self.light_on.setVolume(background_volume)
+        self.light_buzz.setVolume(background_volume * 3)
+        self.light_on.setVolume(background_volume * 3)
         self.printer.setVolume(background_volume)
 
     def wait_for_load_thread(self):
@@ -48,11 +48,16 @@ class SoundPlayerTwo:
 
     def play_sounds(self):
         x = threading.Thread(target=self.wait_for_load_thread, args=())
+        x.daemon = True
         x.start()
         self.cockroach.play()
         self.printer.play()
 
     def play_lights_on(self):
         x = threading.Thread(target=self.play_lights_on_thread, args=())
+        x.daemon = True
         x.start()
+
+    def play_interruptor(self):
+        self.light_on.play()
 
