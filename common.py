@@ -90,6 +90,7 @@ flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
 smooth_ball_model_path = model_path + level_two + "balls/smooth_ball.gltf"
 smooth_no_mat_ball_model_path = model_path + level_two + "balls/smooth_ball_no_mat.gltf"
 podium_model_path = model_path + level_two + "podium/scene.gltf"
+text_ball_model_path = model_path + level_two + "text/choose_ball.gltf"
 
 #gourand pig
 gourand_pig_model_path = model_path + level_two + "gourand_pig/pig.gltf"

@@ -22,7 +22,7 @@ def run(level : int):
     else:
         sys.exit(0)
 
-run(level = 1)
+run(level = 2)
 
 
 

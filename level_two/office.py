@@ -162,6 +162,11 @@ class ociffer(ShowBase):
         self.podium.setScale(0.35)
         self.podium.setPos(10.6, -5.8, 0)
         self.podium.setHpr((120, 0, 0))
+        
+        self.text_choose_ball = self.loader.loadModel(text_ball_model_path)
+        self.text_choose_ball.reparentTo(self.podium)
+        self.text_choose_ball.setPos(0, 0, 15)
+        
 
         sphere = self.loader.loadModel(sphere_model_path)
         sphere.reparentTo(self.podium)
@@ -299,6 +304,9 @@ class ociffer(ShowBase):
                 # move the camera accordingly 
                 self.cam.setH(self.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
                 self.cam.setP(self.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)
+        
+        self.text_choose_ball.lookAt(self.cam)
+
         return task.cont
 
 
