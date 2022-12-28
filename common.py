@@ -63,6 +63,9 @@ white_ambient = (1, 1, 1, 1)
 
 
 # MODEL PATHS
+
+# office_model_path =   model_path + level_two + "office_space/office/untitled.gltf"
+
 office_model_path = model_path + level_two + "office_space/office_final.gltf"
 
 office_room_model_path = model_path + level_two + "office_space/office_room.gltf"
@@ -78,12 +81,14 @@ sphere_model_path = model_path + level_two + "sphere/sphere.gltf"
 torch_model_path =  model_path + level_two + "office_space/minecraft_torch/scene.gltf"
 
 hand_model_path =  model_path + level_two + "arm/arm.gltf"
-office_model_path =   model_path + level_two + "office_space/office/untitled.gltf"
 
 orange_map_model_path = model_path + level_two + "orange_fruit/orange.egg"
 orange_model_path = model_path + level_two + "orange_fruit/orange.gltf"
 
 cup_of_tea_model_path = model_path + level_two + "tea/cup_of_tea.gltf"
+
+telephone_base_model_path = model_path + level_two + "office_space/telephone_base.gltf"
+telephone_ring_model_path = model_path + level_two + "office_space/telephone_anim.gltf"
 
 # balls
 flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"

@@ -84,6 +84,7 @@ class ociffer():
         self.setup_balls()
         self.setup_pig()
         self.setup_tea_glass()
+        self.setup_telephone()
         # self.render.setShaderAuto()
 
         # Play Sounds
@@ -239,6 +240,13 @@ class ociffer():
         self.light_timer = threading.Timer(1, self.lights_off, args=(False,))
         self.light_timer.daemon = True
         self.light_timer.start()
+
+    def setup_telephone(self):
+        self.telephone_base = self.base.loader.loadModel(telephone_base_model_path)
+        self.telephone_base.setPos(1.05, -3.57, -3.84)
+        # self.telephone_base.setHpr(180,0,0)
+        # self.telephone_base.setScale(0.25)
+        self.telephone_base.reparentTo(self.base.render)
 
 
     # Called every frame
