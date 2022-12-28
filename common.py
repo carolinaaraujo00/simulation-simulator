@@ -55,6 +55,10 @@ power_up_sound_path = sound_path + level_one + "power_up.wav"
 
 torch_yellow = (0.83137, 0.42353, 0.00784, 1)
 office_ambient_black = (0.00, 0.03, 0.06, 0.9)
+ambient_grey = (0.2, 0.2, 0.2, 1)
+white_ambient = (1, 1, 1, 1)
+
+
 
 # MODEL PATHS
 office_model_path = model_path + level_two + "office_space/office_final.gltf"
@@ -73,6 +77,21 @@ torch_model_path =  model_path + level_two + "office_space/minecraft_torch/scene
 
 hand_model_path =  model_path + level_two + "arm/arm.gltf"
 office_model_path =   model_path + level_two + "office_space/office/untitled.gltf"
+
+# orange_map_model_path = model_path + level_two + "orange_fruit/orange.gltf"
+orange_map_model_path = model_path + level_two + "orange_fruit/orange.egg"
+orange_model_path = model_path + level_two + "orange_fruit/orange.gltf"
+
+cup_of_tea_model_path = model_path + level_two + "tea/cup_of_tea.gltf"
+
+# balls
+flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
+smooth_ball_model_path = model_path + level_two + "balls/smooth_ball.gltf"
+smooth_no_mat_ball_model_path = model_path + level_two + "balls/smooth_ball_no_mat.gltf"
+
+#gourand pig
+gourand_pig_model_path = model_path + level_two + "gourand_pig/pig.gltf"
+
 
 # SOUNDS
 intro_level2_sound_path = sound_path + level_two + "intro.ogg"

@@ -14,6 +14,9 @@ from level_two.sound_player_two import *
 from level_two.lamp import * 
 
 import sys
+from level_two.balls import *
+from panda3d.core import Material
+
 
 
 loadPrcFileData("", configVars)
@@ -35,6 +38,7 @@ class ociffer(ShowBase):
         self.init_movement()
 
         setup_black_ambient_light(self.render)
+        # setup_ambient_light(self.render, office_ambient_black)
 
 
         self.sound_player = SoundPlayerTwo(self)
@@ -78,6 +82,12 @@ class ociffer(ShowBase):
         self.setup_cockroach()
         self.setup_printer()
         self.setup_ceiling_lights()
+        self.setup_giant_orange()
+        # self.render.setShaderAuto()
+
+        self.setup_balls()
+        self.setup_pig()
+        self.setup_tea_glass()
 
         # Play Sounds
         self.sound_player.play_sounds()
@@ -101,7 +111,7 @@ class ociffer(ShowBase):
         self.hand = self.loader.loadModel(hand_model_path)
         self.hand.setScale(self.cam, 0.2)
         self.hand.reparentTo(self.render)
-
+        print("hand =", self.hand.getPos())
 
     def setup_torch(self):
         self.sphere = self.loader.loadModel(sphere_model_path)
@@ -126,8 +136,78 @@ class ociffer(ShowBase):
         self.printer = self.loader.loadModel(printer_model_path)
         self.printer.reparentTo(self.office_model)
         self.printer.setPos(printer_location)
-        self.printer_paper = Printer(self.office_model, printer_location)
+        self.printer_paper = Printer(self.loader, self.office_model, printer_location )
 
+    def setup_giant_orange(self):
+        orange_location = Vec3(-4, 7, 2)
+        self.orange = self.loader.loadModel(orange_map_model_path)
+
+    def setup_giant_orange(self):
+        orange_location = Vec3(-4, 7, 2)
+        self.orange = self.loader.loadModel(orange_map_model_path)
+
+        # attribute grey ambient light to orange
+        # Then the light that affects the model
+
+        # setup_model_ambient_light(self.render, self.orange)
+        # setup_point_light_in_model_mapping(self.hand, self.orange, Vec3(0,0,0))
+
+        self.orange.setScale(0.2, 0.2, 0.2)
+        self.orange.reparentTo(self.office_model)
+        self.orange.setPos(orange_location)
+        self.orange.setHpr((90, 20, 0))
+
+
+    def setup_balls(self):
+        ball_location = Vec3(-4.21, 0.375, 3.55)
+        
+        self.flat_ball = Ball(self.loader, self.office_model, ball_location)
+        self.flat_ball.create_flat_ball()
+
+        ball_location.z = 3.55 + 0.38
+        self.flat_bronze_ball = Ball(self.loader, self.office_model, ball_location)
+        self.flat_bronze_ball.create_flat_ball_bronze()
+
+        ball_location.z = 3.55
+        ball_location.y = -0.03
+        self.smooth_ball = Ball(self.loader, self.office_model, ball_location)
+        self.smooth_ball.create_smooth_ball()
+
+        ball_location.z = 3.55 + 0.38
+        ball_location.y = -0.03
+        self.smooth_bronze_ball = Ball(self.loader, self.office_model, ball_location)
+        self.smooth_bronze_ball.create_smooth_ball_bronze()
+
+        ball_location.x = -4.88
+        ball_location.y = 1.55
+        self.moving_flat_ball = Ball(self.loader, self.office_model, ball_location)
+        self.moving_flat_ball.create_moving_flat_ball()
+
+        ball_location.x = -4.79
+        ball_location.y = 0.66
+        ball_location.z = 4.11
+        self.flat_neon_ball = Ball(self.loader, self.office_model, ball_location)
+        self.flat_neon_ball.create_flat_ball_neon()
+
+    def setup_pig(self):
+        self.pig = self.loader.loadModel(gourand_pig_model_path)
+        self.pig.setPos(-4.21, -0.03, 5.50)
+        self.pig.setHpr(180,0,0)
+        self.pig.setScale(0.25)
+        self.pig.reparentTo(self.render)
+
+    def setup_tea_glass(self):
+        self.tea = self.loader.loadModel(cup_of_tea_model_path)
+        # Glass material didn't had transparency originally
+        self.glass = Material()
+        self.glass_diffuse = (0.3, 0.3, 0.3, 0.3)
+        self.glass.setDiffuse(self.glass_diffuse)
+        material = self.tea.findMaterial("vidro")
+        # Changed material and now it does
+        self.tea.replaceMaterial(material, self.glass)
+        self.tea.setPos(-0.1, -3.1, 2.7)
+        self.tea.setScale(0.75)
+        self.tea.reparentTo(self.render)
 
     def setup_ceiling_lights(self):
         self.lamp1 = Lamp(self.loader, self.render, (-4, 17, 3))
