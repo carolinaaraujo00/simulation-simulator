@@ -9,7 +9,9 @@ class SoundPlayerOne:
         self.power_up_sound = self.engine_ref.loader.loadSfx(power_up_sound_path)
         self.underwater_music = self.engine_ref.loader.loadSfx(underwater_sound_path)
         self.glitch_sound = self.engine_ref.loader.loadSfx(glitch_sound_path)
+        self.death_sound = self.engine_ref.loader.loadSfx(death_sound_path)
         self.power_up_sound.setLoop(False)
+        self.death_sound.setLoop(False)
         self.underwater_music.setLoop(True)
         self.set_volumes(0.1)
         self.underwater_music.play()
@@ -17,6 +19,7 @@ class SoundPlayerOne:
     def set_volumes(self, volume_value):
         self.underwater_music.setVolume(volume_value)
         self.power_up_sound.setVolume(0.3)
+        self.death_sound.setVolume(0.7)
         self.glitch_sound.setVolume(0.7)
 
     def power_up(self):
@@ -24,3 +27,6 @@ class SoundPlayerOne:
 
     def glitch(self):
         self.glitch_sound.play()
+
+    def death(self):
+        self.death_sound.play()

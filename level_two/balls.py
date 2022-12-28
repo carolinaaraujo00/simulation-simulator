@@ -16,7 +16,7 @@ class Ball:
         self.start_position = location  
         self.previous_hpr = Point3(0, 0, 0)
         self.hpr = Point3(0, 0, 0)
-        self.scale = Vec3(0.2, 0.2, 0.2)
+        self.scale = Vec3(0.3)
 
         # Creates materials for balls
         self.polished_bronze = Material()
@@ -79,6 +79,7 @@ class Ball:
         self.actor = self.loader.loadModel(flat_ball_model_path)
         self.setup_ball()
         self.setup_animation()
+        self.actor.setScale(0.2)
 
     # Setup scale, parent and position of ball
     def setup_ball(self):
@@ -90,14 +91,14 @@ class Ball:
     def setup_animation(self):
         intervals = []
         # Ball in works Start Vec3(-4.88, 1.55, 3.55)
-        intervals.append(self.define_new_interval(0, Vec3(-4.88, 1.55, 3.55), Point3(0, 0, 0) ))
-        intervals.append(self.define_new_interval(2, Vec3(-3.43, 1.55, 3.55), Point3(0, 0, 360) ))
+        intervals.append(self.define_new_interval(0, Vec3(-4.88, 1.45, 3.55), Point3(0, 0, 0) ))
+        intervals.append(self.define_new_interval(2, Vec3(-3.43, 1.45, 3.55), Point3(0, 0, 360) ))
         # Side
         intervals.append(self.define_new_interval(2, Vec3(-3.43, 0, 3.55), Point3(0, 360, 360) ))
-        intervals.append(self.define_new_interval(2,  Vec3(-3.43,  1.55, 3.55), Point3(0, 0, 360) ))
+        intervals.append(self.define_new_interval(2,  Vec3(-3.43,  1.45, 3.55), Point3(0, 0, 360) ))
         # Return
         # intervals.append(self.define_new_interval(2, Vec3(-3.43,  1.55, 3.55), Point3(0, 0, 0) ))
-        intervals.append(self.define_new_interval(2, Vec3(-4.88, 1.55, 3.55), Point3(0, 0, 0) ))
+        intervals.append(self.define_new_interval(2, Vec3(-4.88, 1.45, 3.55), Point3(0, 0, 0) ))
 
         self.animation_sequence = Sequence(name="animation_ball")
         

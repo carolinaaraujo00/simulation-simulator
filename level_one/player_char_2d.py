@@ -11,9 +11,11 @@ from camera_setup import *
 
 # Needs to inherit from DirectObject to receive collision notifications
 class PlayerChar2D(Entity, DirectObject):
-    def __init__(self, incoming_engine_ref, pos, rot, scale, spcl_shading):
+    def __init__(self, incoming_engine_ref, sound_player, pos, rot, scale, spcl_shading):
         super().__init__(incoming_engine_ref, pos, rot, scale, angler_fish_model_path, False, spcl_shading)
         
+        self.sound_player = sound_player
+
         self.SPEED = 0.7
         self.JUMP_FORCE = 10
         self.FRICTION = -0.12
@@ -111,7 +113,7 @@ class PlayerChar2D(Entity, DirectObject):
         if self.pos.z < self.engine_ref.cam_z_limits[0]:
             self.pos.x = self.beggining_pos_x
             self.pos.z = self.beggining_pos_z
-            
+            self.sound_player.death()
             self.mesh.setPos(self.pos)
 
 

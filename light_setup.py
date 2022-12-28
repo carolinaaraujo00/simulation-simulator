@@ -124,10 +124,14 @@ def turn_on(light):
     light.setColor((1, 1, 1, 1))
 
 
-def setup_torch_spotlight(render, model, position):
+def setup_torch_spotlight(render, model, position, small = False):
     # Point light
     plight = PointLight("plight")
-    plight.setAttenuation((1, 0, 0)) # constant, linear and quadratic
+    if small: 
+        plight.setAttenuation((0, 0, 1))
+    else:
+        plight.setAttenuation((1, 0, 0)) # constant, linear and quadratic
+    
     plight.setShadowCaster(True, 1280, 1280)
 
     lens = PerspectiveLens()
