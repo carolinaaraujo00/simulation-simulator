@@ -73,6 +73,7 @@ class ociffer(ShowBase):
         self.setup_printer()
         self.setup_ceiling_lights()
         self.setup_balls()
+        self.setup_pig()
 
         # Play Sounds
         self.sound_player.play_sounds()
@@ -136,16 +137,41 @@ class ociffer(ShowBase):
 
     def setup_balls(self):
         ball_location = Vec3(-4.21, 0.375, 3.55)
-
+        
         self.flat_ball = Ball(self.loader, self.office_model, ball_location)
         self.flat_ball.create_flat_ball()
 
-        self.flat_ball = Ball(self.loader, self.office_model, ball_location)
-        self.moving_flat_ball.create_moving_flat_ball()
+        ball_location.z = 3.55 + 0.38
+        self.flat_bronze_ball = Ball(self.loader, self.office_model, ball_location)
+        self.flat_bronze_ball.create_flat_ball_bronze()
 
+        ball_location.z = 3.55
         ball_location.y = -0.03
         self.smooth_ball = Ball(self.loader, self.office_model, ball_location)
         self.smooth_ball.create_smooth_ball()
+
+        ball_location.z = 3.55 + 0.38
+        ball_location.y = -0.03
+        self.smooth_bronze_ball = Ball(self.loader, self.office_model, ball_location)
+        self.smooth_bronze_ball.create_smooth_ball_bronze()
+
+        ball_location.x = -4.88
+        ball_location.y = 1.55
+        self.moving_flat_ball = Ball(self.loader, self.office_model, ball_location)
+        self.moving_flat_ball.create_moving_flat_ball()
+
+        ball_location.x = -4.79
+        ball_location.y = 0.66
+        ball_location.z = 4.11
+        self.flat_neon_ball = Ball(self.loader, self.office_model, ball_location)
+        self.flat_neon_ball.create_flat_ball_neon()
+
+    def setup_pig(self):
+        self.pig = self.loader.loadModel(gourand_pig_model_path)
+        self.pig.setPos(-4.21, -0.03, 5.50)
+        self.pig.setHpr(180,0,0)
+        self.pig.setScale(0.25)
+        self.pig.reparentTo(self.render)
 
     def setup_ceiling_lights(self):
         self.c_lamp = self.loader.loadModel(ceiling_lamp_model_path)
