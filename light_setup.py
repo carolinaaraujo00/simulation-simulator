@@ -1,6 +1,6 @@
 from panda3d.core import PointLight, AmbientLight, Spotlight
 from panda3d.core import PerspectiveLens
-from common import * 
+from common import *
 
 ###################################################
 #                  ANGLER LIGHTS                  #
@@ -20,32 +20,32 @@ def setup_black_ambient_light(render):
 def setup_blue_point_light(render, pos):
     plight = PointLight("plight")
     #plight.setShadowCaster(True, 1280, 1280)
-    
+
     # Color Blue
     plight.setColor((0.1, 0.5, 0.5, 1))
     plnp = render.attachNewNode(plight)
     plnp.setPos(pos[0], pos[1], pos[2])
     #plight.setAttenuation((1.4, 0, 0))
-    render.setLight(plnp) 
+    render.setLight(plnp)
 
 def setup_black_point_light(render, pos):
     plight = PointLight("plight")
     plight.setColor((0, 0, 0, 1))
     plnp = render.attachNewNode(plight)
     plnp.setPos(pos[0], pos[1], pos[2])
-    render.setLight(plnp) 
+    render.setLight(plnp)
 
 def setup_point_light(render, pos):
     # Point light
     plight = PointLight("plight")
     #plight.setShadowCaster(True, 1280, 1280)
-    
+
     plight.setColor(angler_p_light)
     plnp = render.attachNewNode(plight)
     plnp.setPos(pos[0], pos[1], pos[2])
 
     #plight.setAttenuation((1.4, 0, 0))
-    render.setLight(plnp) 
+    render.setLight(plnp)
 
 
 
@@ -78,13 +78,29 @@ def setup_ceiling_light(render, model, position):
 
     plnp = model.attachNewNode(plight)
 
+    plight.setColor((1, 1, 1, 1))
+    plight.setAttenuation((1, 0, 0.01)) # constant, linear and quadratic
+
+    lens = PerspectiveLens()
+    plight.setLens(lens)
+
     plnp.setPos(position)
-    plight.setColor((0.6471, 0.3608, 0.6078, 1))
-    plight.setAttenuation((0.2, 0.05, 0.05))
-    # plight.setAttenuation((0, 0, 1))
-    plight.setMaxDistance(1)
-    # plight.setShadowCaster(True, 512, 512)
+    plnp.lookAt(position[0], position[1], 0)
+
+    # plight.setShadowCaster(True, 10, 10)
+    # render.setShaderAuto()
+
     render.setLight(plnp)
+
+    return plight
+
+
+def turn_off(light):
+    light.setColor((0, 0, 0, 0))
+
+
+def turn_on(light):
+    light.setColor((1, 1, 1, 1))
 
 
 def setup_torch_spotlight(render, model, position):

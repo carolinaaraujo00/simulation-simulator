@@ -47,6 +47,7 @@ class ociffer(ShowBase):
         self.cam.setPos(9.20, 8.80, 6) # X = left & right, Y = zoom, Z = Up & down.
         self.cam.setHpr(140, -10, 0) # Heading, pitch, roll.
         self.mouse_sens = 2.5
+        self.repeat_lights = True
 
         load_thread = threading.Thread(target=self.thread_function, args=())
         load_thread.start()
@@ -86,7 +87,6 @@ class ociffer(ShowBase):
     def setup_office(self):
         self.office_model = self.loader.loadModel(office_model_path)
         self.office_model.setScale(0.8)
-        print(self.office_model.getPos())
         self.office_model.reparentTo(self.render)
 
 
@@ -130,10 +130,13 @@ class ociffer(ShowBase):
 
 
     def setup_ceiling_lights(self):
-        lamp1 = Lamp(self.loader, self.render, (-4, 17, 3))
-        lamp2 = Lamp(self.loader, self.render, (8, 7, 3))
-        lamp3 = Lamp(self.loader, self.render, (22, -3, 3))
+        self.lamp1 = Lamp(self.loader, self.render, (-4, 17, 3))
+        self.lamp2 = Lamp(self.loader, self.render, (22, -3, 3))
+        # middle_lamp = Lamp(self.loader, self.render, (8, 7, 3))
 
+        self.light_timer = threading.Timer(1, self.lights_off, args=(False,))
+        self.light_timer.daemon = True
+        self.light_timer.start()
 
     # Called every frame
     def update(self, task):
@@ -176,6 +179,29 @@ class ociffer(ShowBase):
         self.accept("escape", sys.exit)
 
 
+    def mousePosition(self, task):
+        mouse_pos = self.win.getPointer(0)
+
+        win_x = self.win.getXSize() 
+        win_y = self.win.getYSize() 
+
+        x = mouse_pos.getX()
+        y = mouse_pos.getY()
+
+        if self.lock_move:
+            self.win.movePointer(0, win_x // 2, win_y // 2)
+            
+        elif self.mouseWatcherNode.hasMouse() and not self.lock_move:
+            # movePointer forces the pointer to that position, half win_x and half win_y (center of the screen),
+            # if its not possible, it returns false
+            if self.win.movePointer(0, win_x // 2, win_y // 2):
+
+                # move the camera accordingly 
+                self.cam.setH(self.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
+                self.cam.setP(self.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)
+        return task.cont
+
+
     def check_movement(self, task):
         if not self.lock_move:
             cam_pos = self.cam.getPos()
@@ -210,24 +236,33 @@ class ociffer(ShowBase):
         return task.cont
 
 
-    def mousePosition(self, task):
-        mouse_pos = self.win.getPointer(0)
+    # called first, turns off the lights and immediatly after turns them on 
+    def lights_off(self, repeat):
+        for light in self.lamp1.lights:
+            turn_off(light)
 
-        win_x = self.win.getXSize() 
-        win_y = self.win.getYSize() 
+        if repeat: 
+            self.repeat_lights = not self.repeat_lights
 
-        x = mouse_pos.getX()
-        y = mouse_pos.getY()
+        self.light_timer = threading.Timer(0.05, self.lights_on)
+        self.light_timer.daemon = True
+        self.light_timer.start()
 
-        if self.lock_move:
-            self.win.movePointer(0, win_x // 2, win_y // 2)
-            
-        elif self.mouseWatcherNode.hasMouse() and not self.lock_move:
-            # movePointer forces the pointer to that position, half win_x and half win_y (center of the screen),
-            # if its not possible, it returns false
-            if self.win.movePointer(0, win_x // 2, win_y // 2):
 
-                # move the camera accordingly 
-                self.cam.setH(self.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
-                self.cam.setP(self.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)
-        return task.cont
+
+    # called 0.1 seconds after lights off and turns on the lights
+    # waits another second before calling lights off again 
+    def lights_on(self):
+        for light in self.lamp1.lights:
+            self.sound_player.play_interruptor()
+            turn_on(light)
+
+        if self.repeat_lights: 
+            self.light_timer = threading.Timer(0.05, self.lights_off, args=(True,))
+        
+        else:
+            self.light_timer = threading.Timer(2, self.lights_off, args=(False,))
+            self.repeat_lights = not self.repeat_lights
+
+        self.light_timer.daemon = True
+        self.light_timer.start()

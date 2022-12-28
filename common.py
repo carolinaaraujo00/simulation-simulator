@@ -54,14 +54,12 @@ power_up_sound_path = sound_path + level_one + "power_up.wav"
 ##################################################
 
 torch_yellow = (0.83137, 0.42353, 0.00784, 1)
-office_ambient_black = (0.00, 0.03, 0.06, 0.88)
+office_ambient_black = (0.00, 0.03, 0.06, 0.9)
 
 # MODEL PATHS
 office_model_path = model_path + level_two + "office_space/office_final.gltf"
 
 office_room_model_path = model_path + level_two + "office_space/office_room.gltf"
-
-lamp_model_path = model_path + level_two + "office_space/lamp.gltf"
 
 cockroach_model_path = model_path + level_two + "cockroach/cockroach.gltf"
 
@@ -69,7 +67,7 @@ printer_model_path = model_path + level_two + "deskjet_printer/printer.gltf"
 
 paper_model_path = model_path + level_two + "deskjet_printer/paper_anim.gltf"
 
-ceiling_lamp_model_path = model_path + level_two + "office_space/ceiling_lamp/scene.gltf"
+ceiling_lamp_model_path = model_path + level_two + "office_space/lamp.gltf"
 sphere_model_path = model_path + level_two + "sphere/sphere.gltf"
 torch_model_path =  model_path + level_two + "office_space/minecraft_torch/scene.gltf"
 
