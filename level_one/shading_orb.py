@@ -33,6 +33,7 @@ class ShadingOrb(Entity, DirectObject):
             if entry.getIntoNodePath() == self.collider.collider:
                 self.sound_player.power_up()
                 self.main_camera.change_camera_ortho()
+                self.main_camera.fov_breathing_effect_start()
                 self.engine_ref.change_shading(self.shading_stage)
                 self.mesh.cleanup()
 
