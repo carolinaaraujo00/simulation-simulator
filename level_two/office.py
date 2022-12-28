@@ -13,6 +13,8 @@ from level_two.printer import *
 from level_two.sound_player_two import *
 from level_two.lamp import * 
 
+import sys
+
 
 loadPrcFileData("", configVars)
 
@@ -170,6 +172,8 @@ class ociffer(ShowBase):
 
         self.accept("z", updateKeyMap, ["lower", True])
         self.accept("z-up", updateKeyMap, ["lower", False])
+
+        self.accept("escape", sys.exit)
 
 
     def check_movement(self, task):
