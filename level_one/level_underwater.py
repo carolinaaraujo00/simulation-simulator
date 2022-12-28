@@ -113,8 +113,13 @@ class LevelUnderwater(Level):
         self.sound_player = SoundPlayerOne(self.engine_ref)
         self.sound_player.init_sounds()
 
+        # Setups up main camera
+        self.main_camera = MainCamera(self.engine_ref.cam, self.sound_player)
+        self.main_camera.change_camera_to_ortho(True)
+        self.main_camera.camera_glitch_effect_start()
+
         for index, pos in enumerate(orb_positions):
-            self.orbs.append(ShadingOrb(self.engine_ref, self.sound_player, orb_positions[index], Vec3(45, 45, 45), Vec3(2, 2, 2), True, index + 2))
+            self.orbs.append(ShadingOrb(self.engine_ref, self.sound_player, self.main_camera, orb_positions[index], Vec3(45, 45, 45), Vec3(2, 2, 2), True, index + 2))
             self.add_actor(self.orbs[-1])
 
         # Background
@@ -128,6 +133,8 @@ class LevelUnderwater(Level):
         self.add_actor(self.background_alpha)
 
         self.toggle_background(False)
+
+        
 
     def toggle_background(self, toggle):
         if toggle:

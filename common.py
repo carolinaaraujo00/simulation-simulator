@@ -47,6 +47,7 @@ orb_anim_model_path = model_path + level_one + "shading_orb/magic_orb-Orb rotati
 underwater_sound_path = sound_path + level_one + "Underwater.ogg"
 
 power_up_sound_path = sound_path + level_one + "power_up.wav"
+glitch_sound_path = sound_path + level_one + "glitch.ogg"
 
 
 ##################################################
