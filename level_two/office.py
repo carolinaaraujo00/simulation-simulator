@@ -18,7 +18,6 @@ from level_two.balls import *
 from panda3d.core import Material
 
 
-
 loadPrcFileData("", configVars)
 
 class ociffer(ShowBase):
@@ -48,8 +47,8 @@ class ociffer(ShowBase):
         self.props.setCursorHidden(True)
         self.win.requestProperties(self.props)
         
-        self.cam.setPos(9.20, 8.80, 6) # X = left & right, Y = zoom, Z = Up & down.
-        self.cam.setHpr(140, -10, 0) # Heading, pitch, roll.
+        self.cam.setPos(5, 4.5, 6) # X = left & right, Y = zoom, Z = Up & down.
+        self.cam.setHpr(135, -10, 0) # Heading, pitch, roll.
         self.mouse_sens = 2.5
         self.repeat_lights = True
 
@@ -83,15 +82,17 @@ class ociffer(ShowBase):
         self.setup_printer()
         self.setup_ceiling_lights()
         self.setup_giant_orange()
-        # self.render.setShaderAuto()
-
+        self.setup_podium()
         self.setup_balls()
         self.setup_pig()
         self.setup_tea_glass()
+        # self.render.setShaderAuto()
 
         # Play Sounds
         self.sound_player.play_sounds()
-        self.sound_player.play_lights_on()
+
+        # continuous light buzz sound
+        self.sound_player.play_lights_on() 
 
 
     def setup_office(self):
@@ -138,12 +139,9 @@ class ociffer(ShowBase):
         self.printer.setPos(printer_location)
         self.printer_paper = Printer(self.loader, self.office_model, printer_location )
 
-    def setup_giant_orange(self):
-        orange_location = Vec3(-4, 7, 2)
-        self.orange = self.loader.loadModel(orange_map_model_path)
 
     def setup_giant_orange(self):
-        orange_location = Vec3(-4, 7, 2)
+        orange_location = Vec3(-3.5, 17, 2.3)
         self.orange = self.loader.loadModel(orange_map_model_path)
 
         # attribute grey ambient light to orange
@@ -155,39 +153,58 @@ class ociffer(ShowBase):
         self.orange.setScale(0.2, 0.2, 0.2)
         self.orange.reparentTo(self.office_model)
         self.orange.setPos(orange_location)
-        self.orange.setHpr((90, 20, 0))
+        self.orange.setHpr((45, 20, 0))
+
+
+    def setup_podium(self):
+        self.podium = self.loader.loadModel(podium_model_path)
+        self.podium.reparentTo(self.render)
+        self.podium.setScale(0.35)
+        self.podium.setPos(10.6, -5.8, 0)
+        self.podium.setHpr((120, 0, 0))
+
+        sphere = self.loader.loadModel(sphere_model_path)
+        sphere.reparentTo(self.podium)
+        sphere.setScale(0.1)
+        sphere.setPos(-2.8, 0.8, 12)
+        setup_torch_spotlight(self.render, sphere, (-1.5, -0.21, 2), True)
 
 
     def setup_balls(self):
-        ball_location = Vec3(-4.21, 0.375, 3.55)
+        ball_location = Vec3(13, -6, 4.34)
         
+        # flat ball
         self.flat_ball = Ball(self.loader, self.office_model, ball_location)
         self.flat_ball.create_flat_ball()
 
-        ball_location.z = 3.55 + 0.38
+        ball_location.x += 0.55
+        ball_location.y += -0.2
         self.flat_bronze_ball = Ball(self.loader, self.office_model, ball_location)
         self.flat_bronze_ball.create_flat_ball_bronze()
 
-        ball_location.z = 3.55
-        ball_location.y = -0.03
+
+        # smooth ball
+        ball_location = Vec3(14.3, -7, 4.34)
         self.smooth_ball = Ball(self.loader, self.office_model, ball_location)
         self.smooth_ball.create_smooth_ball()
 
-        ball_location.z = 3.55 + 0.38
-        ball_location.y = -0.03
+        ball_location.x += 0.3
+        ball_location.y -= -0.55
         self.smooth_bronze_ball = Ball(self.loader, self.office_model, ball_location)
         self.smooth_bronze_ball.create_smooth_ball_bronze()
 
-        ball_location.x = -4.88
-        ball_location.y = 1.55
+        # moving ball
+        ball_location = Vec3(14.3, -7, 4.34)
         self.moving_flat_ball = Ball(self.loader, self.office_model, ball_location)
         self.moving_flat_ball.create_moving_flat_ball()
 
-        ball_location.x = -4.79
-        ball_location.y = 0.66
-        ball_location.z = 4.11
+        # neon ball
+        ball_location = Vec3(13, -7.5, 4.34)
+        ball_location.x -= -0.1
+        ball_location.y += 0.1
         self.flat_neon_ball = Ball(self.loader, self.office_model, ball_location)
         self.flat_neon_ball.create_flat_ball_neon()
+
 
     def setup_pig(self):
         self.pig = self.loader.loadModel(gourand_pig_model_path)
@@ -195,6 +212,7 @@ class ociffer(ShowBase):
         self.pig.setHpr(180,0,0)
         self.pig.setScale(0.25)
         self.pig.reparentTo(self.render)
+
 
     def setup_tea_glass(self):
         self.tea = self.loader.loadModel(cup_of_tea_model_path)
@@ -209,6 +227,7 @@ class ociffer(ShowBase):
         self.tea.setScale(0.75)
         self.tea.reparentTo(self.render)
 
+
     def setup_ceiling_lights(self):
         self.lamp1 = Lamp(self.loader, self.render, (-4, 17, 3))
         self.lamp2 = Lamp(self.loader, self.render, (22, -3, 3))
@@ -217,6 +236,7 @@ class ociffer(ShowBase):
         self.light_timer = threading.Timer(1, self.lights_off, args=(False,))
         self.light_timer.daemon = True
         self.light_timer.start()
+
 
     # Called every frame
     def update(self, task):

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Stylized table
+* source:	https://sketchfab.com/3d-models/stylized-table-2582b59da25749f3bcbc75e5ec032200
+* author:	Tom_Martinaud (https://sketchfab.com/Totor_17)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Stylized table" (https://sketchfab.com/3d-models/stylized-table-2582b59da25749f3bcbc75e5ec032200) by Tom_Martinaud (https://sketchfab.com/Totor_17) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
