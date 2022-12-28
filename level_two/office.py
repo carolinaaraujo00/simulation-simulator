@@ -11,6 +11,7 @@ import threading
 from level_two.cockroach import *
 from level_two.printer import *
 from level_two.sound_player_two import *
+from level_two.balls import *
 
 
 loadPrcFileData("", configVars)
@@ -71,6 +72,7 @@ class ociffer(ShowBase):
         self.setup_cockroach()
         self.setup_printer()
         self.setup_ceiling_lights()
+        self.setup_balls()
 
         # Play Sounds
         self.sound_player.play_sounds()
@@ -118,8 +120,32 @@ class ociffer(ShowBase):
         self.printer = self.loader.loadModel(printer_model_path)
         self.printer.reparentTo(self.office_model)
         self.printer.setPos(printer_location)
-        self.printer_paper = Printer(self.office_model, printer_location )
+        self.printer_paper = Printer(self.loader, self.office_model, printer_location )
 
+    def setup_giant_orange(self):
+        orange_location = Vec3(-4, 7, 2)
+        self.orange = self.loader.loadModel(orange_map_model_path)
+
+        # setup_model_ambient_light(self.render, self.orange)
+        # setup_point_light_in_model_mapping(self.hand, self.orange, Vec3(0,0,0))
+
+        self.orange.setScale(0.2, 0.2, 0.2)
+        self.orange.reparentTo(self.office_model)
+        self.orange.setPos(orange_location)
+        self.orange.setHpr((90, 20, 0))
+
+    def setup_balls(self):
+        ball_location = Vec3(-4.21, 0.375, 3.55)
+
+        self.flat_ball = Ball(self.loader, self.office_model, ball_location)
+        self.flat_ball.create_flat_ball()
+
+        self.flat_ball = Ball(self.loader, self.office_model, ball_location)
+        self.moving_flat_ball.create_moving_flat_ball()
+
+        ball_location.y = -0.03
+        self.smooth_ball = Ball(self.loader, self.office_model, ball_location)
+        self.smooth_ball.create_smooth_ball()
 
     def setup_ceiling_lights(self):
         self.c_lamp = self.loader.loadModel(ceiling_lamp_model_path)
