@@ -6,6 +6,8 @@ from level_one.engine_2d import last_string_from_node
 from level_one.collider import Collider
 from light_setup import *
 from common import * 
+from camera_setup import *
+
 
 # Needs to inherit from DirectObject to receive collision notifications
 class PlayerChar2D(Entity, DirectObject):

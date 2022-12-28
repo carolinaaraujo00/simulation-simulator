@@ -15,6 +15,10 @@ class LevelUnderwater(Level):
         # 2D level position
         self.y_pos = -15
         
+        # Setups up main camera
+        self.main_camera = MainCamera(self.engine_ref.cam)
+        self.main_camera.change_camera_to_ortho(True)
+
         # Player
         self.player_char_2d = PlayerChar2D(self.engine_ref, Vec3(-97, self.y_pos, 3), Vec3(-90, 0, 0), Vec3(0.01, 0.01, 0.01), False)
         self.add_actor(self.player_char_2d)
@@ -114,7 +118,7 @@ class LevelUnderwater(Level):
         self.sound_player.init_sounds()
 
         for index, pos in enumerate(orb_positions):
-            self.orbs.append(ShadingOrb(self.engine_ref, self.sound_player, orb_positions[index], Vec3(45, 45, 45), Vec3(2, 2, 2), True, index + 2))
+            self.orbs.append(ShadingOrb(self.engine_ref, self.sound_player, self.main_camera, orb_positions[index], Vec3(45, 45, 45), Vec3(2, 2, 2), True, index + 2))
             self.add_actor(self.orbs[-1])
 
         # Background
@@ -128,6 +132,8 @@ class LevelUnderwater(Level):
         self.add_actor(self.background_alpha)
 
         self.toggle_background(False)
+
+        
 
     def toggle_background(self, toggle):
         if toggle:
