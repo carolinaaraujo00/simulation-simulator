@@ -59,7 +59,7 @@ torch_yellow = (0.83137, 0.42353, 0.00784, 1)
 office_ambient_black = (0.00, 0.03, 0.06, 0.9)
 ambient_grey = (0.2, 0.2, 0.2, 1)
 white_ambient = (1, 1, 1, 1)
-
+loading_gray = (0.15, 0.59, 0.75, 1)
 
 
 # MODEL PATHS

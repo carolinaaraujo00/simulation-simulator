@@ -22,12 +22,13 @@ loadPrcFileData("", configVars)
 class ociffer():
     def __init__(self, base, debug):
         self.base = base
-        # super().__init__()
         simplepbr.init()
 
-        self.base.set_background_color(0, 0, 0, 1)
-        loadingText = OnscreenText("Loading...",1, fg=(1, 1, 1, 1), bg = (0, 0, 0, 1), pos=(0, 0), align=TextNode.ACenter, scale=.07, mayChange=1)
+        self.base.set_background_color(loading_gray)
+
+        loadingText = OnscreenText("Simulating...", 1, scale=0.1, pos=(0, 0), align=TextNode.ACenter, mayChange=1)
         self.base.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
+       
 
         # movement variables and key mapping 
         self.base.disable_mouse()
