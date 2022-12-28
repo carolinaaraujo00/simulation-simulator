@@ -77,6 +77,7 @@ sphere_model_path = model_path + level_two + "sphere/sphere.gltf"
 torch_model_path =  model_path + level_two + "office_space/minecraft_torch/scene.gltf"
 
 hand_model_path =  model_path + level_two + "arm/arm.gltf"
+# hand_model_path =  model_path + level_two + "arm/arm.egg"
 office_model_path =   model_path + level_two + "office_space/office/untitled.gltf"
 
 # orange_map_model_path = model_path + level_two + "orange_fruit/orange.gltf"
