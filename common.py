@@ -89,7 +89,6 @@ cup_of_tea_model_path = model_path + level_two + "tea/cup_of_tea.gltf"
 
 telephone_base_model_path = model_path + level_two + "office_space/telephone_base.gltf"
 telephone_ring_model_path = model_path + level_two + "office_space/telephone_anim.gltf"
-# telephone_ring_model_path = model_path + level_two + "office_space/telephone_anim.egg"
 
 # balls
 flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
@@ -110,6 +109,7 @@ light_on_level2_sound_path = sound_path + level_two + "light_on.ogg"
 light_buzz_level2_sound_path = sound_path + level_two + "light_buzz.ogg"
 cockroach_level2_sound_path = sound_path + level_two + "cockroach.ogg"
 printer_level2_sound_path = sound_path + level_two + "printer.ogg"
+phone_ring_sound_path = sound_path + level_two + "telephone_ring.ogg"
 
 key_map_3d = {
     "up" : False,

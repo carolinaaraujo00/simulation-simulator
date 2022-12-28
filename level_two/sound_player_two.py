@@ -17,10 +17,12 @@ class SoundPlayerTwo:
         self.light_buzz = self.engine_ref.loader.loadSfx(light_buzz_level2_sound_path)
         self.cockroach = self.engine_ref.loader.loadSfx(cockroach_level2_sound_path)
         self.printer = self.engine_ref.loader.loadSfx(printer_level2_sound_path)
+        self.ring = self.engine_ref.loader.loadSfx(phone_ring_sound_path)
         
         self.intro_music.setLoop(True)
         self.cockroach.setLoop(True)
         self.light_buzz.setLoop(True)
+        self.ring.setLoop(True)
 
         self.light_on.setLoop(False)
         self.printer.setLoop(False)
@@ -35,6 +37,7 @@ class SoundPlayerTwo:
         self.light_buzz.setVolume(background_volume * 3)
         self.light_on.setVolume(background_volume * 3)
         self.printer.setVolume(background_volume)
+        self.ring.setVolume(background_volume/3)
 
     def wait_for_load_thread(self):
         time.sleep(4)
@@ -52,6 +55,7 @@ class SoundPlayerTwo:
         x.start()
         self.cockroach.play()
         self.printer.play()
+        self.ring.play()
 
     def play_lights_on(self):
         x = threading.Thread(target=self.play_lights_on_thread, args=())

@@ -243,21 +243,16 @@ class ociffer():
 
     def setup_telephone(self):
         self.telephone_base = self.base.loader.loadModel(telephone_base_model_path)
-        self.telephone_base.setPos(1.05, -2.6, 3.1)
+        self.telephone_base.setPos(1.05, -2.6, 2.9)
         self.telephone_base.setScale(0.75)
         self.telephone_base.reparentTo(self.base.render)
 
-        # self.telephone_ring = self.base.loader.loadModel(telephone_ring_model_path)
-        # self.telephone_ring = Actor(telephone_ring_model_path, {"ring": telephone_ring_model_path})
-        self.telephone_ring = Actor(telephone_ring_model_path)
-        # self.telephone_ring = Actor(telephone_ring_model_path)
+        self.telephone_ring = Actor(telephone_ring_model_path, {"ring": telephone_ring_model_path})
         self.telephone_ring.loop("ring")
-        self.telephone_ring.play("ring")
         self.telephone_ring.setPlayRate(1, 'ring')
         self.telephone_ring.setScale(0.75)
-        print(self.telephone_ring.getCurrentAnim())
-        # self.telephone_ring.setPos(1.05, -2.6, 3.1)
-        self.telephone_ring.setPos(0, 0, 3.1)
+        self.telephone_ring.setPos(1.05, -2.45, 2.95)
+        self.telephone_ring.setHpr(0, 0, 5)
         self.telephone_ring.reparentTo(self.base.render)
 
 
