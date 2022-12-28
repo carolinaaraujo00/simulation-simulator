@@ -37,7 +37,7 @@ class SoundPlayerTwo:
         self.printer.setVolume(background_volume)
 
     def wait_for_load_thread(self):
-        time.sleep(5)
+        time.sleep(4)
         self.intro_sound.play()
         self.intro_music.play()
 
