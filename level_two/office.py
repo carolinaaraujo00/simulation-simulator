@@ -161,7 +161,7 @@ class ociffer():
         self.podium.setPos(10.6, -5.8, 0)
         self.podium.setHpr((120, 0, 0))
         
-        self.text_choose_ball = self.loader.loadModel(text_ball_model_path)
+        self.text_choose_ball = self.base.loader.loadModel(text_ball_model_path)
         self.text_choose_ball.reparentTo(self.podium)
         self.text_choose_ball.setPos(0, 0, 15)
         
