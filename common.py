@@ -89,7 +89,7 @@ cup_of_tea_model_path = model_path + level_two + "tea/cup_of_tea.gltf"
 flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
 smooth_ball_model_path = model_path + level_two + "balls/smooth_ball.gltf"
 smooth_no_mat_ball_model_path = model_path + level_two + "balls/smooth_ball_no_mat.gltf"
-podium_model_path = model_path + level_two + "podium/scene.gltf"
+podium_model_path = model_path + level_two + "podium2/davinci.gltf"
 text_ball_model_path = model_path + level_two + "text/choose_ball.gltf"
 
 #gourand pig
