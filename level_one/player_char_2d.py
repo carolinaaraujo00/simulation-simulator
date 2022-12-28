@@ -1,3 +1,4 @@
+import sys
 from direct.showbase.DirectObject import DirectObject
 from panda3d.core import Vec3
 
@@ -37,7 +38,7 @@ class PlayerChar2D(Entity, DirectObject):
         }
 
         # Attach point light
-        setup_point_light_in_model(self.engine_ref.render, self.mesh, (0,15,48))
+        setup_point_light_in_model(self.engine_ref.base.render, self.mesh, (0,15,48))
 
         self.accept_input()
 
@@ -55,11 +56,12 @@ class PlayerChar2D(Entity, DirectObject):
 
     def accept_input(self):
         # Keyboard events
-        self.engine_ref.accept("arrow_left", self.update_key_map, ["left", True])
-        self.engine_ref.accept("arrow_left-up", self.update_key_map, ["left", False])
-        self.engine_ref.accept("arrow_right", self.update_key_map, ["right", True])
-        self.engine_ref.accept("arrow_right-up", self.update_key_map, ["right", False])
-        self.engine_ref.accept("arrow_up", self.jump)
+        self.engine_ref.base.accept("arrow_left", self.update_key_map, ["left", True])
+        self.engine_ref.base.accept("arrow_left-up", self.update_key_map, ["left", False])
+        self.engine_ref.base.accept("arrow_right", self.update_key_map, ["right", True])
+        self.engine_ref.base.accept("arrow_right-up", self.update_key_map, ["right", False])
+        self.engine_ref.base.accept("arrow_up", self.jump)
+        self.engine_ref.base.accept("escape", sys.exit)
 
     def update_key_map(self, control_name, state):
         if self.can_move:
@@ -71,12 +73,12 @@ class PlayerChar2D(Entity, DirectObject):
     def jump(self):
         if self.is_on_floor and self.can_move:
             self.is_on_floor = False
-            self.velocity.z = self.JUMP_FORCE
+            self.velocity.z = self.JUMP_FORCE * 2.3
 
     def set_pos_on_collision(self, entry):
         if self.velocity.z < 0:
             self.velocity.z = 0
-            self.pos.z = entry.getIntoNodePath().getPos(self.engine_ref.render).z + self.floor_offset
+            self.pos.z = entry.getIntoNodePath().getPos(self.engine_ref.base.render).z + self.floor_offset
             self.mesh.setPos(self.pos)
 
     def update(self):

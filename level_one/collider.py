@@ -15,7 +15,7 @@ class Collider:
         collider_node.setFromCollideMask(BitMask32.bit(1))
         collider_node.addSolid(CollisionBox(offset, size.x, size.y, size.z))
         self.collider = entity_ref.mesh.attachNewNode(collider_node)
-        engine_ref.cTrav.addCollider(self.collider, engine_ref.colHandlerEvent)
+        engine_ref.base.cTrav.addCollider(self.collider, engine_ref.base.colHandlerEvent)
         if engine_ref.DEBUG:
             self.collider.show()
    

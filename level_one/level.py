@@ -11,7 +11,7 @@ class Level:
         self.scale = scale
 
         self.lvl_node_path = NodePath("lvl_np")
-        self.lvl_node_path.reparentTo(self.engine_ref.render)
+        self.lvl_node_path.reparentTo(self.engine_ref.base.render)
 
         self.lvl_node_path.setPos(self.pos)
         self.lvl_node_path.setHpr(self.rot)

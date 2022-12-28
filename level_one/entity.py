@@ -18,7 +18,7 @@ class Entity:
 
         # Setting the actor
         if self.model_actor:
-            self.mesh = self.engine_ref.loader.loadModel(model_path)
+            self.mesh = self.engine_ref.base.loader.loadModel(model_path)
         else:
             self.mesh = Actor(model_path)
 
