@@ -12,6 +12,8 @@ from level_two.cockroach import *
 from level_two.printer import *
 from level_two.sound_player_two import *
 from level_two.balls import *
+from panda3d.core import Material
+
 
 
 loadPrcFileData("", configVars)
@@ -176,7 +178,16 @@ class ociffer(ShowBase):
 
     def setup_tea_glass(self):
         self.tea = self.loader.loadModel(cup_of_tea_model_path)
+        mats = self.tea.findAllMaterials()
+        print(mats)
+        self.glass = Material()
+        self.glass_ambient = (0.3, 0.3, 0.3, 0.3)
+        self.glass.setDiffuse(self.glass_ambient)
+        material = self.tea.findMaterial("vidro")
+        self.tea.replaceMaterial(material, self.glass)
         self.tea.setPos(-0.1, -3.1, 2.7)
+        mats = self.tea.findAllMaterials()
+        print(mats)
         # self.tea.setHpr(180,0,0)
         self.tea.setScale(0.75)
         self.tea.reparentTo(self.render)
