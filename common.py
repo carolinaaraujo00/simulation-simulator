@@ -90,16 +90,23 @@ cup_of_tea_model_path = model_path + level_two + "tea/cup_of_tea.gltf"
 telephone_base_model_path = model_path + level_two + "office_space/telephone_base.gltf"
 telephone_ring_model_path = model_path + level_two + "office_space/telephone_anim.gltf"
 
-# balls
+# Balls
 flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
 smooth_ball_model_path = model_path + level_two + "balls/smooth_ball.gltf"
 smooth_no_mat_ball_model_path = model_path + level_two + "balls/smooth_ball_no_mat.gltf"
 podium_model_path = model_path + level_two + "podium/scene.gltf"
-text_ball_model_path = model_path + level_two + "text/choose_ball.gltf"
 
-#gourand pig
+# Gouraud Shading Pig
 gourand_pig_model_path = model_path + level_two + "gourand_pig/pig.gltf"
 
+# Texts
+text_ball_model_path = model_path + level_two + "text/choose_ball.gltf"
+text_escape_model_path = model_path + level_two + "text/escape.gltf"
+flat_shading_model_path = model_path + level_two + "text/flat_shading.gltf"
+gouraud_shading_model_path = model_path + level_two + "text/gouraud_shading.gltf"
+phong_shading_model_path = model_path + level_two + "text/phong_shading.gltf"
+neon_shading_model_path = model_path + level_two + "text/neon_shading.gltf"
+the_end_model_path = model_path + level_two + "text/the_end.gltf"
 
 # SOUNDS
 intro_level2_sound_path = sound_path + level_two + "intro.ogg"

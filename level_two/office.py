@@ -176,7 +176,14 @@ class ociffer():
 
     def setup_balls(self):
         ball_location = Vec3(13, -6, 4.34)
-        
+        ball_text_location = Vec3(13, -6, 4.05)
+
+        # Text Loaders
+        self.flat_shading = self.base.loader.loadModel(flat_shading_model_path)
+        self.flat_shading_move = self.base.loader.loadModel(flat_shading_model_path)
+        self.phong_shading = self.base.loader.loadModel(phong_shading_model_path)
+        self.neon_shading = self.base.loader.loadModel(neon_shading_model_path)
+
         # flat ball
         self.flat_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.flat_ball.create_flat_ball()
@@ -186,6 +193,13 @@ class ociffer():
         self.flat_bronze_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.flat_bronze_ball.create_flat_ball_bronze()
 
+        # Flat Balls Text
+        ball_text_location.x += 1.2
+        ball_text_location.y -= 0.1
+        self.flat_shading.setScale(0.1)
+        self.flat_shading.setHpr(160,0,0)
+        self.flat_shading.reparentTo(self.office_model)
+        self.flat_shading.setPos(ball_text_location)
 
         # smooth ball
         ball_location = Vec3(14.3, -7, 4.34)
@@ -197,10 +211,26 @@ class ociffer():
         self.smooth_bronze_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.smooth_bronze_ball.create_smooth_ball_bronze()
 
+        # Flat Balls Text
+        ball_text_location = Vec3(14.3, -7, 4.05)
+        ball_text_location.x += 0.5 
+        ball_text_location.y -= 0.13
+        self.phong_shading.setScale(0.1)
+        self.phong_shading.setHpr(70,0,0)
+        self.phong_shading.reparentTo(self.office_model)
+        self.phong_shading.setPos(ball_text_location)
+     
         # moving ball
         ball_location = Vec3(14.3, -7, 4.34)
         self.moving_flat_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.moving_flat_ball.create_moving_flat_ball()
+
+        # Flat Balls Moving Text
+        ball_text_location = Vec3(-2.93, -0.5, 3.45)
+        self.flat_shading_move.setScale(0.1)
+        self.flat_shading_move.setHpr(90,0,0)
+        self.flat_shading_move.reparentTo(self.office_model)
+        self.flat_shading_move.setPos(ball_text_location)
 
         # neon ball
         ball_location = Vec3(13, -7.5, 4.34)
@@ -209,6 +239,16 @@ class ociffer():
         self.flat_neon_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.flat_neon_ball.create_flat_ball_neon()
 
+        # Neon Shading Text
+        ball_text_location = Vec3(13, -7.5, 4.05)
+        ball_text_location.x += 0.25
+        ball_text_location.y += 0.5
+        self.neon_shading.setScale(0.08)
+        self.neon_shading.setHpr(70,0,0)
+        self.neon_shading.reparentTo(self.office_model)
+        self.neon_shading.setPos(ball_text_location)
+        
+
 
     def setup_pig(self):
         self.pig = self.base.loader.loadModel(gourand_pig_model_path)
@@ -216,6 +256,12 @@ class ociffer():
         self.pig.setHpr(180,0,0)
         self.pig.setScale(0.25)
         self.pig.reparentTo(self.base.render)
+
+        self.pig_gouraud_shading = self.base.loader.loadModel(gouraud_shading_model_path)
+        self.pig_gouraud_shading.setScale(0.1)
+        self.pig_gouraud_shading.setHpr(0,90,90)
+        self.pig_gouraud_shading.reparentTo(self.base.render)
+        self.pig_gouraud_shading.setPos((-3.90, -1.99, 5.40))
 
 
     def setup_tea_glass(self):
@@ -361,6 +407,7 @@ class ociffer():
                 cam_pos.z -= speed
 
             self.base.cam.setPos(cam_pos)
+            print(cam_pos)
 
         return task.cont
 
