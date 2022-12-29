@@ -32,5 +32,5 @@ def run(level : int):
         sys.exit(0)
 
 if __name__ == "__main__":
-    run(level = 2)
+    run(level = 1)
 
