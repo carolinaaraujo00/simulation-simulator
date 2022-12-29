@@ -85,6 +85,8 @@ class ociffer():
         self.setup_pig()
         self.setup_tea_glass()
         self.setup_telephone()
+        self.setup_border_texts()
+        self.setup_screen_game()
         # self.render.setShaderAuto()
 
         # Play Sounds
@@ -248,6 +250,60 @@ class ociffer():
         self.neon_shading.reparentTo(self.office_model)
         self.neon_shading.setPos(ball_text_location)
         
+    def setup_border_texts(self):
+        self.border_texts = [] 
+        self.border_texts.append(self.base.loader.loadModel(the_end_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+
+        self.border_limites = [] 
+
+        self.border_limites.append(Vec3(-20,-20,6))
+        self.border_limites.append(Vec3(20,-20,6))
+        self.border_limites.append(Vec3(20,20,6))
+        self.border_limites.append(Vec3(-20,20,6))
+        self.border_limites.append(Vec3(-50,-50,6))
+        self.border_limites.append(Vec3(50,-50,6))
+        self.border_limites.append(Vec3(50,50,6))
+        self.border_limites.append(Vec3(-50,50,6))
+
+        border_counter = 0
+        for text in self.border_texts:
+            text.setScale(1)
+            text.reparentTo(self.base.render)
+            text.setPos(self.border_limites[border_counter])
+            border_counter += 1
+
+    def setup_screen_game(self):
+        self.angler_fish = self.base.loader.loadModel(angler_fish_model_path)
+        self.angler_fish.setPos((-2.3, -2.43, 4.0))
+        self.angler_fish.setHpr((45, 0, 0))
+        self.angler_fish.setScale((0.002))
+        self.angler_fish.reparentTo(self.base.render)
+
+        self.fossil = self.base.loader.loadModel(fossil_model_path)
+        self.fossil.setPos((-2.3, -2.97, 3.9))
+        self.fossil.setHpr((137, 0, 0))
+        self.fossil.setScale((0.002))
+        self.fossil.reparentTo(self.base.render)
+
+        # Perfect
+        self.background_albedo = self.base.loader.loadModel(background_sea_model_path)
+        self.background_albedo.setPos((-2.13, -3.08, 3.6))
+        self.background_albedo.setHpr((47, 0, 0))
+        self.background_albedo.setScale((0.0073))
+        self.background_albedo.reparentTo(self.base.render)
+
+        # Vec3(0, 100, 0), Vec3(0, 0, 0), Vec3(0.5, 0.5, 0.5), fossil_model_path
+        
+        # Vec3(-80, 350, -30), Vec3(-90, 0, 0), Vec3(2, 2.2, 2), background_sea_model_path
+        
 
 
     def setup_pig(self):
@@ -374,6 +430,9 @@ class ociffer():
                 self.base.cam.setP(self.base.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)  
         
         self.text_choose_ball.lookAt(self.base.cam)
+        for text in self.border_texts:
+            text.lookAt(self.base.cam)
+
         return task.cont
 
 
@@ -407,7 +466,7 @@ class ociffer():
                 cam_pos.z -= speed
 
             self.base.cam.setPos(cam_pos)
-            print(cam_pos)
+            # print(cam_pos)
 
         return task.cont
 
