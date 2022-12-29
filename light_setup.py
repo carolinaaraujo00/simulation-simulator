@@ -146,3 +146,25 @@ def setup_torch_spotlight(render, model, position, small = False):
     render.setLight(plnp)
 
 
+def setup_computer_light(render, model, position, small = False):
+    # Point light
+    plight = PointLight("plight")
+    if small: 
+        plight.setAttenuation((0.8, 0, 0.01))
+    else:
+        plight.setAttenuation((1, 0, 0)) # constant, linear and quadratic
+    
+    plight.setShadowCaster(True, 1280, 1280)
+
+    lens = PerspectiveLens()
+    plight.setLens(lens)
+
+    plight.setColor(white_ambient)
+
+    plnp = model.attachNewNode(plight)
+    plnp.setPos(position[0], position[1], position[2])
+    plnp.lookAt(position[0], position[1], 0)
+
+    render.setLight(plnp)
+
+
