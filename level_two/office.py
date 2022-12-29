@@ -22,12 +22,13 @@ loadPrcFileData("", configVars)
 class ociffer():
     def __init__(self, base, debug):
         self.base = base
-        # super().__init__()
         simplepbr.init()
 
-        self.base.set_background_color(0, 0, 0, 1)
-        loadingText = OnscreenText("Loading...",1, fg=(1, 1, 1, 1), bg = (0, 0, 0, 1), pos=(0, 0), align=TextNode.ACenter, scale=.07, mayChange=1)
+        self.base.set_background_color(loading_gray)
+
+        loadingText = OnscreenText("Simulating...", 1, scale=0.1, pos=(0, 0), align=TextNode.ACenter, mayChange=1)
         self.base.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
+       
 
         # movement variables and key mapping 
         self.base.disable_mouse()
@@ -172,24 +173,26 @@ class ociffer():
     def setup_podium(self):
         self.podium = self.base.loader.loadModel(podium_model_path)
         self.podium.reparentTo(self.base.render)
-        self.podium.setScale(0.35)
-        self.podium.setPos(10.6, -5.8, 0)
-        self.podium.setHpr((120, 0, 0))
+        self.podium.setScale(0.2)
+        self.podium.setPos(14, -2.5, 0)
+        self.podium.setHpr((-120, 0, 0))
         
         self.text_choose_ball = self.base.loader.loadModel(text_ball_model_path)
         self.text_choose_ball.reparentTo(self.podium)
-        self.text_choose_ball.setPos(0, 0, 15)
+        self.text_choose_ball.setScale(1.5)
+        self.text_choose_ball.setPos(9.8, 6.2, 23)
         
 
         sphere = self.base.loader.loadModel(sphere_model_path)
         sphere.reparentTo(self.podium)
-        sphere.setScale(0.1)
-        sphere.setPos(-2.8, 0.8, 12)
+        sphere.setScale(0.07)
+        sphere.setPos(15.6, 6.2, 16.8)
+        # sphere.setPos(13, -8, 5)
         setup_torch_spotlight(self.base.render, sphere, (-1.5, -0.21, 2), True)
 
 
     def setup_balls(self):
-        ball_location = Vec3(13, -6, 4.34)
+        ball_location = Vec3(16.3, -6.1, 2.95)
         ball_text_location = Vec3(13, -6, 4.05)
 
         # Text Loaders
@@ -199,13 +202,13 @@ class ociffer():
         self.neon_shading = self.base.loader.loadModel(neon_shading_model_path)
 
         # flat ball
-        self.flat_ball = Ball(self.base.loader, self.office_model, ball_location)
-        self.flat_ball.create_flat_ball()
-
-        ball_location.x += 0.55
-        ball_location.y += -0.2
         self.flat_bronze_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.flat_bronze_ball.create_flat_ball_bronze()
+ 
+        ball_location.x += 0.6
+        ball_location.y += -0.4
+        self.flat_ball = Ball(self.base.loader, self.office_model, ball_location)
+        self.flat_ball.create_flat_ball()
 
         # Flat Balls Text
         ball_text_location.x += 1.2
@@ -216,14 +219,15 @@ class ociffer():
         self.flat_shading.setPos(ball_text_location)
 
         # smooth ball
-        ball_location = Vec3(14.3, -7, 4.34)
-        self.smooth_ball = Ball(self.base.loader, self.office_model, ball_location)
-        self.smooth_ball.create_smooth_ball()
-
-        ball_location.x += 0.3
-        ball_location.y -= -0.55
+        ball_location = Vec3(18.2, -6.7, 2.95)
+        ball_location.x += -0.5
+        ball_location.y += 1
         self.smooth_bronze_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.smooth_bronze_ball.create_smooth_ball_bronze()
+        ball_location.x += 0.8
+        ball_location.y += 0.4
+        self.smooth_ball = Ball(self.base.loader, self.office_model, ball_location)
+        self.smooth_ball.create_smooth_ball()
 
         # Flat Balls Text
         ball_text_location = Vec3(14.3, -7, 4.05)
@@ -247,9 +251,7 @@ class ociffer():
         self.flat_shading_move.setPos(ball_text_location)
 
         # neon ball
-        ball_location = Vec3(13, -7.5, 4.34)
-        ball_location.x -= -0.1
-        ball_location.y += 0.1
+        ball_location = Vec3(18.2, -6.7, 2.95)
         self.flat_neon_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.flat_neon_ball.create_flat_ball_neon()
 
@@ -314,6 +316,11 @@ class ociffer():
 
         
 
+
+        # moving ball
+        ball_location = Vec3(14, -2.5, 3)
+        self.moving_flat_ball = Ball(self.base.loader, self.office_model, ball_location)
+        self.moving_flat_ball.create_moving_flat_ball()
 
     def setup_pig(self):
         self.pig = self.base.loader.loadModel(gourand_pig_model_path)
@@ -475,7 +482,8 @@ class ociffer():
                 cam_pos.z -= speed
 
             self.base.cam.setPos(cam_pos)
-            # print(cam_pos)
+
+            print(self.hand.getPos(self.base.render))
 
         return task.cont
 

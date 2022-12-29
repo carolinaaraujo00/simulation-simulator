@@ -59,7 +59,7 @@ torch_yellow = (0.83137, 0.42353, 0.00784, 1)
 office_ambient_black = (0.00, 0.03, 0.06, 0.9)
 ambient_grey = (0.2, 0.2, 0.2, 1)
 white_ambient = (1, 1, 1, 1)
-
+loading_gray = (0.15, 0.59, 0.75, 1)
 
 
 # MODEL PATHS
@@ -94,7 +94,7 @@ telephone_ring_model_path = model_path + level_two + "office_space/telephone_ani
 flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
 smooth_ball_model_path = model_path + level_two + "balls/smooth_ball.gltf"
 smooth_no_mat_ball_model_path = model_path + level_two + "balls/smooth_ball_no_mat.gltf"
-podium_model_path = model_path + level_two + "podium/scene.gltf"
+podium_model_path = model_path + level_two + "podium2/davinci.gltf"
 
 # Gouraud Shading Pig
 gourand_pig_model_path = model_path + level_two + "gourand_pig/pig.gltf"
