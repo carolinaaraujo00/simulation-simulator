@@ -60,16 +60,15 @@ class ociffer():
        
         self.base.taskMgr.add(self.update, "update")
         
-        self.camera_pan_out_animation()
-
         if not debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
+            self.camera_pan_out_animation()
         else: 
-            timer = threading.Timer(2, self.unlock_move)
+            timer = threading.Timer(0.5, self.unlock_move)
             timer.start()
 
-    # TODO: Help wanted
+
     def camera_pan_out_animation(self):
         self.animation_sequence = Sequence(name="animation_cam")
         self.hand.hide()
@@ -193,7 +192,7 @@ class ociffer():
 
     def setup_balls(self):
         ball_location = Vec3(16.3, -6.1, 2.95)
-        ball_text_location = Vec3(13, -6, 4.05)
+        ball_text_location = Vec3(16.3, -6.1, 4.05)
 
         # Text Loaders
         self.flat_shading = self.base.loader.loadModel(flat_shading_model_path)
@@ -275,6 +274,7 @@ class ociffer():
         self.neon_shading.reparentTo(self.office_model)
         self.neon_shading.setPos(ball_text_location)
         
+
     def setup_border_texts(self):
         self.border_texts = [] 
         self.border_texts.append(self.base.loader.loadModel(the_end_model_path))
@@ -304,6 +304,7 @@ class ociffer():
             text.reparentTo(self.base.render)
             text.setPos(self.border_limites[border_counter])
             border_counter += 1
+
 
     def setup_screen_game(self):
         self.angler_fish = self.base.loader.loadModel(angler_fish_model_path)
@@ -363,6 +364,7 @@ class ociffer():
         self.light_timer.daemon = True
         self.light_timer.start()
 
+
     def setup_telephone(self):
         self.telephone_base = self.base.loader.loadModel(telephone_base_model_path)
         self.telephone_base.setPos(1.05, -2.6, 2.9)
@@ -376,7 +378,6 @@ class ociffer():
         self.telephone_ring.setPos(1.05, -2.45, 2.95)
         self.telephone_ring.setHpr(0, 0, 5)
         self.telephone_ring.reparentTo(self.base.render)
-
 
 
     # Called every frame
@@ -521,6 +522,7 @@ class ociffer():
 
         self.light_timer.daemon = True
         self.light_timer.start()
+
 
     def run(self):
         self.base.run()
