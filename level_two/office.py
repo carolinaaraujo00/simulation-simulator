@@ -210,10 +210,11 @@ class ociffer():
         self.flat_ball.create_flat_ball()
 
         # Flat Balls Text
-        ball_text_location.x += 2.64
-        ball_text_location.y += 1.3
+        ball_text_location = Vec3(18.2, -6.7, 2.67)
+        ball_text_location.x += -0.5
+        ball_text_location.y += 0.5
         self.flat_shading.setScale(0.1)
-        self.flat_shading.setHpr(200, 0, 0)
+        self.flat_shading.setHpr(160, 0, 0)
         self.flat_shading.reparentTo(self.office_model)
         self.flat_shading.setPos(ball_text_location)
 
@@ -232,15 +233,14 @@ class ociffer():
         self.smooth_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.smooth_ball.create_smooth_ball()
 
-        # Flat Balls Text
-        ball_text_location = Vec3(18.2, -6.7, 2.67)
-        ball_text_location.x += -1.4
-        ball_text_location.y += 0.8
+        # Phong Balls Text
+        ball_text_location.x += 0.24
+        ball_text_location.y += 1.1
         self.phong_shading.setScale(0.1)
-        self.phong_shading.setHpr(160, 0, 0)
+        self.phong_shading.setHpr(200, 0, 0)
         self.phong_shading.reparentTo(self.office_model)
         self.phong_shading.setPos(ball_text_location)
-     
+
 
 
 
