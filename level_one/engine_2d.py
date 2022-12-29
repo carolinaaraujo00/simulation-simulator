@@ -115,7 +115,6 @@ class Engine2D():
                 
                 self.current_level.toggle_background(True)
             case 5:
-                print("Transition to office here!")
                 self.current_level.player.disable_input()
 
                 self.base.userExit()

@@ -72,7 +72,8 @@ class PlayerChar2D(Entity, DirectObject):
         self.engine_ref.base.accept("arrow_up", self.jump)
         self.engine_ref.base.accept("space", self.jump)
 
-        # self.engine_ref.base.accept("escape", sys.exit)
+        if self.engine_ref.DEBUG: 
+            self.engine_ref.base.accept("escape", sys.exit)
 
     def update_key_map(self, control_name, state):
         if self.can_move:

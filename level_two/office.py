@@ -24,6 +24,7 @@ class ociffer():
         self.base = base
         simplepbr.init()
 
+        self.debug = debug
         self.base.set_background_color(loading_gray)
 
         loadingText = OnscreenText("Simulating...", 1, scale=0.1, pos=(0, 0), align=TextNode.ACenter, mayChange=1)
@@ -60,7 +61,7 @@ class ociffer():
        
         self.base.taskMgr.add(self.update, "update")
         
-        if not debug: 
+        if not self.debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
             self.camera_pan_out_animation()
@@ -332,7 +333,7 @@ class ociffer():
 
 
     def setup_pig(self):
-        self.pig = self.base.loader.loadModel(gourand_pig_model_path)
+        self.pig = self.base.loader.loadModel(gouraud_pig_model_path)
         self.pig.setPos(-4.21, -0.03, 5.50)
         self.pig.setHpr(180,0,0)
         self.pig.setScale(0.25)
@@ -424,13 +425,14 @@ class ociffer():
         self.base.accept("arrow_down-up", updateKeyMap, ["up", False])
 
         # Debug
-        self.base.accept("x", updateKeyMap, ["elevate", True])
-        self.base.accept("x-up", updateKeyMap, ["elevate", False])
+        if self.debug:
+            self.base.accept("x", updateKeyMap, ["elevate", True])
+            self.base.accept("x-up", updateKeyMap, ["elevate", False])
 
-        self.base.accept("z", updateKeyMap, ["lower", True])
-        self.base.accept("z-up", updateKeyMap, ["lower", False])
+            self.base.accept("z", updateKeyMap, ["lower", True])
+            self.base.accept("z-up", updateKeyMap, ["lower", False])
 
-        self.base.accept("escape", sys.exit)
+            self.base.accept("escape", sys.exit)
 
 
     def mousePosition(self, task):
@@ -491,8 +493,6 @@ class ociffer():
                 cam_pos.z -= speed
 
             self.base.cam.setPos(cam_pos)
-
-            print(self.hand.getPos(self.base.render))
 
         return task.cont
 

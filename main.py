@@ -20,7 +20,7 @@ def run(level : int):
         except SystemExit as e:
             base.destroy()
             base = ShowBase()
-            game = ociffer(base, debug = True) 
+            game = ociffer(base, debug = False) 
             game.run()
 
 
@@ -32,5 +32,5 @@ def run(level : int):
         sys.exit(0)
 
 if __name__ == "__main__":
-    run(level = 2)
+    run(level = 1)
 
