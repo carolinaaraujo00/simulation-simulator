@@ -313,17 +313,22 @@ class ociffer():
         self.angler_fish.reparentTo(self.base.render)
 
         self.fossil = self.base.loader.loadModel(fossil_model_path)
-        self.fossil.setPos((-2.3, -2.97, 3.9))
-        self.fossil.setHpr((137, 0, 0))
-        self.fossil.setScale((0.002))
+        self.fossil.setPos((-2.35, -2.98, 3.75))
+        self.fossil.setHpr((138, 0, 0))
+        self.fossil.setScale((0.0026,0.0022,0.0022))
         self.fossil.reparentTo(self.base.render)
 
-        # Perfect
         self.background_albedo = self.base.loader.loadModel(background_sea_model_path)
-        self.background_albedo.setPos((-2.13, -3.08, 3.6))
-        self.background_albedo.setHpr((47, 0, 0))
-        self.background_albedo.setScale((0.0073))
-        self.background_albedo.reparentTo(self.base.render)
+        self.background_albedo.setPos((-3.2,-4.35, 4.8))
+        self.background_albedo.setHpr((48, 0, 0))
+        self.background_albedo.setScale((0.0071, 0.0071,0.0082))
+        self.background_albedo.reparentTo(self.office_model)
+
+        screen_sphere = self.base.loader.loadModel(sphere_model_path)
+        screen_sphere.reparentTo(self.office_model)
+        screen_sphere.setScale(0.07)
+        screen_sphere.setPos(-2.50,-3.28, 5.99)
+        setup_torch_spotlight(self.base.render, screen_sphere, (0,0,0), True)
 
 
     def setup_pig(self):
