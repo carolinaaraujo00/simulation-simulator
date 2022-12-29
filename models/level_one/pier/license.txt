@@ -1,0 +1,11 @@
+Model Information:
+* title:	pier_V_1
+* source:	https://sketchfab.com/3d-models/pier-v-1-f32ddc2c6dcf4c99b33abf3eaad71766
+* author:	Isengrim (https://sketchfab.com/Isengrim)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "pier_V_1" (https://sketchfab.com/3d-models/pier-v-1-f32ddc2c6dcf4c99b33abf3eaad71766) by Isengrim (https://sketchfab.com/Isengrim) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
