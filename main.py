@@ -20,12 +20,12 @@ def run(level : int):
         except SystemExit as e:
             base.destroy()
             base = ShowBase()
-            game = ociffer(base, debug = True) 
+            game = ociffer(base, debug = False) 
             game.run()
 
 
     elif level == 2:
-            game = ociffer(base, debug = True) 
+            game = ociffer(base, debug = False) 
             game.run()
 
     else:

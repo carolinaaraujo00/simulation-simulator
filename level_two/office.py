@@ -73,7 +73,7 @@ class ociffer():
     def camera_pan_out_animation(self):
         self.animation_sequence = Sequence(name="animation_cam")
         self.hand.hide()
-        self.base.cam.lookAt(self.fossil)
+        self.base.cam.lookAt((-2.3, -2.97, 3.9))
         self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((5, 4.5, 6)), startPos=Vec3(-1.6, -2.1, 4.2)))
         self.animation_sequence.start()
 
@@ -218,12 +218,17 @@ class ociffer():
         self.flat_shading.reparentTo(self.office_model)
         self.flat_shading.setPos(ball_text_location)
 
+
+
+
         # smooth ball
         ball_location = Vec3(18.2, -6.7, 2.95)
         ball_location.x += -0.5
         ball_location.y += 1
         self.smooth_bronze_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.smooth_bronze_ball.create_smooth_ball_bronze()
+
+        # not the problem
         ball_location.x += 0.8
         ball_location.y += 0.4
         self.smooth_ball = Ball(self.base.loader, self.office_model, ball_location)
@@ -238,6 +243,9 @@ class ociffer():
         self.phong_shading.reparentTo(self.office_model)
         self.phong_shading.setPos(ball_text_location)
      
+
+
+
         # moving ball
         ball_location = Vec3(14.3, -7, 4.34)
         self.moving_flat_ball = Ball(self.base.loader, self.office_model, ball_location)
@@ -249,6 +257,9 @@ class ociffer():
         self.flat_shading_move.setHpr(90,0,0)
         self.flat_shading_move.reparentTo(self.office_model)
         self.flat_shading_move.setPos(ball_text_location)
+
+
+
 
         # neon ball
         ball_location = Vec3(18.2, -6.7, 2.95)
@@ -314,13 +325,6 @@ class ociffer():
         self.background_albedo.setScale((0.0073))
         self.background_albedo.reparentTo(self.base.render)
 
-        
-
-
-        # moving ball
-        ball_location = Vec3(14, -2.5, 3)
-        self.moving_flat_ball = Ball(self.base.loader, self.office_model, ball_location)
-        self.moving_flat_ball.create_moving_flat_ball()
 
     def setup_pig(self):
         self.pig = self.base.loader.loadModel(gourand_pig_model_path)

@@ -102,7 +102,7 @@ gourand_pig_model_path = model_path + level_two + "gourand_pig/pig.gltf"
 # Texts
 text_ball_model_path = model_path + level_two + "text/choose_ball.gltf"
 text_escape_model_path = model_path + level_two + "text/escape.gltf"
-flat_shading_model_path = model_path + level_two + "text/flat_shading.gltf"
+flat_shading_model_path = model_path + level_two + "text/Flat_shading.gltf"
 gouraud_shading_model_path = model_path + level_two + "text/gouraud_shading.gltf"
 phong_shading_model_path = model_path + level_two + "text/phong_shading.gltf"
 neon_shading_model_path = model_path + level_two + "text/neon_shading.gltf"
