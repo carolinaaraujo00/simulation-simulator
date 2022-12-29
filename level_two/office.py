@@ -60,6 +60,8 @@ class ociffer():
        
         self.base.taskMgr.add(self.update, "update")
         
+        self.camera_pan_out_animation()
+
         if not debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
@@ -67,8 +69,18 @@ class ociffer():
             timer = threading.Timer(2, self.unlock_move)
             timer.start()
 
+    # TODO: Help wanted
+    def camera_pan_out_animation(self):
+        self.animation_sequence = Sequence(name="animation_cam")
+        self.hand.hide()
+        self.base.cam.lookAt(self.fossil)
+        self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((5, 4.5, 6)), startPos=Vec3(-1.6, -2.1, 4.2)))
+        self.animation_sequence.start()
+
+
     def unlock_move(self):
         self.lock_move = False 
+        self.hand.show()
 
 
     def thread_function(self):
@@ -85,6 +97,9 @@ class ociffer():
         self.setup_balls()
         self.setup_pig()
         self.setup_tea_glass()
+        self.setup_telephone()
+        self.setup_border_texts()
+        self.setup_screen_game()
         # self.render.setShaderAuto()
 
         # Play Sounds
@@ -178,7 +193,14 @@ class ociffer():
 
     def setup_balls(self):
         ball_location = Vec3(16.3, -6.1, 2.95)
-        
+        ball_text_location = Vec3(13, -6, 4.05)
+
+        # Text Loaders
+        self.flat_shading = self.base.loader.loadModel(flat_shading_model_path)
+        self.flat_shading_move = self.base.loader.loadModel(flat_shading_model_path)
+        self.phong_shading = self.base.loader.loadModel(phong_shading_model_path)
+        self.neon_shading = self.base.loader.loadModel(neon_shading_model_path)
+
         # flat ball
         self.flat_bronze_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.flat_bronze_ball.create_flat_ball_bronze()
@@ -188,6 +210,13 @@ class ociffer():
         self.flat_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.flat_ball.create_flat_ball()
 
+        # Flat Balls Text
+        ball_text_location.x += 1.2
+        ball_text_location.y -= 0.1
+        self.flat_shading.setScale(0.1)
+        self.flat_shading.setHpr(160,0,0)
+        self.flat_shading.reparentTo(self.office_model)
+        self.flat_shading.setPos(ball_text_location)
 
         # smooth ball
         ball_location = Vec3(18.2, -6.7, 2.95)
@@ -195,17 +224,97 @@ class ociffer():
         ball_location.y += 1
         self.smooth_bronze_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.smooth_bronze_ball.create_smooth_ball_bronze()
-
         ball_location.x += 0.8
         ball_location.y += 0.4
         self.smooth_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.smooth_ball.create_smooth_ball()
 
+        # Flat Balls Text
+        ball_text_location = Vec3(14.3, -7, 4.05)
+        ball_text_location.x += 0.5 
+        ball_text_location.y -= 0.13
+        self.phong_shading.setScale(0.1)
+        self.phong_shading.setHpr(70,0,0)
+        self.phong_shading.reparentTo(self.office_model)
+        self.phong_shading.setPos(ball_text_location)
+     
+        # moving ball
+        ball_location = Vec3(14.3, -7, 4.34)
+        self.moving_flat_ball = Ball(self.base.loader, self.office_model, ball_location)
+        self.moving_flat_ball.create_moving_flat_ball()
+
+        # Flat Balls Moving Text
+        ball_text_location = Vec3(-2.93, -0.5, 3.45)
+        self.flat_shading_move.setScale(0.1)
+        self.flat_shading_move.setHpr(90,0,0)
+        self.flat_shading_move.reparentTo(self.office_model)
+        self.flat_shading_move.setPos(ball_text_location)
 
         # neon ball
         ball_location = Vec3(18.2, -6.7, 2.95)
         self.flat_neon_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.flat_neon_ball.create_flat_ball_neon()
+
+        # Neon Shading Text
+        ball_text_location = Vec3(13, -7.5, 4.05)
+        ball_text_location.x += 0.25
+        ball_text_location.y += 0.5
+        self.neon_shading.setScale(0.08)
+        self.neon_shading.setHpr(70,0,0)
+        self.neon_shading.reparentTo(self.office_model)
+        self.neon_shading.setPos(ball_text_location)
+        
+    def setup_border_texts(self):
+        self.border_texts = [] 
+        self.border_texts.append(self.base.loader.loadModel(the_end_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+
+        self.border_limites = [] 
+
+        self.border_limites.append(Vec3(-20,-20,6))
+        self.border_limites.append(Vec3(20,-20,6))
+        self.border_limites.append(Vec3(20,20,6))
+        self.border_limites.append(Vec3(-20,20,6))
+        self.border_limites.append(Vec3(-50,-50,6))
+        self.border_limites.append(Vec3(50,-50,6))
+        self.border_limites.append(Vec3(50,50,6))
+        self.border_limites.append(Vec3(-50,50,6))
+
+        border_counter = 0
+        for text in self.border_texts:
+            text.setScale(1)
+            text.reparentTo(self.base.render)
+            text.setPos(self.border_limites[border_counter])
+            border_counter += 1
+
+    def setup_screen_game(self):
+        self.angler_fish = self.base.loader.loadModel(angler_fish_model_path)
+        self.angler_fish.setPos((-2.3, -2.43, 4.0))
+        self.angler_fish.setHpr((45, 0, 0))
+        self.angler_fish.setScale((0.002))
+        self.angler_fish.reparentTo(self.base.render)
+
+        self.fossil = self.base.loader.loadModel(fossil_model_path)
+        self.fossil.setPos((-2.3, -2.97, 3.9))
+        self.fossil.setHpr((137, 0, 0))
+        self.fossil.setScale((0.002))
+        self.fossil.reparentTo(self.base.render)
+
+        # Perfect
+        self.background_albedo = self.base.loader.loadModel(background_sea_model_path)
+        self.background_albedo.setPos((-2.13, -3.08, 3.6))
+        self.background_albedo.setHpr((47, 0, 0))
+        self.background_albedo.setScale((0.0073))
+        self.background_albedo.reparentTo(self.base.render)
+
+        
 
 
         # moving ball
@@ -219,6 +328,12 @@ class ociffer():
         self.pig.setHpr(180,0,0)
         self.pig.setScale(0.25)
         self.pig.reparentTo(self.base.render)
+
+        self.pig_gouraud_shading = self.base.loader.loadModel(gouraud_shading_model_path)
+        self.pig_gouraud_shading.setScale(0.1)
+        self.pig_gouraud_shading.setHpr(0,90,90)
+        self.pig_gouraud_shading.reparentTo(self.base.render)
+        self.pig_gouraud_shading.setPos((-3.90, -1.99, 5.40))
 
 
     def setup_tea_glass(self):
@@ -243,6 +358,21 @@ class ociffer():
         self.light_timer = threading.Timer(1, self.lights_off, args=(False,))
         self.light_timer.daemon = True
         self.light_timer.start()
+
+    def setup_telephone(self):
+        self.telephone_base = self.base.loader.loadModel(telephone_base_model_path)
+        self.telephone_base.setPos(1.05, -2.6, 2.9)
+        self.telephone_base.setScale(0.75)
+        self.telephone_base.reparentTo(self.base.render)
+
+        self.telephone_ring = Actor(telephone_ring_model_path, {"ring": telephone_ring_model_path})
+        self.telephone_ring.loop("ring")
+        self.telephone_ring.setPlayRate(1, 'ring')
+        self.telephone_ring.setScale(0.75)
+        self.telephone_ring.setPos(1.05, -2.45, 2.95)
+        self.telephone_ring.setHpr(0, 0, 5)
+        self.telephone_ring.reparentTo(self.base.render)
+
 
 
     # Called every frame
@@ -316,6 +446,9 @@ class ociffer():
                 self.base.cam.setP(self.base.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)  
         
         self.text_choose_ball.lookAt(self.base.cam)
+        for text in self.border_texts:
+            text.lookAt(self.base.cam)
+
         return task.cont
 
 
@@ -349,6 +482,7 @@ class ociffer():
                 cam_pos.z -= speed
 
             self.base.cam.setPos(cam_pos)
+
             print(self.hand.getPos(self.base.render))
 
         return task.cont
