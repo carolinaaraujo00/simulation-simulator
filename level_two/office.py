@@ -59,22 +59,28 @@ class ociffer():
        
         self.base.taskMgr.add(self.update, "update")
         
+        self.camera_pan_out_animation()
+
         if not debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
         else: 
-            self.camera_pan_out_animation()
             timer = threading.Timer(2, self.unlock_move)
             timer.start()
 
     # TODO: Help wanted
     def camera_pan_out_animation(self):
         self.animation_sequence = Sequence(name="animation_cam")
-        self.animation_sequence.append(self.base.cam.posInterval(2, Vec3(-2.04, 2.62, 4), startPos=Vec3((5, 4.5, 6))))
-        self.animation_sequence.play()
+        self.hand.hide()
+        self.base.cam.lookAt(self.fossil)
+        self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((5, 4.5, 6)), startPos=Vec3(-1.6, -2.1, 4.2)))
+        self.animation_sequence.start()
+
 
     def unlock_move(self):
         self.lock_move = False 
+        self.hand.show()
+
 
     def thread_function(self):
         # load models
