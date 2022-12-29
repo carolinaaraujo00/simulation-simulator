@@ -128,7 +128,7 @@ def setup_torch_spotlight(render, model, position, small = False):
     # Point light
     plight = PointLight("plight")
     if small: 
-        plight.setAttenuation((0, 0, 1))
+        plight.setAttenuation((0.8, 0, 0.01))
     else:
         plight.setAttenuation((1, 0, 0)) # constant, linear and quadratic
     
