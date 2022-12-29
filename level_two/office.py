@@ -63,12 +63,18 @@ class ociffer():
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
         else: 
+            self.camera_pan_out_animation()
             timer = threading.Timer(2, self.unlock_move)
             timer.start()
 
+    # TODO: Help wanted
+    def camera_pan_out_animation(self):
+        self.animation_sequence = Sequence(name="animation_cam")
+        self.animation_sequence.append(self.base.cam.posInterval(2, Vec3(-2.04, 2.62, 4), startPos=Vec3((5, 4.5, 6))))
+        self.animation_sequence.play()
+
     def unlock_move(self):
         self.lock_move = False 
-
 
     def thread_function(self):
         # load models
@@ -300,9 +306,6 @@ class ociffer():
         self.background_albedo.setScale((0.0073))
         self.background_albedo.reparentTo(self.base.render)
 
-        # Vec3(0, 100, 0), Vec3(0, 0, 0), Vec3(0.5, 0.5, 0.5), fossil_model_path
-        
-        # Vec3(-80, 350, -30), Vec3(-90, 0, 0), Vec3(2, 2.2, 2), background_sea_model_path
         
 
 
