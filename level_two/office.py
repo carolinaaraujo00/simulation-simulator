@@ -192,7 +192,7 @@ class ociffer():
 
     def setup_balls(self):
         ball_location = Vec3(16.3, -6.1, 2.95)
-        ball_text_location = Vec3(16.3, -6.1, 4.05)
+        ball_text_location = Vec3(16.3, -6.1, 2.67)
 
         # Text Loaders
         self.flat_shading = self.base.loader.loadModel(flat_shading_model_path)
@@ -210,10 +210,10 @@ class ociffer():
         self.flat_ball.create_flat_ball()
 
         # Flat Balls Text
-        ball_text_location.x += 1.2
-        ball_text_location.y -= 0.1
+        ball_text_location.x += 2.64
+        ball_text_location.y += 1.3
         self.flat_shading.setScale(0.1)
-        self.flat_shading.setHpr(160,0,0)
+        self.flat_shading.setHpr(200, 0, 0)
         self.flat_shading.reparentTo(self.office_model)
         self.flat_shading.setPos(ball_text_location)
 
@@ -227,18 +227,17 @@ class ociffer():
         self.smooth_bronze_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.smooth_bronze_ball.create_smooth_ball_bronze()
 
-        # not the problem
         ball_location.x += 0.8
         ball_location.y += 0.4
         self.smooth_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.smooth_ball.create_smooth_ball()
 
         # Flat Balls Text
-        ball_text_location = Vec3(14.3, -7, 4.05)
-        ball_text_location.x += 0.5 
-        ball_text_location.y -= 0.13
+        ball_text_location = Vec3(18.2, -6.7, 2.67)
+        ball_text_location.x += -1.4
+        ball_text_location.y += 0.8
         self.phong_shading.setScale(0.1)
-        self.phong_shading.setHpr(70,0,0)
+        self.phong_shading.setHpr(160, 0, 0)
         self.phong_shading.reparentTo(self.office_model)
         self.phong_shading.setPos(ball_text_location)
      
@@ -266,11 +265,11 @@ class ociffer():
         self.flat_neon_ball.create_flat_ball_neon()
 
         # Neon Shading Text
-        ball_text_location = Vec3(13, -7.5, 4.05)
-        ball_text_location.x += 0.25
-        ball_text_location.y += 0.5
+        ball_text_location = Vec3(18.2, -6.7, 2.67)
+        ball_text_location.x += -0.2
+        ball_text_location.y += 0.2
         self.neon_shading.setScale(0.08)
-        self.neon_shading.setHpr(70,0,0)
+        self.neon_shading.setHpr(120,0,0)
         self.neon_shading.reparentTo(self.office_model)
         self.neon_shading.setPos(ball_text_location)
         
