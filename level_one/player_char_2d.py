@@ -42,10 +42,6 @@ class PlayerChar2D(Entity, DirectObject):
             "right": False
         }
 
-        # Attach point light
-        #setup_point_light_in_model(self.engine_ref.base.render, self.mesh, (0, 15, 48))
-        setup_point_light_in_model(self.engine_ref.base.render, self.mesh, (0, 0, 0))
-
         self.accept_input()
 
         # Collision Events

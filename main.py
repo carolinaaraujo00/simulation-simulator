@@ -1,4 +1,3 @@
-from panda3d.core import Vec3
 from level_one.engine_2d import *
 from level_one.level_underwater import LevelUnderwater
 from level_two.office import ociffer 
