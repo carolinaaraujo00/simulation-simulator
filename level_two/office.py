@@ -100,6 +100,7 @@ class ociffer():
         self.setup_telephone()
         self.setup_border_texts()
         self.setup_screen_game()
+        self.setup_end_credits_button()
         # self.render.setShaderAuto()
 
         # Play Sounds
@@ -383,6 +384,14 @@ class ociffer():
         self.telephone_ring.setPos(1.05, -2.45, 2.95)
         self.telephone_ring.setHpr(0, 0, 5)
         self.telephone_ring.reparentTo(self.base.render)
+
+
+    def setup_end_credits_button(self):
+        self.credits_button = self.base.loader.loadModel(red_button_model_path)
+        self.credits_button.setPos(5, 0, 2.9)
+        self.credits_button.setScale(0.50)
+        self.credits_button.reparentTo(self.office_model)
+        
 
 
     # Called every frame
