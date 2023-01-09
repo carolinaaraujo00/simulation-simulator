@@ -32,7 +32,10 @@ class PlayerChar2D(Entity, DirectObject):
         self.floor_offset = 0.5
         self.can_move = True
 
-        self.collider = Collider(self.engine_ref, self, "player_char_2d", Vec3(0, 0, -30), Vec3(20, 40, 25))
+        self.collider = Collider(self.engine_ref, self, "player_char_2d", Vec3(0, 0, -0.35), Vec3(0.2, 0.4, 0.25))
+
+        self.mesh.loadAnims({"mill": angler_fish_model_path})
+        self.mesh.loop("mill")
 
         self.key_map = {
             "left": False,
@@ -40,7 +43,8 @@ class PlayerChar2D(Entity, DirectObject):
         }
 
         # Attach point light
-        setup_point_light_in_model(self.engine_ref.base.render, self.mesh, (0, 15, 48))
+        #setup_point_light_in_model(self.engine_ref.base.render, self.mesh, (0, 15, 48))
+        setup_point_light_in_model(self.engine_ref.base.render, self.mesh, (0, 0, 0))
 
         self.accept_input()
 
@@ -122,6 +126,7 @@ class PlayerChar2D(Entity, DirectObject):
         # Setting cam based on player
         self.engine_ref.set_cam_pos(self.pos)
 
+        # Check if has fallen of map
         if self.pos.z < self.engine_ref.cam_z_limits[0]:
             self.pos.x = self.beggining_pos_x
             self.pos.z = self.beggining_pos_z

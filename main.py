@@ -8,7 +8,7 @@ def run(level : int):
     base = ShowBase()
     if level == 1: 
 
-        engine = Engine2D(base, False)
+        engine = Engine2D(base, debug = False)
 
         # Set underwater level
         underwater = LevelUnderwater(engine, Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(1, 1, 1))
