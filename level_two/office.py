@@ -435,8 +435,8 @@ class ociffer():
             self.hand.hide()
             self.lock_movement()
             self.animation_sequence_credits = Sequence(name="animation_credits_cam1")
-            self.animation_sequence_credits.append(self.base.cam.posInterval(4, Vec3((17, 17, 6)), startPos=self.base.cam.getPos()))
-            self.animation_sequence_credits.append(self.base.cam.posInterval(3, Vec3((75, 75, 6)), startPos=(17, 17, 6)))
+            self.animation_sequence_credits.append(self.base.cam.posInterval(4, Vec3((17, 17, 4)), startPos=self.base.cam.getPos()))
+            self.animation_sequence_credits.append(self.base.cam.posInterval(3, Vec3((65, 70, 2)), startPos=(17, 17, 4)))
             self.animation_sequence_credits.start()
 
             timer = threading.Timer(7, self.camera_credits_animation_pt2)
@@ -448,7 +448,7 @@ class ociffer():
 
 
         self.animation_sequence_credits2 = Sequence(name="animation_text_credits")
-        self.animation_sequence_credits2.append(self.credits_text.posInterval(25, (70, 70, 30), startPos=(70, 70, -15)))
+        self.animation_sequence_credits2.append(self.credits_text.posInterval(25, (59, 65, 30), startPos=(59, 65, -15)))
         self.animation_sequence_credits2.start()
 
         timer = threading.Timer(25, self.camera_credits_animation_pt3)
@@ -459,7 +459,6 @@ class ociffer():
         self.unlock_move()
         self.base.destroy()
         os._exit(0)
-        # sys.exit(0)
 
 
     def setup_end_credits_button(self):
@@ -478,7 +477,7 @@ class ociffer():
 
         self.credits_text = self.base.loader.loadModel(credits_text_model_path)
         self.credits_text.setPos(72, 72, -20)
-        self.credits_text.setScale(0.50)
+        self.credits_text.setScale(0.41)
         self.credits_text.reparentTo(self.office_model)     
 
 
@@ -500,7 +499,7 @@ class ociffer():
                 self.camera_credits_animation_pt1()
 
         if self.is_button_active:
-            self.base.cam.lookAt((0,0,3))
+            self.base.cam.lookAt((0,0,0))
 
         return task.cont
 
@@ -526,8 +525,8 @@ class ociffer():
 
         self.base.accept("s", updateKeyMap, ["down", True])
         self.base.accept("s-up", updateKeyMap, ["down", False])
-        self.base.accept("arrow_down", updateKeyMap, ["up", True])
-        self.base.accept("arrow_down-up", updateKeyMap, ["up", False])
+        self.base.accept("arrow_down", updateKeyMap, ["down", True])
+        self.base.accept("arrow_down-up", updateKeyMap, ["down", False])
 
         # Debug
         if self.debug:
@@ -560,9 +559,11 @@ class ociffer():
                 # move the camera accordingly 
                 self.base.cam.setH(self.base.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
                 self.base.cam.setP(self.base.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)  
+        
         if self.is_game_ready:
             self.text_choose_ball.lookAt(self.base.cam)
             self.credits_text.lookAt(self.base.cam)
+
             for text in self.border_texts:
                 text.lookAt(self.base.cam)
 
