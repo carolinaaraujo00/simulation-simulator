@@ -2,7 +2,7 @@
 
 This game was developed in the context of the **MSc. in Digital Game Development**, Universidade de Aveiro, for the curricular unit of **Visual Computing**. It proposes to explore different visual computing concepts, such as transformations, collisions, animations, 3D meshes, illumination of various types, shading methods, materials, textures, *etc*. 
 
-Envisioned and created by **Carolina Araújo**, **Francisco R. Pinto** and **Luís Chaves**.
+Envisioned and created by **Carolina Araújo**, **Francisco R. Pinto** and **Luís Chaves**, using the Panda3D game engine.
 
 # How to run the game 
 
