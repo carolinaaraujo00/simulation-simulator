@@ -59,6 +59,10 @@ class ociffer():
         
         self.base.cam.setPos(5, 4.5, 6) # X = left & right, Y = zoom, Z = Up & down.
         self.base.cam.setHpr(135, -10, 0) # Heading, pitch, roll.
+        
+        # self.base.cam.setPos(-1.6, -2.1, 4.2) # X = left & right, Y = zoom, Z = Up & down.
+        # self.base.cam.lookAt((-2.3, -2.97, 3.9))
+
         self.mouse_sens = 2.5
         self.repeat_lights = True
 
@@ -89,8 +93,18 @@ class ociffer():
         self.base.cam.lookAt((-2.3, -2.97, 3.9))
         self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((5, 4.5, 6)), startPos=Vec3(-1.6, -2.1, 4.2)))
         self.animation_sequence.start()
-        
 
+        timer = threading.Timer(6, self.change_orange_position_to_load)
+        timer.start()
+
+        timer = threading.Timer(7, self.change_orange_position)
+        timer.start()
+
+    def change_orange_position_to_load(self):
+        self.orange.setPos(Vec3(-8, -8, 2.3))
+        
+    def change_orange_position(self):
+        self.orange.setPos(Vec3(-3.5, 17, 2.3))
     
     def unlock_move(self):
         self.lock_move = False 
@@ -155,7 +169,7 @@ class ociffer():
         self.hand_collider_node.addSolid(CollisionBox(Vec3(0, -5, 0), 1, 1, 1))
         self.hand_collider = self.hand.attachNewNode(self.hand_collider_node)
         self.base.cTrav.addCollider(self.hand_collider, self.base.colHandlerQueue)
-        if not self.debug: 
+        if self.debug: 
             self.hand_collider.show()
 
 
@@ -459,7 +473,7 @@ class ociffer():
         self.button_collider_node.addSolid(CollisionBox(Vec3(0.7, 0, 5), 0.75, 0.75, 0.75))
         self.button_collider = self.credits_button.attachNewNode(self.button_collider_node)
         self.base.cTrav.addCollider(self.button_collider, self.base.colHandlerQueue)
-        if not self.debug: 
+        if self.debug: 
             self.button_collider.show()
 
         self.credits_text = self.base.loader.loadModel(credits_text_model_path)
