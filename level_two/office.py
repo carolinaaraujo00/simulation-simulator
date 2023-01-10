@@ -13,6 +13,7 @@ from level_two.sound_player_two import *
 from level_two.lamp import * 
 
 import sys
+import os
 from level_two.balls import *
 from panda3d.core import Material
 
@@ -69,7 +70,8 @@ class ociffer():
         self.base.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
        
         self.base.taskMgr.add(self.update, "update")
-        
+        self.is_animation_started = False
+
         if not self.debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
@@ -80,12 +82,14 @@ class ociffer():
 
 
 
+
     def camera_pan_out_animation(self):
         self.animation_sequence = Sequence(name="animation_cam")
         self.hand.hide()
         self.base.cam.lookAt((-2.3, -2.97, 3.9))
         self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((5, 4.5, 6)), startPos=Vec3(-1.6, -2.1, 4.2)))
         self.animation_sequence.start()
+        
 
     
     def unlock_move(self):
@@ -412,23 +416,36 @@ class ociffer():
 
 
     def camera_credits_animation_pt1(self):
-        print("camera_credits_animation_pt1")
-        self.hand.hide()
-        self.lock_movement()
-        self.animation_sequence_credits = Sequence(name="animation_credits_cam1")
-        current_pos = self.base.cam.getPos()
-        self.animation_sequence_credits.append(self.base.cam.posInterval(4, Vec3((17, 17, 6)), startPos=current_pos))
-        self.animation_sequence_credits.append(self.base.cam.posInterval(3, Vec3((75, 75, 6)), startPos=(17, 17, 6)))
-        self.animation_sequence_credits.start()
+        if not self.is_animation_started:
+            self.is_animation_started = True
+            self.hand.hide()
+            self.lock_movement()
+            self.animation_sequence_credits = Sequence(name="animation_credits_cam1")
+            self.animation_sequence_credits.append(self.base.cam.posInterval(4, Vec3((17, 17, 6)), startPos=self.base.cam.getPos()))
+            self.animation_sequence_credits.append(self.base.cam.posInterval(3, Vec3((75, 75, 6)), startPos=(17, 17, 6)))
+            self.animation_sequence_credits.start()
 
-        timer = threading.Timer(7, self.camera_credits_animation_pt2)
-        timer.start()
+            timer = threading.Timer(7, self.camera_credits_animation_pt2)
+            timer.start()
 
     def camera_credits_animation_pt2(self):
+        self.animation_sequence_credits.finish()
+        self.is_button_active = False
+
+
+        self.animation_sequence_credits2 = Sequence(name="animation_text_credits")
+        self.animation_sequence_credits2.append(self.credits_text.posInterval(25, (70, 70, 30), startPos=(70, 70, -15)))
+        self.animation_sequence_credits2.start()
+
+        timer = threading.Timer(25, self.camera_credits_animation_pt3)
+        timer.start()
+
+    def camera_credits_animation_pt3(self):
         self.hand.show()
         self.unlock_move()
-        self.is_button_active = False
-        self.animation_sequence_credits.finish()
+        self.base.destroy()
+        os._exit(0)
+        # sys.exit(0)
 
 
     def setup_end_credits_button(self):
@@ -446,7 +463,7 @@ class ociffer():
             self.button_collider.show()
 
         self.credits_text = self.base.loader.loadModel(credits_text_model_path)
-        self.credits_text.setPos(50, 50, 10)
+        self.credits_text.setPos(72, 72, -20)
         self.credits_text.setScale(0.50)
         self.credits_text.reparentTo(self.office_model)     
 
@@ -467,8 +484,6 @@ class ociffer():
             for entry in self.base.colHandlerQueue.getEntries():
                 self.is_button_active = True
                 self.camera_credits_animation_pt1()
-                timer = threading.Timer(0.5, self.unlock_move)
-                timer.start()
 
         if self.is_button_active:
             self.base.cam.lookAt((0,0,3))
