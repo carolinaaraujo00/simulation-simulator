@@ -73,10 +73,13 @@ class ociffer():
         if not self.debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
-            self.camera_pan_out_animation()
+            # self.camera_pan_out_animation()
+            self.camera_credits_animation_pt1()
         else: 
             timer = threading.Timer(0.5, self.unlock_move)
             timer.start()
+            self.camera_credits_animation_pt1()
+
 
 
     def camera_pan_out_animation(self):
@@ -86,10 +89,14 @@ class ociffer():
         self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((5, 4.5, 6)), startPos=Vec3(-1.6, -2.1, 4.2)))
         self.animation_sequence.start()
 
-
+    
     def unlock_move(self):
         self.lock_move = False 
         self.hand.show()
+
+    def lock_movement(self):
+        self.base.disable_mouse()
+        self.lock_move = True 
 
 
     def thread_function(self):
@@ -401,11 +408,37 @@ class ociffer():
         self.telephone_ring.reparentTo(self.base.render)
 
 
+    def camera_credits_animation_pt1(self):
+        self.animation_sequence = Sequence(name="animation_credits_cam1")
+        self.hand.hide()
+        self.lock_movement()
+        # self.animation_sequence.append(self.base.cam.posInterval(4, Vec3((17, 17, 8)), startPos=self.base.cam.getPos()))
+        self.animation_sequence.append(self.base.cam.posInterval(8, Vec3((55, 55, 4)), startPos=self.base.cam.getPos()))
+        # self.animation_sequence.append(self.base.cam.hprInterval(1, Point3(135 + 180, 0, 0), startHpr=self.base.cam.getHpr()))
+        self.animation_sequence.start()
+        # timer = threading.Timer(5, self.camera_credits_animation_pt2)
+        # timer.start()
+
+    def camera_credits_animation_pt2(self):
+        self.hand.hide()
+        self.animation_sequence = Sequence(name="animation_credits_cam2")
+        self.base.cam.lookAt(self.end_scenary)
+        self.animation_sequence.append(self.base.cam.posInterval(12, Vec3((55, 55, 4)), startPos=self.base.cam.getPos()))
+        self.animation_sequence.start()
+        self.hand.show()
+
+
     def setup_end_credits_button(self):
         self.credits_button = self.base.loader.loadModel(red_button_model_path)
         self.credits_button.setPos(5, 0, 2.9)
         self.credits_button.setScale(0.50)
         self.credits_button.reparentTo(self.office_model)
+
+        self.end_scenary = self.base.loader.loadModel(end_scenary_model_path)
+        self.end_scenary.setPos((75, 75, 4))
+        self.end_scenary.lookAt(self.base.cam)
+        self.end_scenary.setScale(0.05)
+        self.end_scenary.reparentTo(self.base.render)
 
         self.pusher.addCollider(self.collider, self.hand)
         # The traverser wants a collider, and a handler

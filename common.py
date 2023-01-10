@@ -99,6 +99,7 @@ telephone_ring_model_path = model_path + level_two + "office_space/telephone_ani
 # END CREDITS
 
 red_button_model_path = model_path + level_two + "red_button/red_button.gltf"
+end_scenary_model_path = model_path + level_two + "credits/university.gltf"
 
 # Balls
 flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
