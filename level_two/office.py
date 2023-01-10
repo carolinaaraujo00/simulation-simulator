@@ -302,7 +302,7 @@ class ociffer():
         self.border_texts = [] 
         self.border_texts.append(self.base.loader.loadModel(the_end_model_path))
         self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
-        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        # self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
         self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
 
         self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
@@ -314,11 +314,11 @@ class ociffer():
 
         self.border_limites.append(Vec3(-20,-20,6))
         self.border_limites.append(Vec3(20,-20,6))
-        self.border_limites.append(Vec3(20,20,6))
+        # self.border_limites.append(Vec3(20,20,6))
         self.border_limites.append(Vec3(-20,20,6))
         self.border_limites.append(Vec3(-50,-50,6))
         self.border_limites.append(Vec3(50,-50,6))
-        self.border_limites.append(Vec3(50,50,6))
+        self.border_limites.append(Vec3(60,60,6))
         self.border_limites.append(Vec3(-50,50,6))
 
         border_counter = 0
@@ -409,24 +409,15 @@ class ociffer():
 
 
     def camera_credits_animation_pt1(self):
-        self.animation_sequence = Sequence(name="animation_credits_cam1")
         self.hand.hide()
         self.lock_movement()
-        # self.animation_sequence.append(self.base.cam.posInterval(4, Vec3((17, 17, 8)), startPos=self.base.cam.getPos()))
-        self.animation_sequence.append(self.base.cam.posInterval(8, Vec3((55, 55, 4)), startPos=self.base.cam.getPos()))
-        # self.animation_sequence.append(self.base.cam.hprInterval(1, Point3(135 + 180, 0, 0), startHpr=self.base.cam.getHpr()))
+        self.animation_sequence = Sequence(name="animation_credits_cam1")
+        self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((55, 55, 6)), startPos=self.base.cam.getPos()))
+        # self.animation_sequence.append(self.base.cam.hprInterval(1, Point3(0,0,10) , startHpr=self.base.cam.getPos()))
         self.animation_sequence.start()
-        # timer = threading.Timer(5, self.camera_credits_animation_pt2)
-        # timer.start()
-
-    def camera_credits_animation_pt2(self):
         self.hand.hide()
-        self.animation_sequence = Sequence(name="animation_credits_cam2")
-        self.base.cam.lookAt(self.end_scenary)
-        self.animation_sequence.append(self.base.cam.posInterval(12, Vec3((55, 55, 4)), startPos=self.base.cam.getPos()))
-        self.animation_sequence.start()
-        self.hand.show()
-
+        self.lock_movement()
+        # self.hand.show()
 
     def setup_end_credits_button(self):
         self.credits_button = self.base.loader.loadModel(red_button_model_path)
@@ -434,11 +425,11 @@ class ociffer():
         self.credits_button.setScale(0.50)
         self.credits_button.reparentTo(self.office_model)
 
-        self.end_scenary = self.base.loader.loadModel(end_scenary_model_path)
-        self.end_scenary.setPos((75, 75, 4))
-        self.end_scenary.lookAt(self.base.cam)
-        self.end_scenary.setScale(0.05)
-        self.end_scenary.reparentTo(self.base.render)
+        self.credits_text = self.base.loader.loadModel(credits_text_model_path)
+        self.credits_text.setPos(50, 50, 10)
+        self.credits_text.setScale(0.50)
+        self.credits_text.reparentTo(self.office_model)
+
 
         self.pusher.addCollider(self.collider, self.hand)
         # The traverser wants a collider, and a handler
