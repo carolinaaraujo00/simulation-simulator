@@ -16,6 +16,12 @@ import sys
 from level_two.balls import *
 from panda3d.core import Material
 
+# Collisions
+from panda3d.core import CollisionTraverser
+from panda3d.core import CollisionHandlerPusher
+from panda3d.core import CollisionSphere, CollisionNode
+from panda3d.core import CollisionTube
+
 
 loadPrcFileData("", configVars)
 
@@ -25,6 +31,7 @@ class ociffer():
         simplepbr.init()
 
         self.debug = debug
+        self.is_game_ready = False
         self.base.set_background_color(loading_gray)
 
         loadingText = OnscreenText("Simulating...", 1, scale=0.1, pos=(0, 0), align=TextNode.ACenter, mayChange=1)
@@ -35,6 +42,8 @@ class ociffer():
         self.base.disable_mouse()
         self.lock_move = True 
         self.init_movement()
+        self.base.cTrav = CollisionTraverser()
+        self.pusher = CollisionHandlerPusher()
 
         setup_black_ambient_light(self.base.render)
         # setup_ambient_light(self.render, office_ambient_black)
@@ -108,6 +117,7 @@ class ociffer():
 
         # continuous light buzz sound
         self.sound_player.play_lights_on() 
+        self.is_game_ready = True
 
 
     def setup_office(self):
@@ -127,6 +137,11 @@ class ociffer():
         self.hand = self.base.loader.loadModel(hand_model_path)
         self.hand.setScale(self.base.cam, 0.2)
         self.hand.reparentTo(self.base.render)
+        colliderNode = CollisionNode("hand")
+        # Add a collision-sphere centred on (0, 0, 0), and with a radius of 0.3
+        colliderNode.addSolid(CollisionSphere(0, 0, 0, 0.3))
+        self.collider = self.hand.attachNewNode(colliderNode)
+        self.collider.show()
 
 
     def setup_torch(self):
@@ -391,6 +406,17 @@ class ociffer():
         self.credits_button.setPos(5, 0, 2.9)
         self.credits_button.setScale(0.50)
         self.credits_button.reparentTo(self.office_model)
+
+        self.pusher.addCollider(self.collider, self.hand)
+        # The traverser wants a collider, and a handler
+        # that responds to that collider's collisions
+        self.base.cTrav.addCollider(self.collider, self.pusher)
+
+        wallSolid = CollisionTube(-8.0, 0, 0, 8.0, 0, 0, 0.2)
+        wallNode = CollisionNode("wall")
+        wallNode.addSolid(wallSolid)
+        wall = render.attachNewNode(wallNode)
+        wall.setY(8.0)
         
 
 
@@ -464,10 +490,10 @@ class ociffer():
                 # move the camera accordingly 
                 self.base.cam.setH(self.base.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
                 self.base.cam.setP(self.base.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)  
-        
-        self.text_choose_ball.lookAt(self.base.cam)
-        for text in self.border_texts:
-            text.lookAt(self.base.cam)
+        if self.is_game_ready:
+            self.text_choose_ball.lookAt(self.base.cam)
+            for text in self.border_texts:
+                text.lookAt(self.base.cam)
 
         return task.cont
 
