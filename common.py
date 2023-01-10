@@ -23,7 +23,7 @@ blank_texture = level_one + "BlankTextr.png"
 
 
 # MODEL PATHS
-angler_fish_model_path = model_path + level_one + "angler_fish/angler_fish2.glb"
+angler_fish_model_path = model_path + level_one + "angler_fish/angler_fish.gltf"
 
 
 angler_ambient = (0.08, 0.08, 0.08, 1)

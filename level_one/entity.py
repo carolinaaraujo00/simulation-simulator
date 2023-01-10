@@ -19,14 +19,8 @@ class Entity:
         # Setting the actor
         if self.model_actor:
             self.mesh = self.engine_ref.base.loader.loadModel(model_path)
-            # self.mesh.loop('animations')
-            print("model")
         else:
             self.mesh = Actor(model_path)
-            print("actor")
-            self.mesh.loop('mill')
-            # self.mesh.play('mill')
-            print(self.mesh.getCurrentAnim())
 
         self.mesh.setPos(self.pos)
         self.mesh.setHpr(self.rot)
