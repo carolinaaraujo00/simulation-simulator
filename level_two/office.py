@@ -42,8 +42,9 @@ class ociffer():
         self.base.disable_mouse()
         self.lock_move = True 
         self.init_movement()
-        self.base.cTrav = CollisionTraverser()
-        self.pusher = CollisionHandlerPusher()
+
+        # Collisions
+        self.setup_collisions()
 
         # Lights
         setup_black_ambient_light(self.base.render)
@@ -72,12 +73,10 @@ class ociffer():
         if not self.debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
-            # self.camera_pan_out_animation()
-            self.camera_credits_animation_pt1()
+            self.camera_pan_out_animation()
         else: 
             timer = threading.Timer(0.5, self.unlock_move)
             timer.start()
-            # self.camera_credits_animation_pt1()
 
 
 
@@ -124,6 +123,11 @@ class ociffer():
         self.sound_player.play_lights_on() 
         self.is_game_ready = True
 
+    def setup_collisions(self):
+        self.base.cTrav = CollisionTraverser()  # VAR NEEDS TO HAVE THIS NAME. PANDA3D SHENANIGANS...
+        self.base.colHandlerQueue = CollisionHandlerQueue()
+        self.is_button_active = False
+
 
     def setup_office(self):
         self.office_model = self.base.loader.loadModel(office_model_path)
@@ -141,11 +145,14 @@ class ociffer():
         self.hand = self.base.loader.loadModel(hand_model_path)
         self.hand.setScale(self.base.cam, 0.2)
         self.hand.reparentTo(self.base.render)
-        colliderNode = CollisionNode("hand")
-        # Add a collision-sphere centred on (0, 0, 0), and with a radius of 0.3
-        colliderNode.addSolid(CollisionSphere(0, 0, 0, 0.3))
-        self.collider = self.hand.attachNewNode(colliderNode)
-        self.collider.show()
+
+        # Collisions
+        self.hand_collider_node = CollisionNode("hand_col")
+        self.hand_collider_node.addSolid(CollisionBox(Vec3(0, -5, 0), 1, 1, 1))
+        self.hand_collider = self.hand.attachNewNode(self.hand_collider_node)
+        self.base.cTrav.addCollider(self.hand_collider, self.base.colHandlerQueue)
+        if not self.debug: 
+            self.hand_collider.show()
 
 
     def setup_torch(self):
@@ -314,7 +321,7 @@ class ociffer():
         self.border_limites.append(Vec3(-20,20,6))
         self.border_limites.append(Vec3(-50,-50,6))
         self.border_limites.append(Vec3(50,-50,6))
-        self.border_limites.append(Vec3(60,60,6))
+        self.border_limites.append(Vec3(75,75,6))
         self.border_limites.append(Vec3(-50,50,6))
 
         border_counter = 0
@@ -405,39 +412,43 @@ class ociffer():
 
 
     def camera_credits_animation_pt1(self):
+        print("camera_credits_animation_pt1")
         self.hand.hide()
         self.lock_movement()
-        self.animation_sequence = Sequence(name="animation_credits_cam1")
-        self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((55, 55, 6)), startPos=self.base.cam.getPos()))
-        # self.animation_sequence.append(self.base.cam.hprInterval(1, Point3(0,0,10) , startHpr=self.base.cam.getPos()))
-        self.animation_sequence.start()
-        self.hand.hide()
-        self.lock_movement()
-        # self.hand.show()
+        self.animation_sequence_credits = Sequence(name="animation_credits_cam1")
+        current_pos = self.base.cam.getPos()
+        self.animation_sequence_credits.append(self.base.cam.posInterval(4, Vec3((17, 17, 6)), startPos=current_pos))
+        self.animation_sequence_credits.append(self.base.cam.posInterval(3, Vec3((75, 75, 6)), startPos=(17, 17, 6)))
+        self.animation_sequence_credits.start()
+
+        timer = threading.Timer(7, self.camera_credits_animation_pt2)
+        timer.start()
+
+    def camera_credits_animation_pt2(self):
+        self.hand.show()
+        self.unlock_move()
+        self.is_button_active = False
+        self.animation_sequence_credits.finish()
+
 
     def setup_end_credits_button(self):
         self.credits_button = self.base.loader.loadModel(red_button_model_path)
-        self.credits_button.setPos(5, 0, 2.9)
-        self.credits_button.setScale(0.50)
+        self.credits_button.setPos(0, 24, 2.6)
+        self.credits_button.setHpr(270, 0, 0)
+        self.credits_button.setScale(0.65)
         self.credits_button.reparentTo(self.office_model)
+
+        self.button_collider_node = CollisionNode("button_col")
+        self.button_collider_node.addSolid(CollisionBox(Vec3(0.7, 0, 5), 0.75, 0.75, 0.75))
+        self.button_collider = self.credits_button.attachNewNode(self.button_collider_node)
+        self.base.cTrav.addCollider(self.button_collider, self.base.colHandlerQueue)
+        if not self.debug: 
+            self.button_collider.show()
 
         self.credits_text = self.base.loader.loadModel(credits_text_model_path)
         self.credits_text.setPos(50, 50, 10)
         self.credits_text.setScale(0.50)
-        self.credits_text.reparentTo(self.office_model)
-
-
-        self.pusher.addCollider(self.collider, self.hand)
-        # The traverser wants a collider, and a handler
-        # that responds to that collider's collisions
-        self.base.cTrav.addCollider(self.collider, self.pusher)
-
-        wallSolid = CollisionTube(-8.0, 0, 0, 8.0, 0, 0, 0.2)
-        wallNode = CollisionNode("wall")
-        wallNode.addSolid(wallSolid)
-        wall = render.attachNewNode(wallNode)
-        wall.setY(8.0)
-        
+        self.credits_text.reparentTo(self.office_model)     
 
 
     # Called every frame
@@ -448,9 +459,19 @@ class ociffer():
         self.check_movement(task)
         self.mousePosition(task)
 
-        self.hand.setPos(self.base.cam, (1, 1.5, -0.8))
-        self.hand.setHpr(self.base.cam, (200, -32, 0))
-        self.hand.setScale(self.base.cam, 0.2)
+        if not self.is_button_active:
+            self.hand.setPos(self.base.cam, (1, 1.5, -0.8))
+            self.hand.setHpr(self.base.cam, (200, -32, 0))
+            self.hand.setScale(self.base.cam, 0.2)
+
+            for entry in self.base.colHandlerQueue.getEntries():
+                self.is_button_active = True
+                self.camera_credits_animation_pt1()
+                timer = threading.Timer(0.5, self.unlock_move)
+                timer.start()
+
+        if self.is_button_active:
+            self.base.cam.lookAt((0,0,3))
 
         return task.cont
 
@@ -478,9 +499,6 @@ class ociffer():
         self.base.accept("s-up", updateKeyMap, ["down", False])
         self.base.accept("arrow_down", updateKeyMap, ["up", True])
         self.base.accept("arrow_down-up", updateKeyMap, ["up", False])
-
-        self.base.accept("l", updateKeyMap, ["lights", True])
-        self.base.accept("l-up", updateKeyMap, ["lights", False])
 
         # Debug
         if self.debug:
@@ -515,6 +533,7 @@ class ociffer():
                 self.base.cam.setP(self.base.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)  
         if self.is_game_ready:
             self.text_choose_ball.lookAt(self.base.cam)
+            self.credits_text.lookAt(self.base.cam)
             for text in self.border_texts:
                 text.lookAt(self.base.cam)
 
@@ -549,9 +568,6 @@ class ociffer():
                 cam_pos.z += speed
             if key_map_3d["lower"]:
                 cam_pos.z -= speed
-            if key_map_3d["lights"]:
-                #TODO check if will be used for credits. else delete
-                pass
 
             self.base.cam.setPos(cam_pos)
 

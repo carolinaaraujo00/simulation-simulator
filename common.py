@@ -150,8 +150,7 @@ key_map_3d = {
     "left" : False,
     "right" : False,
     "elevate" : False,
-    "lower" : False,
-    "lights": False
+    "lower" : False
 }
 
 def updateKeyMap(key, state):
