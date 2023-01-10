@@ -45,9 +45,8 @@ class ociffer():
         self.base.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
 
+        # Lights
         setup_black_ambient_light(self.base.render)
-        # setup_ambient_light(self.render, office_ambient_black)
-
 
         self.sound_player = SoundPlayerTwo(self.base)
         self.sound_player.init_sounds()
@@ -78,7 +77,7 @@ class ociffer():
         else: 
             timer = threading.Timer(0.5, self.unlock_move)
             timer.start()
-            self.camera_credits_animation_pt1()
+            # self.camera_credits_animation_pt1()
 
 
 
@@ -117,7 +116,6 @@ class ociffer():
         self.setup_border_texts()
         self.setup_screen_game()
         self.setup_end_credits_button()
-        # self.render.setShaderAuto()
 
         # Play Sounds
         self.sound_player.play_sounds()
@@ -131,7 +129,6 @@ class ociffer():
         self.office_model = self.base.loader.loadModel(office_model_path)
         self.office_model.setScale(0.8)
         self.office_model.reparentTo(self.base.render)
-
 
     def setup_office_room(self):
         self.office_room_model = self.base.loader.loadModel(office_room_model_path)
@@ -183,14 +180,13 @@ class ociffer():
 
         # attribute grey ambient light to orange
         # Then the light that affects the model
-
-        # setup_model_ambient_light(self.render, self.orange)
-        # setup_point_light_in_model_mapping(self.hand, self.orange, Vec3(0,0,0))
+        setup_point_light_in_model_mapping(self.hand, self.orange, Vec3(0,0,0))
 
         self.orange.setScale(0.2, 0.2, 0.2)
         self.orange.reparentTo(self.office_model)
         self.orange.setPos(orange_location)
         self.orange.setHpr((45, 20, 0))
+        self.orange.setShaderAuto()
 
 
     def setup_podium(self):
@@ -483,6 +479,9 @@ class ociffer():
         self.base.accept("arrow_down", updateKeyMap, ["up", True])
         self.base.accept("arrow_down-up", updateKeyMap, ["up", False])
 
+        self.base.accept("l", updateKeyMap, ["lights", True])
+        self.base.accept("l-up", updateKeyMap, ["lights", False])
+
         # Debug
         if self.debug:
             self.base.accept("x", updateKeyMap, ["elevate", True])
@@ -550,6 +549,9 @@ class ociffer():
                 cam_pos.z += speed
             if key_map_3d["lower"]:
                 cam_pos.z -= speed
+            if key_map_3d["lights"]:
+                #TODO check if will be used for credits. else delete
+                pass
 
             self.base.cam.setPos(cam_pos)
 
