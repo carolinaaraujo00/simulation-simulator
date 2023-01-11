@@ -13,8 +13,15 @@ from level_two.sound_player_two import *
 from level_two.lamp import * 
 
 import sys
+import os
 from level_two.balls import *
 from panda3d.core import Material
+
+# Collisions
+from panda3d.core import CollisionTraverser
+from panda3d.core import CollisionHandlerPusher
+from panda3d.core import CollisionSphere, CollisionNode
+from panda3d.core import CollisionTube
 
 
 loadPrcFileData("", configVars)
@@ -25,6 +32,7 @@ class ociffer():
         simplepbr.init()
 
         self.debug = debug
+        self.is_game_ready = False
         self.base.set_background_color(loading_gray)
 
         loadingText = OnscreenText("Simulating...", 1, scale=0.1, pos=(0, 0), align=TextNode.ACenter, mayChange=1)
@@ -36,9 +44,11 @@ class ociffer():
         self.lock_move = True 
         self.init_movement()
 
-        setup_black_ambient_light(self.base.render)
-        # setup_ambient_light(self.render, office_ambient_black)
+        # Collisions
+        self.setup_collisions()
 
+        # Lights
+        setup_black_ambient_light(self.base.render)
 
         self.sound_player = SoundPlayerTwo(self.base)
         self.sound_player.init_sounds()
@@ -49,6 +59,10 @@ class ociffer():
         
         self.base.cam.setPos(5, 4.5, 6) # X = left & right, Y = zoom, Z = Up & down.
         self.base.cam.setHpr(135, -10, 0) # Heading, pitch, roll.
+        
+        # self.base.cam.setPos(-1.6, -2.1, 4.2) # X = left & right, Y = zoom, Z = Up & down.
+        # self.base.cam.lookAt((-2.3, -2.97, 3.9))
+
         self.mouse_sens = 2.5
         self.repeat_lights = True
 
@@ -60,7 +74,8 @@ class ociffer():
         self.base.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
        
         self.base.taskMgr.add(self.update, "update")
-        
+        self.is_animation_started = False
+
         if not self.debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
@@ -70,6 +85,8 @@ class ociffer():
             timer.start()
 
 
+
+
     def camera_pan_out_animation(self):
         self.animation_sequence = Sequence(name="animation_cam")
         self.hand.hide()
@@ -77,10 +94,25 @@ class ociffer():
         self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((5, 4.5, 6)), startPos=Vec3(-1.6, -2.1, 4.2)))
         self.animation_sequence.start()
 
+        timer = threading.Timer(6, self.change_orange_position_to_load)
+        timer.start()
 
+        timer = threading.Timer(7, self.change_orange_position)
+        timer.start()
+
+    def change_orange_position_to_load(self):
+        self.orange.setPos(Vec3(-8, -8, 2.3))
+        
+    def change_orange_position(self):
+        self.orange.setPos(Vec3(-3.5, 17, 2.3))
+    
     def unlock_move(self):
         self.lock_move = False 
         self.hand.show()
+
+    def lock_movement(self):
+        self.base.disable_mouse()
+        self.lock_move = True 
 
 
     def thread_function(self):
@@ -100,20 +132,25 @@ class ociffer():
         self.setup_telephone()
         self.setup_border_texts()
         self.setup_screen_game()
-        # self.render.setShaderAuto()
+        self.setup_end_credits_button()
 
         # Play Sounds
         self.sound_player.play_sounds()
 
         # continuous light buzz sound
         self.sound_player.play_lights_on() 
+        self.is_game_ready = True
+
+    def setup_collisions(self):
+        self.base.cTrav = CollisionTraverser()  # VAR NEEDS TO HAVE THIS NAME. PANDA3D SHENANIGANS...
+        self.base.colHandlerQueue = CollisionHandlerQueue()
+        self.is_button_active = False
 
 
     def setup_office(self):
         self.office_model = self.base.loader.loadModel(office_model_path)
         self.office_model.setScale(0.8)
         self.office_model.reparentTo(self.base.render)
-
 
     def setup_office_room(self):
         self.office_room_model = self.base.loader.loadModel(office_room_model_path)
@@ -126,6 +163,14 @@ class ociffer():
         self.hand = self.base.loader.loadModel(hand_model_path)
         self.hand.setScale(self.base.cam, 0.2)
         self.hand.reparentTo(self.base.render)
+
+        # Collisions
+        self.hand_collider_node = CollisionNode("hand_col")
+        self.hand_collider_node.addSolid(CollisionBox(Vec3(0, -5, 0), 1, 1, 1))
+        self.hand_collider = self.hand.attachNewNode(self.hand_collider_node)
+        self.base.cTrav.addCollider(self.hand_collider, self.base.colHandlerQueue)
+        if self.debug: 
+            self.hand_collider.show()
 
 
     def setup_torch(self):
@@ -160,14 +205,13 @@ class ociffer():
 
         # attribute grey ambient light to orange
         # Then the light that affects the model
-
-        # setup_model_ambient_light(self.render, self.orange)
-        # setup_point_light_in_model_mapping(self.hand, self.orange, Vec3(0,0,0))
+        setup_point_light_in_model_mapping(self.hand, self.orange, Vec3(0,0,0))
 
         self.orange.setScale(0.2, 0.2, 0.2)
         self.orange.reparentTo(self.office_model)
         self.orange.setPos(orange_location)
         self.orange.setHpr((45, 20, 0))
+        self.orange.setShaderAuto()
 
 
     def setup_podium(self):
@@ -279,7 +323,7 @@ class ociffer():
         self.border_texts = [] 
         self.border_texts.append(self.base.loader.loadModel(the_end_model_path))
         self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
-        self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
+        # self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
         self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
 
         self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
@@ -291,11 +335,11 @@ class ociffer():
 
         self.border_limites.append(Vec3(-20,-20,6))
         self.border_limites.append(Vec3(20,-20,6))
-        self.border_limites.append(Vec3(20,20,6))
+        # self.border_limites.append(Vec3(20,20,6))
         self.border_limites.append(Vec3(-20,20,6))
         self.border_limites.append(Vec3(-50,-50,6))
         self.border_limites.append(Vec3(50,-50,6))
-        self.border_limites.append(Vec3(50,50,6))
+        self.border_limites.append(Vec3(75,75,6))
         self.border_limites.append(Vec3(-50,50,6))
 
         border_counter = 0
@@ -385,6 +429,58 @@ class ociffer():
         self.telephone_ring.reparentTo(self.base.render)
 
 
+    def camera_credits_animation_pt1(self):
+        if not self.is_animation_started:
+            self.is_animation_started = True
+            self.hand.hide()
+            self.lock_movement()
+            self.animation_sequence_credits = Sequence(name="animation_credits_cam1")
+            self.animation_sequence_credits.append(self.base.cam.posInterval(4, Vec3((17, 17, 4)), startPos=self.base.cam.getPos()))
+            self.animation_sequence_credits.append(self.base.cam.posInterval(3, Vec3((65, 70, 2)), startPos=(17, 17, 4)))
+            self.animation_sequence_credits.start()
+
+            timer = threading.Timer(7, self.camera_credits_animation_pt2)
+            timer.start()
+
+    def camera_credits_animation_pt2(self):
+        self.animation_sequence_credits.finish()
+        self.is_button_active = False
+
+
+        self.animation_sequence_credits2 = Sequence(name="animation_text_credits")
+        self.animation_sequence_credits2.append(self.credits_text.posInterval(25, (59, 65, 30), startPos=(59, 65, -15)))
+        self.animation_sequence_credits2.start()
+
+        timer = threading.Timer(25, self.camera_credits_animation_pt3)
+        timer.start()
+
+    def camera_credits_animation_pt3(self):
+        self.hand.show()
+        self.unlock_move()
+        self.base.destroy()
+        os._exit(0)
+
+
+    def setup_end_credits_button(self):
+        self.credits_button = self.base.loader.loadModel(red_button_model_path)
+        self.credits_button.setPos(0, 24, 2.6)
+        self.credits_button.setHpr(270, 0, 0)
+        self.credits_button.setScale(0.65)
+        self.credits_button.reparentTo(self.office_model)
+
+        self.button_collider_node = CollisionNode("button_col")
+        self.button_collider_node.addSolid(CollisionBox(Vec3(0.7, 0, 5), 0.75, 0.75, 0.75))
+        self.button_collider = self.credits_button.attachNewNode(self.button_collider_node)
+        self.base.cTrav.addCollider(self.button_collider, self.base.colHandlerQueue)
+        if self.debug: 
+            self.button_collider.show()
+
+        self.credits_text = self.base.loader.loadModel(credits_text_model_path)
+        self.credits_text.setPos(72, 72, -20)
+        self.credits_text.setScale(0.41)
+        self.credits_text.reparentTo(self.office_model)     
+
+
     # Called every frame
     def update(self, task):
         # globalClock is, naturally, a panda3d global, despite what the IDE might say
@@ -393,9 +489,17 @@ class ociffer():
         self.check_movement(task)
         self.mousePosition(task)
 
-        self.hand.setPos(self.base.cam, (1, 1.5, -0.8))
-        self.hand.setHpr(self.base.cam, (200, -32, 0))
-        self.hand.setScale(self.base.cam, 0.2)
+        if not self.is_button_active:
+            self.hand.setPos(self.base.cam, (1, 1.5, -0.8))
+            self.hand.setHpr(self.base.cam, (200, -32, 0))
+            self.hand.setScale(self.base.cam, 0.2)
+
+            for entry in self.base.colHandlerQueue.getEntries():
+                self.is_button_active = True
+                self.camera_credits_animation_pt1()
+
+        if self.is_button_active:
+            self.base.cam.lookAt((0,0,0))
 
         return task.cont
 
@@ -421,8 +525,8 @@ class ociffer():
 
         self.base.accept("s", updateKeyMap, ["down", True])
         self.base.accept("s-up", updateKeyMap, ["down", False])
-        self.base.accept("arrow_down", updateKeyMap, ["up", True])
-        self.base.accept("arrow_down-up", updateKeyMap, ["up", False])
+        self.base.accept("arrow_down", updateKeyMap, ["down", True])
+        self.base.accept("arrow_down-up", updateKeyMap, ["down", False])
 
         # Debug
         if self.debug:
@@ -456,9 +560,12 @@ class ociffer():
                 self.base.cam.setH(self.base.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
                 self.base.cam.setP(self.base.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)  
         
-        self.text_choose_ball.lookAt(self.base.cam)
-        for text in self.border_texts:
-            text.lookAt(self.base.cam)
+        if self.is_game_ready:
+            self.text_choose_ball.lookAt(self.base.cam)
+            self.credits_text.lookAt(self.base.cam)
+
+            for text in self.border_texts:
+                text.lookAt(self.base.cam)
 
         return task.cont
 

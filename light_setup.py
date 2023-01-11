@@ -45,7 +45,7 @@ def setup_point_light(render, pos):
     # Point light
     plight = PointLight("plight")
 
-    # plight.setShadowCaster(True, 1280, 1280)
+    # plight.setShadowCaster(True, 256, 256)
    
     plight.setColor(angler_p_light)
     plnp = render.attachNewNode(plight)
@@ -65,12 +65,14 @@ def setup_point_light(render, pos):
 def setup_model_ambient_light(render, model):
     alight = AmbientLight('alight')
     alight.setColor(ambient_grey)
+    # alight.setShadowCaster(True, 256, 256)
     alnp = render.attachNewNode(alight)
     model.setLight(alnp)
 
 def setup_point_light_in_model_mapping(model_emmitter, model_receiver, position):
     plight = PointLight("plight")
     plight.setColor(torch_yellow)
+    # plight.setShadowCaster(True, 256, 256)
     plnp = model_emmitter.attachNewNode(plight)
     plnp.setPos(position)
     model_receiver.setLight(plnp)
@@ -79,12 +81,14 @@ def setup_office_ambient_light(render):
     # it needs no position because..... it's ambient
     alight = AmbientLight('alight')
     alight.setColor(office_ambient_black)
+    # alight.setShadowCaster(True, 256, 256)
+
     alnp = render.attachNewNode(alight)
     render.setLight(alnp)
 
 def setup_point_light_in_model(render, model, position):
     plight = PointLight("plight")
-    # plight.setShadowCaster(True, 1280, 1280)
+    # plight.setShadowCaster(True, 256, 256)
     plight.setColor((0.83137, 0.42353, 0.00784, 1))
     plnp = model.attachNewNode(plight)
 
@@ -108,8 +112,7 @@ def setup_ceiling_light(render, model, position):
     plnp.setPos(position)
     plnp.lookAt(position[0], position[1], 0)
 
-    # plight.setShadowCaster(True, 10, 10)
-    # render.setShaderAuto()
+    plight.setShadowCaster(True, 256, 256)
 
     render.setLight(plnp)
 

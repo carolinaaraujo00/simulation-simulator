@@ -96,6 +96,11 @@ telephone_base_model_path = model_path + level_two + "office_space/telephone_bas
 
 telephone_ring_model_path = model_path + level_two + "office_space/telephone_anim.gltf"
 
+# END CREDITS
+
+red_button_model_path = model_path + level_two + "red_button/red_button.gltf"
+credits_text_model_path = model_path + level_two + "credits/credits_rool.gltf"
+
 # Balls
 flat_ball_model_path = model_path + level_two + "balls/flat_ball.gltf"
 

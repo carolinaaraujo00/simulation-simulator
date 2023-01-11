@@ -32,4 +32,3 @@ def run(level : int):
 
 if __name__ == "__main__":
     run(level = 1)
-
