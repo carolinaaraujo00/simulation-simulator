@@ -6,7 +6,7 @@ from level_one.entity import Entity
 from level_one.engine_2d import last_string_from_node
 from level_one.collider import Collider
 from light_setup import *
-from common import * 
+from common import *
 from camera_setup import *
 
 
@@ -14,33 +14,35 @@ from camera_setup import *
 class PlayerChar2D(Entity, DirectObject):
     def __init__(self, incoming_engine_ref, sound_player, pos, rot, scale, spcl_shading):
         super().__init__(incoming_engine_ref, pos, rot, scale, angler_fish_model_path, False, spcl_shading)
-        
-        self.sound_player = sound_player
 
+        # Consts
         self.SPEED = 0.7
+        self.TURN_SPEED = 15
         self.JUMP_FORCE = 10
         self.FRICTION = -0.12
+        self.FLOOR_OFFSET = 0.5  # Messy solution, but it offsets the actor when colliding with floor, instead of
+        # setting the actor's position to the same position as the floor. This way the actor rests ATOP the floor.
 
-        self.beggining_pos_x = self.pos.x
-        self.beggining_pos_z = self.pos.z
-
+        # Move vars
+        self.beginning_pos_x = self.pos.x
+        self.beginning_pos_z = self.pos.z
         self.velocity = Vec3(0, 0, 0)
         self.acceleration = Vec3(0, 0, 0)
         self.move_direction = "right"
         self.move_direction_cache = "right"
+        self.turn_direction = 0  # If the value is 0 it means actor is not turning. 1 means its turning clockwise and -1 anticlockwise.
         self.is_on_floor = True
-        self.floor_offset = 0.5
         self.can_move = True
+        self.key_map = {"left": False, "right": False}
 
-        self.collider = Collider(self.engine_ref, self, "player_char_2d", Vec3(0, 0, -30), Vec3(20, 40, 25))
+        # Other components
+        self.sound_player = sound_player
+        self.collider = Collider(self.engine_ref, self, "player_char_2d", Vec3(0, 0, -0.35), Vec3(0.2, 0.4, 0.25))
 
-        self.key_map = {
-            "left": False,
-            "right": False
-        }
-
-        # Attach point light
-        setup_point_light_in_model(self.engine_ref.base.render, self.mesh, (0, 15, 48))
+        # Setup animation
+        self.mesh.loadAnims({"mill": angler_fish_model_path})
+        self.mesh.loop("mill")
+        self.mesh.setPlayRate(3, "mill")
 
         self.accept_input()
 
@@ -72,25 +74,43 @@ class PlayerChar2D(Entity, DirectObject):
         self.engine_ref.base.accept("arrow_up", self.jump)
         self.engine_ref.base.accept("space", self.jump)
 
-        if self.engine_ref.DEBUG: 
+        if self.engine_ref.DEBUG:
             self.engine_ref.base.accept("escape", sys.exit)
 
     def update_key_map(self, control_name, state):
         if self.can_move:
             self.key_map[control_name] = state
 
-    def turn(self):
-        self.mesh.setH(self.mesh, 180)
+    def turn(self, direction):
+        if self.turn_direction != 0:
+            self.engine_ref.base.taskMgr.remove("turn")
+
+        if direction == "right":
+            self.turn_direction = 1
+        else:
+            self.turn_direction = -1
+
+        self.engine_ref.base.taskMgr.add(self.turn_task, "turn")
+
+    def turn_task(self, task):
+
+        self.mesh.setH(self.mesh.getH() + self.TURN_SPEED * self.turn_direction)
+
+        if self.mesh.getH() >= -90 or self.mesh.getH() <= -270:
+            self.turn_direction = 0
+            return task.done
+
+        return task.cont
 
     def jump(self):
         if self.is_on_floor and self.can_move:
             self.is_on_floor = False
-            self.velocity.z = self.JUMP_FORCE 
+            self.velocity.z = self.JUMP_FORCE
 
     def set_pos_on_collision(self, entry):
         if self.velocity.z < 0:
             self.velocity.z = 0
-            self.pos.z = entry.getIntoNodePath().getPos(self.engine_ref.base.render).z + self.floor_offset
+            self.pos.z = entry.getIntoNodePath().getPos(self.engine_ref.base.render).z + self.FLOOR_OFFSET
             self.mesh.setPos(self.pos)
 
     def update(self):
@@ -109,12 +129,12 @@ class PlayerChar2D(Entity, DirectObject):
             self.move_direction = "left"
 
         if self.move_direction != self.move_direction_cache:
-            self.turn()
+            self.turn(self.move_direction)
 
         # Calculating the position vector based on the velocity and the acceleration vectors
         self.acceleration.x += self.velocity.x * self.FRICTION  # Only add Friction to horizontal movement
         self.velocity += self.acceleration
-        self.pos += (self.velocity + (self.acceleration * self.engine_ref.ACCEL_MODIFIER))* self.engine_ref.dt_time
+        self.pos += (self.velocity + (self.acceleration * self.engine_ref.ACCEL_MODIFIER)) * self.engine_ref.dt_time
 
         # Setting the actor's position
         self.mesh.setPos(self.pos)
@@ -122,21 +142,21 @@ class PlayerChar2D(Entity, DirectObject):
         # Setting cam based on player
         self.engine_ref.set_cam_pos(self.pos)
 
+        # Check if has fallen of map
         if self.pos.z < self.engine_ref.cam_z_limits[0]:
-            self.pos.x = self.beggining_pos_x
-            self.pos.z = self.beggining_pos_z
+            self.pos.x = self.beginning_pos_x
+            self.pos.z = self.beginning_pos_z
             self.sound_player.death()
             self.mesh.setPos(self.pos)
 
-
     # ::::::::::::::::::::::::::::::::Collision::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    
+
     def on_collision_enter(self, entry):
         if last_string_from_node(entry.getIntoNodePath()) == "pier":
             self.is_on_floor = True
             self.set_pos_on_collision(entry)
-        
+
     def on_collision_again(self, entry):
         if last_string_from_node(entry.getIntoNodePath()) == "pier":
             self.is_on_floor = True

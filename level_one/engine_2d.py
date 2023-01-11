@@ -67,7 +67,6 @@ class Engine2D():
 
         if self.DEBUG:
             self.cTrav.showCollisions(self.base.render)
-
             self.base.accept("1", self.change_shading, [1])
             self.base.accept("2", self.change_shading, [2])
             self.base.accept("3", self.change_shading, [3])
@@ -76,7 +75,6 @@ class Engine2D():
         else:
             self.base.disable_mouse()
         
-
         # Tasks setup
         self.base.taskMgr.add(self.update, "update")
         self.base.taskMgr.doMethodLater(self.time_to_start_fade, self.fade_screen_in, "custom_fade")
@@ -107,7 +105,9 @@ class Engine2D():
 
                 self.current_level.toggle_background(True)
 
-                setup_blue_point_light(self.base.render, (-50, 0, 20)) 
+                setup_blue_point_light(self.base.render, (-50, 0, 20))
+                setup_point_light_in_model(self.base.render, self.current_level.player.mesh, (0, 0.5, 0))
+
             case 4:
                 for actor in self.current_level.actors:
                     actor.toggle_wireframe(False)

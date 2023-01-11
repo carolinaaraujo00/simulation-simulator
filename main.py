@@ -1,4 +1,3 @@
-from panda3d.core import Vec3
 from level_one.engine_2d import *
 from level_one.level_underwater import LevelUnderwater
 from level_two.office import ociffer 
@@ -8,7 +7,7 @@ def run(level : int):
     base = ShowBase()
     if level == 1: 
 
-        engine = Engine2D(base, False)
+        engine = Engine2D(base, debug = False)
 
         # Set underwater level
         underwater = LevelUnderwater(engine, Vec3(0, 0, 0), Vec3(0, 0, 0), Vec3(1, 1, 1))
