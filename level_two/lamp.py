@@ -12,7 +12,7 @@ class Lamp():
         self.load_lamp()
         self.load_spheres()
     
-
+    # Loads model of ceiling lamps
     def load_lamp(self):
         self.lamp = self.loader.loadModel(ceiling_lamp_model_path)
         self.lamp.setPos(self.pos)
@@ -20,7 +20,7 @@ class Lamp():
         self.lamp.setScale(4)
         self.lamp.reparentTo(self.render)
 
-
+    # Loads speheres iwth attached lights to ceiling lamps
     def load_spheres(self):
         # first sphere + light
         self.sphere1 = self.loader.loadModel(sphere_model_path)
@@ -33,7 +33,6 @@ class Lamp():
         
 
         # second sphere + light
-
         self.sphere2 = self.loader.loadModel(sphere_model_path)
         self.sphere2.reparentTo(self.lamp)
         self.sphere2.setPos(-0.002, 0.2, 2.475)

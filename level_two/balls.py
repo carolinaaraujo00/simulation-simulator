@@ -11,6 +11,7 @@ class Ball:
         self.loader = loader
         self.scene = scene
 
+        # Current and previous position to help on animations
         self.position = location  # This is also the initial position of the actor
         self.previous_position = location  
         self.start_position = location  
@@ -87,17 +88,15 @@ class Ball:
         self.actor.reparentTo(self.scene)
         self.actor.setPos(self.position)
 
-
     def setup_animation(self):
         intervals = []
-        # Ball in works Start Vec3(-4.88, 1.55, 3.55)
+        # Starting position of flat red ball
         intervals.append(self.define_new_interval(0, Vec3(-4.88, 1.45, 3.55), Point3(0, 0, 0) ))
         intervals.append(self.define_new_interval(2, Vec3(-3.43, 1.45, 3.55), Point3(0, 0, 360) ))
         # Side
         intervals.append(self.define_new_interval(2, Vec3(-3.43, 0, 3.55), Point3(0, 360, 360) ))
         intervals.append(self.define_new_interval(2,  Vec3(-3.43,  1.45, 3.55), Point3(0, 0, 360) ))
         # Return
-        # intervals.append(self.define_new_interval(2, Vec3(-3.43,  1.55, 3.55), Point3(0, 0, 0) ))
         intervals.append(self.define_new_interval(2, Vec3(-4.88, 1.45, 3.55), Point3(0, 0, 0) ))
 
         self.animation_sequence = Sequence(name="animation_ball")
@@ -107,6 +106,7 @@ class Ball:
 
         self.animation_sequence.loop()
 
+    # Generates position and rotation for each interval
     def define_new_interval(self, duration, new_position, new_hpr):
         self.previous_position = self.position
         self.position = new_position

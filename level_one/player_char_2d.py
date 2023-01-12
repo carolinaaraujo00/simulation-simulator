@@ -23,7 +23,7 @@ class PlayerChar2D(Entity, DirectObject):
         self.FLOOR_OFFSET = 0.5  # Messy solution, but it offsets the actor when colliding with floor, instead of
         # setting the actor's position to the same position as the floor. This way the actor rests ATOP the floor.
 
-        # Move vars
+        # Move starting vars for position, velocity and others
         self.beginning_pos_x = self.pos.x
         self.beginning_pos_z = self.pos.z
         self.velocity = Vec3(0, 0, 0)
@@ -39,7 +39,7 @@ class PlayerChar2D(Entity, DirectObject):
         self.sound_player = sound_player
         self.collider = Collider(self.engine_ref, self, "player_char_2d", Vec3(0, 0, -0.35), Vec3(0.2, 0.4, 0.25))
 
-        # Setup animation
+        # Setup animation in angler fish
         self.mesh.loadAnims({"mill": angler_fish_model_path})
         self.mesh.loop("mill")
         self.mesh.setPlayRate(3, "mill")
@@ -59,7 +59,7 @@ class PlayerChar2D(Entity, DirectObject):
         self.can_move = False
 
     def accept_input(self):
-        # Keyboard events
+        # Keyboard events/inputs
         self.engine_ref.base.accept("a", self.update_key_map, ["left", True])
         self.engine_ref.base.accept("a-up", self.update_key_map, ["left", False])
         self.engine_ref.base.accept("arrow_left", self.update_key_map, ["left", True])
@@ -119,7 +119,7 @@ class PlayerChar2D(Entity, DirectObject):
         # Zero accel each frame otherwise it would scale
         self.acceleration = Vec3(0, 0, self.engine_ref.GRAVITY)
 
-        # Movement input
+        # Movement input for the angler fish  
         self.move_direction_cache = self.move_direction
         if self.key_map["right"]:  # if right is True
             self.acceleration.x = self.SPEED

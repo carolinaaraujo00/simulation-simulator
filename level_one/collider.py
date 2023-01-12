@@ -2,7 +2,7 @@ from panda3d.core import CollisionBox, CollisionNode, BitMask32
 
 from level_one.engine_2d import Engine2D
 
-
+# Generates collider for passed entity
 class Collider:
     def __init__(self, engine_ref: Engine2D, entity_ref, name, offset, size):
 

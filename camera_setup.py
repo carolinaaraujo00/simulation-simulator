@@ -7,6 +7,7 @@ from level_one.sound_player_one import *
 
 class MainCamera:
     def __init__(self, main_camera, sound_player):
+        # Setups up default camera settings
         self.camera = main_camera
         self.sound_player = sound_player
         self.original_lens = None
@@ -20,10 +21,12 @@ class MainCamera:
         self.is_breathing = False
         self.can_play_glitch = True
 
+    # Saves current projection data
     def save_perspective(self) -> None:
         self.original_lens = self.camera.node().getLens()
         self.current_fov = self.original_lens.getFov()
 
+    # Setups up camera orthographic lens to be adequate to the first level
     def setup_camera_perspective(self, camera):
         lens = OrthographicLens()
         multiplier = 0.6
@@ -33,6 +36,7 @@ class MainCamera:
         self.ortho_lens = lens
         camera.node().setLens(lens)
 
+    # Changes camera to the between perspective and ortho. depending on what projection it's currently in
     def change_camera_ortho(self) -> None:
         self.is_ortho = not self.is_ortho
         if self.is_ortho:
@@ -42,6 +46,7 @@ class MainCamera:
         else:
             self.camera.node().setLens(self.original_lens)
 
+    # Change camera projection according to what it's passed
     def change_camera_to_ortho(self, change_to_ortho : bool) -> None:
         self.is_ortho = change_to_ortho
         if change_to_ortho:
@@ -51,6 +56,7 @@ class MainCamera:
         else:
             self.camera.node().setLens(self.original_lens)
 
+
     def set_camera_fov(self, fov_value : int, focal_length_value : int):
         lens = self.camera.node().getLens()
         lens.setFov(fov_value)
@@ -59,6 +65,7 @@ class MainCamera:
         lens = self.camera.node().getLens()
         return lens.getFov()
 
+    # Change FOV by this methods for an uniform change
     def add_camera_fov(self):
         lens = self.camera.node().getLens()
         self.current_fov = self.current_fov + 0.1
@@ -69,17 +76,20 @@ class MainCamera:
         self.current_fov = self.current_fov - 0.1
         lens.setFov(self.current_fov)
 
+    # starts thread for breathing effect
     def fov_breathing_effect_start(self):
         self.fov_breath = threading.Thread(target=self.fov_breath_method, args=())
         self.fov_breath.daemon = True
         self.fov_breath.start()
 
+    # start glitch effect, where it changes 
     def camera_glitch_effect_start(self):
         self.is_glitchy = True
         self.camera_glitch = threading.Thread(target=self.camera_glitch_effect, args=())
         self.camera_glitch.daemon = True
         self.camera_glitch.start()
 
+    # Thread for glitch effect
     def camera_glitch_effect(self):
         while self.is_glitchy:
             time.sleep(7)
@@ -90,7 +100,7 @@ class MainCamera:
                     time.sleep(0.5)
                     self.change_camera_ortho()
 
-
+    # Thread for breath effect
     def fov_breath_method(self):
         if self.is_ortho:
             return

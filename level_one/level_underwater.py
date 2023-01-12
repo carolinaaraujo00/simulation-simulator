@@ -24,12 +24,12 @@ class LevelUnderwater(Level):
         self.main_camera.change_camera_to_ortho(True)
         self.main_camera.camera_glitch_effect_start()
 
-        # Player
+        # Loads Player
         self.player_char_2d = PlayerChar2D(self.engine_ref, self.sound_player, Vec3(-97, self.y_pos, 3), Vec3(-90, 0, 0), Vec3(1, 1, 1), False)
         self.add_actor(self.player_char_2d)
         self.player = self.player_char_2d
 
-        # Setup plats
+        # Setup plataforms in game
         self.platforms = []
 
         plat_positions = [

@@ -5,14 +5,18 @@ class SoundPlayerOne:
     def __init__(self, incoming_engine_ref: Engine2D):
         self.engine_ref = incoming_engine_ref
 
+    # Loads up level one sounds
     def init_sounds(self):
         self.power_up_sound = self.engine_ref.base.loader.loadSfx(power_up_sound_path)
         self.underwater_music = self.engine_ref.base.loader.loadSfx(underwater_sound_path)
         self.glitch_sound = self.engine_ref.base.loader.loadSfx(glitch_sound_path)
         self.death_sound = self.engine_ref.base.loader.loadSfx(death_sound_path)
+
+        # Setup loop for each sound
         self.power_up_sound.setLoop(False)
         self.death_sound.setLoop(False)
         self.underwater_music.setLoop(True)
+
         self.set_volumes(0.1)
         self.underwater_music.play()
 
@@ -22,6 +26,7 @@ class SoundPlayerOne:
         self.death_sound.setVolume(0.7)
         self.glitch_sound.setVolume(0.7)
 
+    # Methods to play correspondent sound
     def power_up(self):
         self.power_up_sound.play()
 
