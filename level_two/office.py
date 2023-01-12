@@ -35,6 +35,7 @@ class ociffer():
         self.is_game_ready = False
         self.base.set_background_color(loading_gray)
 
+        # Starter loading screen while the game loads it's data
         loadingText = OnscreenText("Simulating...", 1, scale=0.1, pos=(0, 0), align=TextNode.ACenter, mayChange=1)
         self.base.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
        
@@ -50,24 +51,25 @@ class ociffer():
         # Lights
         setup_black_ambient_light(self.base.render)
 
+        # Sound Manager
         self.sound_player = SoundPlayerTwo(self.base)
         self.sound_player.init_sounds()
 
+        # Window settings
         self.props = WindowProperties()
         self.props.setCursorHidden(True)
         self.base.win.requestProperties(self.props)
         
+        # Set camera position 
         self.base.cam.setPos(5, 4.5, 6) # X = left & right, Y = zoom, Z = Up & down.
         self.base.cam.setHpr(135, -10, 0) # Heading, pitch, roll.
-        
-        # self.base.cam.setPos(-1.6, -2.1, 4.2) # X = left & right, Y = zoom, Z = Up & down.
-        # self.base.cam.lookAt((-2.3, -2.97, 3.9))
-
         self.mouse_sens = 2.5
         self.repeat_lights = True
 
+        # Threads to load assets to the engine 
         load_thread = threading.Thread(target=self.thread_function, args=())
         load_thread.start()
+        # Waits for assets to load
         load_thread.join()
 
         loadingText.cleanup()
@@ -76,6 +78,7 @@ class ociffer():
         self.base.taskMgr.add(self.update, "update")
         self.is_animation_started = False
 
+        # Starts animation of camera panning out, For certain amount of time. Player can't move in that time
         if not self.debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
@@ -85,8 +88,6 @@ class ociffer():
             timer.start()
 
 
-
-
     def camera_pan_out_animation(self):
         self.animation_sequence = Sequence(name="animation_cam")
         self.hand.hide()
@@ -94,7 +95,7 @@ class ociffer():
         self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((5, 4.5, 6)), startPos=Vec3(-1.6, -2.1, 4.2)))
         self.animation_sequence.start()
 
-        timer = threading.Timer(6, self.change_orange_position_to_load)
+        timer = threading.Timer(6.9, self.change_orange_position_to_load)
         timer.start()
 
         timer = threading.Timer(7, self.change_orange_position)
@@ -448,7 +449,7 @@ class ociffer():
 
 
         self.animation_sequence_credits2 = Sequence(name="animation_text_credits")
-        self.animation_sequence_credits2.append(self.credits_text.posInterval(25, (59, 65, 30), startPos=(59, 65, -15)))
+        self.animation_sequence_credits2.append(self.credits_text.posInterval(25, (59, 65, 20), startPos=(59, 65, -15)))
         self.animation_sequence_credits2.start()
 
         timer = threading.Timer(25, self.camera_credits_animation_pt3)
