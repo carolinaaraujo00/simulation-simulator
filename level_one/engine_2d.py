@@ -87,6 +87,7 @@ class Engine2D():
         self.levels.append(new_level)
         self.current_level = self.levels[0]
 
+    # Changes shading according to the current orb being catched
     def change_shading(self, index):
         match index:
             case 1:

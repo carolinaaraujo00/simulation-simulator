@@ -35,6 +35,7 @@ class ociffer():
         self.is_game_ready = False
         self.base.set_background_color(loading_gray)
 
+        # Starter loading screen while the game loads it's data
         loadingText = OnscreenText("Simulating...", 1, scale=0.1, pos=(0, 0), align=TextNode.ACenter, mayChange=1)
         self.base.graphicsEngine.renderFrame() #render a frame otherwise the screen will remain black
        
@@ -50,24 +51,25 @@ class ociffer():
         # Lights
         setup_black_ambient_light(self.base.render)
 
+        # Sound Manager
         self.sound_player = SoundPlayerTwo(self.base)
         self.sound_player.init_sounds()
 
+        # Window settings
         self.props = WindowProperties()
         self.props.setCursorHidden(True)
         self.base.win.requestProperties(self.props)
         
+        # Set camera position 
         self.base.cam.setPos(5, 4.5, 6) # X = left & right, Y = zoom, Z = Up & down.
         self.base.cam.setHpr(135, -10, 0) # Heading, pitch, roll.
-        
-        # self.base.cam.setPos(-1.6, -2.1, 4.2) # X = left & right, Y = zoom, Z = Up & down.
-        # self.base.cam.lookAt((-2.3, -2.97, 3.9))
-
         self.mouse_sens = 2.5
         self.repeat_lights = True
 
+        # Threads to load assets to the engine 
         load_thread = threading.Thread(target=self.thread_function, args=())
         load_thread.start()
+        # Waits for assets to load
         load_thread.join()
 
         loadingText.cleanup()
@@ -76,6 +78,7 @@ class ociffer():
         self.base.taskMgr.add(self.update, "update")
         self.is_animation_started = False
 
+        # Starts animation of camera panning out, For certain amount of time. Player can't move in that time
         if not self.debug: 
             timer = threading.Timer(7.5, self.unlock_move)
             timer.start()
@@ -85,8 +88,6 @@ class ociffer():
             timer.start()
 
 
-
-
     def camera_pan_out_animation(self):
         self.animation_sequence = Sequence(name="animation_cam")
         self.hand.hide()
@@ -94,7 +95,7 @@ class ociffer():
         self.animation_sequence.append(self.base.cam.posInterval(7, Vec3((5, 4.5, 6)), startPos=Vec3(-1.6, -2.1, 4.2)))
         self.animation_sequence.start()
 
-        timer = threading.Timer(6, self.change_orange_position_to_load)
+        timer = threading.Timer(6.9, self.change_orange_position_to_load)
         timer.start()
 
         timer = threading.Timer(7, self.change_orange_position)
@@ -146,19 +147,20 @@ class ociffer():
         self.base.colHandlerQueue = CollisionHandlerQueue()
         self.is_button_active = False
 
-
+    # Loads model of office
     def setup_office(self):
         self.office_model = self.base.loader.loadModel(office_model_path)
         self.office_model.setScale(0.8)
         self.office_model.reparentTo(self.base.render)
 
+    # Loads model of monitor screen as main room
     def setup_office_room(self):
         self.office_room_model = self.base.loader.loadModel(office_room_model_path)
         self.office_room_model.setPos(self.office_room_model.getPos() + (10, 10, 0))
         self.office_room_model.setScale(0.7)
         self.office_room_model.reparentTo(self.base.render)
 
-
+    # Setups up Hand and it's collisions
     def setup_hand(self):
         self.hand = self.base.loader.loadModel(hand_model_path)
         self.hand.setScale(self.base.cam, 0.2)
@@ -172,7 +174,7 @@ class ociffer():
         if self.debug: 
             self.hand_collider.show()
 
-
+    # Setups up torch with a point light associated with it
     def setup_torch(self):
         self.sphere = self.base.loader.loadModel(sphere_model_path)
         self.sphere.setScale(0.1)
@@ -198,7 +200,7 @@ class ociffer():
         self.printer.setPos(printer_location)
         self.printer_paper = Printer(self.base.loader, self.office_model, printer_location )
 
-
+    # Setups up orange in office and adds an ambient light mapping to it
     def setup_giant_orange(self):
         orange_location = Vec3(-3.5, 17, 2.3)
         self.orange = self.base.loader.loadModel(orange_map_model_path)
@@ -213,7 +215,7 @@ class ociffer():
         self.orange.setHpr((45, 20, 0))
         self.orange.setShaderAuto()
 
-
+    # Setups up pogium with candle light and text that looks at player
     def setup_podium(self):
         self.podium = self.base.loader.loadModel(podium_model_path)
         self.podium.reparentTo(self.base.render)
@@ -231,10 +233,9 @@ class ociffer():
         sphere.reparentTo(self.podium)
         sphere.setScale(0.07)
         sphere.setPos(15.6, 6.2, 16.8)
-        # sphere.setPos(13, -8, 5)
         setup_torch_spotlight(self.base.render, sphere, (-1.5, -0.21, 2), True)
 
-
+    # Setups up balls with flat shading, phong shading, materials (polished bronze) and neon emissions
     def setup_balls(self):
         ball_location = Vec3(16.3, -6.1, 2.95)
         ball_text_location = Vec3(16.3, -6.1, 2.67)
@@ -263,10 +264,7 @@ class ociffer():
         self.flat_shading.reparentTo(self.office_model)
         self.flat_shading.setPos(ball_text_location)
 
-
-
-
-        # smooth ball
+        # smooth balls
         ball_location = Vec3(18.2, -6.7, 2.95)
         ball_location.x += -0.5
         ball_location.y += 1
@@ -286,10 +284,7 @@ class ociffer():
         self.phong_shading.reparentTo(self.office_model)
         self.phong_shading.setPos(ball_text_location)
 
-
-
-
-        # moving ball
+        # Moving flat surface ball
         ball_location = Vec3(14.3, -7, 4.34)
         self.moving_flat_ball = Ball(self.base.loader, self.office_model, ball_location)
         self.moving_flat_ball.create_moving_flat_ball()
@@ -300,9 +295,6 @@ class ociffer():
         self.flat_shading_move.setHpr(90,0,0)
         self.flat_shading_move.reparentTo(self.office_model)
         self.flat_shading_move.setPos(ball_text_location)
-
-
-
 
         # neon ball
         ball_location = Vec3(18.2, -6.7, 2.95)
@@ -319,11 +311,11 @@ class ociffer():
         self.neon_shading.setPos(ball_text_location)
         
 
+    # Loads 7 models of text to place around the outside area. These Text will be looking at player
     def setup_border_texts(self):
         self.border_texts = [] 
         self.border_texts.append(self.base.loader.loadModel(the_end_model_path))
         self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
-        # self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
         self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
 
         self.border_texts.append(self.base.loader.loadModel(text_escape_model_path))
@@ -335,7 +327,6 @@ class ociffer():
 
         self.border_limites.append(Vec3(-20,-20,6))
         self.border_limites.append(Vec3(20,-20,6))
-        # self.border_limites.append(Vec3(20,20,6))
         self.border_limites.append(Vec3(-20,20,6))
         self.border_limites.append(Vec3(-50,-50,6))
         self.border_limites.append(Vec3(50,-50,6))
@@ -349,7 +340,7 @@ class ociffer():
             text.setPos(self.border_limites[border_counter])
             border_counter += 1
 
-
+    # Setups up previous game elements inside the monitor in office with a point light
     def setup_screen_game(self):
         self.angler_fish = self.base.loader.loadModel(angler_fish_model_path)
         self.angler_fish.setPos((-2.3, -2.43, 4.0))
@@ -375,7 +366,7 @@ class ociffer():
         screen_sphere.setPos(-2.50,-3.28, 5.99)
         setup_torch_spotlight(self.base.render, screen_sphere, (0,0,0), True)
 
-
+    # Setups up pig and it's text on the wall
     def setup_pig(self):
         self.pig = self.base.loader.loadModel(gouraud_pig_model_path)
         self.pig.setPos(-4.21, -0.03, 5.50)
@@ -389,7 +380,7 @@ class ociffer():
         self.pig_gouraud_shading.reparentTo(self.base.render)
         self.pig_gouraud_shading.setPos((-3.90, -1.99, 5.40))
 
-
+    # Setups up tea glass in office with given transparency for the glass effect 
     def setup_tea_glass(self):
         self.tea = self.base.loader.loadModel(cup_of_tea_model_path)
         # Glass material didn't had transparency originally
@@ -403,17 +394,17 @@ class ociffer():
         self.tea.setScale(0.75)
         self.tea.reparentTo(self.base.render)
 
-
+    # Setup 2 ceiling lights with two point lights each
+    # Thread that runs each second to turn on and off the lights, giving it the flickering effect
     def setup_ceiling_lights(self):
         self.lamp1 = Lamp(self.base.loader, self.base.render, (-4, 17, 3))
         self.lamp2 = Lamp(self.base.loader, self.base.render, (22, -3, 3))
-        # middle_lamp = Lamp(self.loader, self.render, (8, 7, 3))
 
         self.light_timer = threading.Timer(1, self.lights_off, args=(False,))
         self.light_timer.daemon = True
         self.light_timer.start()
 
-
+    # Setups telephone on desk and loads up it's animation
     def setup_telephone(self):
         self.telephone_base = self.base.loader.loadModel(telephone_base_model_path)
         self.telephone_base.setPos(1.05, -2.6, 2.9)
@@ -428,8 +419,10 @@ class ociffer():
         self.telephone_ring.setHpr(0, 0, 5)
         self.telephone_ring.reparentTo(self.base.render)
 
-
+    # Final credits Scene. pt1 Pans out to the outside monitor
+    # Hand is hidden. Camera and movement are locked 
     def camera_credits_animation_pt1(self):
+        # Ensures animation only happens once
         if not self.is_animation_started:
             self.is_animation_started = True
             self.hand.hide()
@@ -442,18 +435,20 @@ class ociffer():
             timer = threading.Timer(7, self.camera_credits_animation_pt2)
             timer.start()
 
+    # Final credits Scene. pt1 Pans out to the outside monitor
+    # Hand is hidden. Camera and movement are locked 
     def camera_credits_animation_pt2(self):
         self.animation_sequence_credits.finish()
         self.is_button_active = False
 
-
         self.animation_sequence_credits2 = Sequence(name="animation_text_credits")
-        self.animation_sequence_credits2.append(self.credits_text.posInterval(25, (59, 65, 30), startPos=(59, 65, -15)))
+        self.animation_sequence_credits2.append(self.credits_text.posInterval(25, (59, 65, 20), startPos=(59, 65, -15)))
         self.animation_sequence_credits2.start()
 
         timer = threading.Timer(25, self.camera_credits_animation_pt3)
         timer.start()
 
+    # Closes the game 
     def camera_credits_animation_pt3(self):
         self.hand.show()
         self.unlock_move()
@@ -461,6 +456,8 @@ class ociffer():
         os._exit(0)
 
 
+    # Setups up Do Not Press button and adds a collision to it.
+    # Credits Text are loaded into scene
     def setup_end_credits_button(self):
         self.credits_button = self.base.loader.loadModel(red_button_model_path)
         self.credits_button.setPos(0, 24, 2.6)
@@ -489,11 +486,13 @@ class ociffer():
         self.check_movement(task)
         self.mousePosition(task)
 
+        # keeps updating hand with mouve and player movement
         if not self.is_button_active:
             self.hand.setPos(self.base.cam, (1, 1.5, -0.8))
             self.hand.setHpr(self.base.cam, (200, -32, 0))
             self.hand.setScale(self.base.cam, 0.2)
 
+            # If collision detected, plays end scene
             for entry in self.base.colHandlerQueue.getEntries():
                 self.is_button_active = True
                 self.camera_credits_animation_pt1()
@@ -504,6 +503,7 @@ class ociffer():
         return task.cont
 
 
+    # Player movement by wasd and arrows
     def init_movement(self):
         self.speed = 6
         self.angle = 0
@@ -538,7 +538,7 @@ class ociffer():
 
             self.base.accept("escape", sys.exit)
 
-
+    # Tracks mouse position and changes camera accoring to movement
     def mousePosition(self, task):
         mouse_pos = self.base.win.getPointer(0)
 
@@ -560,6 +560,7 @@ class ociffer():
                 self.base.cam.setH(self.base.cam.getH() - (x - win_x / 2) * self.mouse_sens * self.dt) 
                 self.base.cam.setP(self.base.cam.getP() - (y - win_y / 2) * self.mouse_sens * self.dt)  
         
+        # Makes texts in scene update their rotation to be looking at player
         if self.is_game_ready:
             self.text_choose_ball.lookAt(self.base.cam)
             self.credits_text.lookAt(self.base.cam)
@@ -569,7 +570,7 @@ class ociffer():
 
         return task.cont
 
-
+    # Applies movement to player
     def check_movement(self, task):
         if not self.lock_move:
             cam_pos = self.base.cam.getPos()

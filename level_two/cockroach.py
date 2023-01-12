@@ -16,7 +16,7 @@ class Cockroach:
 
         self.scale = Vec3(0.25, 0.25, 0.25)
 
-        # Setting the actor
+        # Setting the actor with it's animation
         self.actor = Actor(cockroach_model_path, {"Walk": cockroach_model_path})
         self.actor.reparentTo(scene)
         self.actor.setPos(self.position)
@@ -29,7 +29,6 @@ class Cockroach:
     def setup_animation(self):
         intervals = []
 
-        # start Vec3(-4.6, 0.80, 3.4)
         intervals.append(self.define_new_interval(2, Vec3(-3.6, -2.35, 3.4)))
         intervals.append(self.define_new_hpr_interval(0.5, Point3(45, 0, 0) ))
         intervals.append(self.define_new_interval(0.1, Vec3(-3.6, -2.35, 3.5)))
@@ -61,12 +60,13 @@ class Cockroach:
 
         self.animation_sequence = Sequence(name="animation_cockroach")
         
+        # Adds intervals of cockroach animation to sequence
         for x in intervals:
             self.animation_sequence.append(x)
 
         self.animation_sequence.loop()
 
-
+    # Generates Position Intervals
     def define_new_interval(self, duration, new_position):
         self.previous_position = self.position
         self.position = new_position
@@ -74,7 +74,7 @@ class Cockroach:
         posInterval = self.actor.posInterval(duration, self.position, startPos=self.previous_position)
         return posInterval
 
-
+    # Generates Rotation Intervals
     def define_new_hpr_interval(self, duration, new_hpr):
         self.previous_hpr = self.hpr
         self.hpr = new_hpr

@@ -31,6 +31,8 @@ class ShadingOrb(Entity, DirectObject):
     def on_collision_enter(self, entry):
         if last_string_from_node(entry.getFromNodePath()) == "player_char_2d":
             if entry.getIntoNodePath() == self.collider.collider:
+                # Plays sound effect of orb being catched
+                # Creates camera breathing effect and changes camera to opposing projection
                 self.sound_player.power_up()
                 self.main_camera.change_camera_ortho()
                 self.main_camera.fov_breathing_effect_start()

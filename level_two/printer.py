@@ -16,11 +16,7 @@ class Printer:
         self.hpr = Point3(0, 0, 0)
         self.scale = Vec3(1,1,1)
 
-        # Setting the actor
-        
-        # TODO : check warning 
-        # Actor(warning): models/level_two/deskjet_printer/paper_anim.gltf is not a character!
-        # self.actor = Actor(paper_model_path)
+        # Setting the actor/model
         self.actor = self.loader.loadModel(paper_model_path)
         self.actor.reparentTo(scene)
         self.actor.setPos(self.position)
@@ -29,11 +25,9 @@ class Printer:
 
         self.setup_animation()
 
-
+    # Printer animation setup
     def setup_animation(self):
         intervals = []
-        # start Vec3(-2.5, 2.43, 3.4)
-        # Printer in works
         intervals.append(self.define_new_hpr_interval(0, Point3(90, 0, 0) ))
         intervals.append(self.define_new_interval(0, Vec3(-3.0, 2.5, 3.8)))
         intervals.append(self.define_new_interval(7, Vec3(-1, 2.5, 3.8)))
@@ -54,17 +48,20 @@ class Printer:
 
         self.animation_sequence = Sequence(name="animation_printer")
         
+        # Add intervals to sequence
         for x in intervals:
             self.animation_sequence.append(x)
 
         self.animation_sequence.loop()
 
+    # Interval to move position of paper
     def define_new_interval(self, duration, new_position):
         self.previous_position = self.position
         self.position = new_position
         posInterval = self.actor.posInterval(duration, self.position, startPos=self.previous_position)
         return posInterval
 
+    # Interval to change rotation of paper
     def define_new_hpr_interval(self, duration, new_hpr):
         self.previous_hpr = self.hpr
         self.hpr = new_hpr
