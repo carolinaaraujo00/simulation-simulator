@@ -4,7 +4,7 @@ This game was developed in the context of the **MSc. in Digital Game Development
 
 Envisioned and created by [Carolina Araújo](https://github.com/carolinaaraujo00), [Francisco R. Pinto](https://github.com/Franciscorp) and [Luís Chaves](https://github.com/luischavesdev), using the Panda3D game engine.
 
-# How to run the game 
+## How to run the game 
 
 After making sure that you have 1.5 GB of available disk space:   
   
@@ -13,7 +13,7 @@ cd simulation-simulator
 py ./main.py  
 
 
-# Alternative to requirements.txt  
+## Alternative to requirements.txt  
 
 pip install numpy  
 pip install wheel  
@@ -21,6 +21,10 @@ pip install direct
 pip install panda3d  
 pip install panda3d_simplepbr  
 pip install panda3d_gltf  
+
+## YouTube Demo
+
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/qT63WL_DHVs/0.jpg)](http://www.youtube.com/watch?v=qT63WL_DHVs "Simulation Simulator")
 
 
 ## THE END IS NEVER THE END IS NEVER THE END IS NEVER THE END 
